@@ -1,0 +1,33 @@
+<footer class="container-fluid">
+  <div class="row" style="background-color: #333333">
+    <div class="col-lg-2 offset-3 me-lg-5">
+      <span class="d-flex text-uppercase text-light pt-4 mb-3" style="font-size: 18px">o restauracji</span>
+      <p class="text-black me-5 mb-4" style="text-align: justify">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a vestibulum leo.
+        Quisque non diam et justo consectetur luctus et ac leo. Vestibulum porta gravida erat vel vulputate. Nam a luctus ipsum.
+        Cras pharetra mauris tortor, nec egestas massa bibendum vitae.
+      </p>
+    </div>
+    <div class="col-lg-2 me-lg-5">
+      <span class="d-flex text-uppercase text-light pt-4 mb-3" style="font-size: 18px">godziny otwarcia</span>
+      <ng-container *ngFor="let hour of openingHours">
+        <div class="d-inline-block text-black text-capitalize">{{hour.weekDayName}}</div>
+        <div class="d-inline-block text-white float-end me-5">{{hour.hours}}</div>
+        <div class="d-block mb-2"></div>
+      </ng-container>
+    </div>
+    <div class="col-lg-2">
+      <span class="d-flex text-uppercase text-light pt-4 mb-3" style="font-size: 18px">kontakt</span>
+      <div class="text-black text-capitalize mb-1">adres</div>
+      <div class="text-white text-capitalize mb-1">ul. Niewiadomskiego 102</div>
+      <div class="text-white text-capitalize mb-1">25-000 Kielce</div>
+      <div class="text-black text-capitalize mb-1">telefon</div>
+      <div class="text-white text-capitalize mb-1">+48 600 200 300</div>
+      <div class="text-black text-capitalize mb-1">email</div>
+      <div class="text-white text-capitalize mb-1">restaurant24@gmail.com</div>
+    </div>
+  </div>
+  <div class="row text-light text-center" style="background-color: #1A1A1A">
+    <span class="py-2 text-uppercase" style="font-size: 13px">WSZELKIE PRAWA ZASTRZEŻONE © 2022</span>
+  </div>
+</footer>

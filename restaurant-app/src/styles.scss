@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/mixins";
+
+
+$grey:(
+  "grey": #333333,
+);
+
+$theme-colors: map-merge($theme-colors, $grey);
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+$utilities-colors: map-merge($utilities-colors, $theme-colors-rgb);
+$utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+
+@import "~bootstrap/scss/bootstrap";
+
+.bg-grey{background-color: var(--bs-grey);};
