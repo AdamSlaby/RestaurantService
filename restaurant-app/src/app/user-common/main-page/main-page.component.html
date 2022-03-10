@@ -1,0 +1,64 @@
+<app-header></app-header>
+<section class="container-fluid" style="background-image: url('assets/background.jpg')">
+  <div class="row">
+    <div class="position-relative px-0">
+      <img class="img-fluid px-0" src="assets/welcomePage.jpg">
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Witaj w naszej kuchni
+      </h1>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-12 col-lg-4 offset-lg-2 my-5">
+      <img class="img-fluid px-0 d-flex mx-auto" src="assets/food.jpg" alt="food picture">
+    </div>
+    <div class="col-lg-4 my-5">
+      <h2 class="text-center" style="font-family: 'Kaushan Script', cursive;">Restaurant</h2>
+      <p class="px-5 mt-3" style="text-align: center">
+        Jesteśmy młodym, zdolnym, dynamicznym zespołem kucharzy,
+        którzy pewnego dnia zamarzyli o posiadaniu własnej restauracji. Dzięki ciężkiej pracy i odrobinie szczęścia
+        udało nam się zrealizować nasze marzenia. Każdy kolejny dzień poświęcamy na polepszanie naszych dań,
+        by wciąż zaskakiwać nowym nietuzinkowym doznaniem.
+        Aby odwdzięczyć się naszym klientom za obdarowanie nas zaufaniem, wkładamy
+        100% sił i serca, aby przygotować najlepsze posiłki, jakie kiedykolwiek jedli.
+        W naszych daniach znajdziecie dużo miłości, pasji i ciężkiej pracy.
+        Podczas posiłku przeżyjecie niezapomniane wrażenia, które będą kazały wam wrócić po więcej. Prócz pysznych
+        dań możecie także liczyć na cudowną, kameralną atmosferę. Nutka jazzu wzbogaci i dopełni wasz pobyt u nas.
+        Obsługa jest niesamowicie miła i pomocna. Jeśli będziecie mieć jakieś zastrzeżenia lub uwagi, nasz manager
+        bardzo chętnie ich wysłucha. Wasze opinie są dla nas niezmiennie ważne, bo dzięki nim możemy się rozwijać i być
+        coraz lepsi. Nasza restauracja jest czynna przez większość dni tygodnia, dlatego czekamy na was przy ulicy
+        Niewiadomskiego 102 w Kielcach.
+      </p>
+      <button routerLink="/about" class="btn btn-grey d-flex mx-auto">
+        Zobacz więcej
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="position-relative px-0">
+      <img class="img-fluid " src="assets/menu.jpg">
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Najlepsze dania
+      </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-4 offset-lg-2 my-5">
+      <h2 class="text-center" style="font-family: 'Kaushan Script', cursive;">
+        Najciekawsze pozycje w naszym menu
+      </h2>
+      <div class="mt-4">
+        <ul class=dots>
+          <li *ngFor="let dish of bestDishes" class="mb-3">
+            <span>{{dish.name}}</span>
+            <span>{{dish.price | currency :'PL':'symbol'}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4 my-5">
+
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

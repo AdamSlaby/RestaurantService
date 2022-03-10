@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
+.header1 {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 60px;
+}
+
+@media only screen and (max-width: 800px) {
+  .header1 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 30px;
+  }
+}
+
+ul.dots {
+  max-width: 40em;
+  padding: 0;
+  overflow-x: hidden;
+  list-style: none
+}
+
+ul.dots li:before {
+  float: left;
+  width: 0;
+  white-space: nowrap;
+  content:
+    ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . "
+    ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . "
+}
+
+ul.dots span:first-child {
+  padding-right: 0.24em;
+  background-image: url('~src/assets/background.jpg');
+}
+
+ul.dots span + span {
+  float: right;
+  padding-left: 0.24em;
+  background-image: url('~src/assets/background.jpg');
+}

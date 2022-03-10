@@ -1,0 +1,24 @@
+.background {
+  background-image: url('~src/assets/background.jpg');
+  background-repeat: repeat;
+}
+
+h1 {
+  font-size: 100px;
+  background: -webkit-linear-gradient(#000, #848484);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.content {
+  background: white;
+  text-align: center;
+  box-shadow: -10px 10px 67px -12px rgba(0,0,0,0.2);
+
+  p {
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.1rem;
+  }
+}
