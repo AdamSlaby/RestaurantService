@@ -6,13 +6,6 @@
   font-size: 60px;
 }
 
-@media only screen and (max-width: 800px) {
-  .header1 {
-    font-family: 'Permanent Marker', cursive;
-    font-size: 30px;
-  }
-}
-
 ul.dots {
   max-width: 40em;
   padding: 0;
@@ -38,4 +31,59 @@ ul.dots span + span {
   float: right;
   padding-left: 0.24em;
   background-image: url('~src/assets/background.jpg');
+}
+
+.bg-image-welcome {
+  background-image: url("~src/assets/restaurant.jpg");
+
+  min-height: 700px;
+
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-image-menu {
+  background-image: url("~src/assets/menu.jpg");
+
+  min-height: 500px;
+
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-image-restaurant {
+  background-image: url("~src/assets/table.jpg");
+
+  min-height: 500px;
+
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media only screen and (max-width: 800px) {
+  .header1 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 30px;
+  }
+
+  .bg-image-menu {
+    background-attachment: scroll;
+    min-height: 300px;
+  }
+
+  .bg-image-restaurant {
+    background-attachment: scroll;
+    min-height: 300px;
+  }
+
+  .bg-image-welcome {
+    background-attachment: scroll;
+    min-height: 300px;
+  }
 }

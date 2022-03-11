@@ -10,34 +10,52 @@ export class MainPageComponent implements OnInit {
   bestDishes: Dish[] = [
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
       price: 18
     },
     {
       name: 'Śledź',
+      type: 'fish',
+      price: 18
+    },
+    {
+      name: 'Śledź',
+      type: 'fish',
+      price: 18
+    },
+    {
+      name: 'Śledź',
+      type: 'fish',
       price: 18
     },
   ]
