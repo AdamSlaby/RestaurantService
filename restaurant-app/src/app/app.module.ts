@@ -9,6 +9,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {CommonModule} from "@angular/common";
 import { PageNotFoundComponent } from './user-common/page-not-found/page-not-found.component';
 import { MainPageComponent } from './user-common/main-page/main-page.component';
+import { NewsComponent } from './user-common/news/news.component';
+import { NewsInfoComponent } from './user-common/news-info/news-info.component';
+import { NewsFeedComponent } from './user-common/news-feed/news-feed.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { MainPageComponent } from './user-common/main-page/main-page.component';
     HeaderComponent,
     FooterComponent,
     PageNotFoundComponent,
-    MainPageComponent
+    MainPageComponent,
+    NewsComponent,
+    NewsInfoComponent,
+    NewsFeedComponent
   ],
   imports: [
     BrowserModule,

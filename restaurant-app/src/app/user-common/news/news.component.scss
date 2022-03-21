@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.bg-image-news {
+  background-image: url('~src/assets/news_image.jpg');
+
+  min-height: 600px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media only screen and (max-width: 800px) {
+  .bg-image-news  {
+    background-attachment: scroll;
+    min-height: 300px;
+  }
+}

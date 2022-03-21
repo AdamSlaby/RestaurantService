@@ -1,0 +1,30 @@
+<div class="row">
+  <div id="news-{{i}}" class="d-flex col-lg-6 offset-lg-3 my-5 mb-3 border-bottom pb-5"
+       *ngFor="let news of newsFeed; index as i">
+    <div class="col-4">
+      <img class="img-fluid" src="{{news.imageUrl}}" alt="{{news.imageUrl}}">
+    </div>
+    <div class="col-8 px-4">
+      <div>
+        <a routerLink="/news/info/{{news.newsId}}" class="d-block text-dark"
+           style="font-size: 24px;font-family: 'Lato', sans-serif;'">
+          {{news.title}}
+        </a>
+        <span class="d-block" style="color: gray; font-size: 12px">
+            {{news.date | date :'longDate':'UTC+1':'pl-PL'}}
+          </span>
+      </div>
+      <div class="pt-4" style="text-align: justify;font-weight: 200">
+        {{news.content}}
+        <p class="w-100 text-end text-black pt-2" style="font-size: 13px">
+          <a routerLink="/news/info/{{news.newsId}}" id="read-more">
+            Czytaj więcej <span style="font-weight: 800">&gt;</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mb-5">
+  <button (click)="loadMore()" class="btn btn-grey w-auto mx-auto">Wczytaj więcej</button>
+</div>

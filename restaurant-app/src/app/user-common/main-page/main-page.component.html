@@ -29,7 +29,7 @@
         coraz lepsi. Nasza restauracja jest czynna przez większość dni tygodnia, dlatego czekamy na was przy ulicy
         Niewiadomskiego 102 w Kielcach.
       </p>
-      <button routerLink="/about" class="btn btn-grey d-flex mx-auto">
+      <button routerLink="/news/feed" class="btn btn-grey d-flex mx-auto">
         Zobacz więcej
       </button>
     </div>
@@ -51,7 +51,8 @@
         <ul class="dots mx-auto">
           <li *ngFor="let dish of bestDishes" class="mb-3">
             <span>{{dish.name}}</span>
-            <span>{{dish.price | currency :'PL':'symbol'}}</span>
+            <span>{{dish.price | currency :'PLN': 'symbol-narrow'}}</span>
+            <p style="font-size: 12px">{{dish.ingredients}}</p>
           </li>
         </ul>
       </div>

@@ -2,12 +2,29 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {PageNotFoundComponent} from "./user-common/page-not-found/page-not-found.component";
 import {MainPageComponent} from "./user-common/main-page/main-page.component";
+import {NewsComponent} from "./user-common/news/news.component";
+import {NewsInfoComponent} from "./user-common/news-info/news-info.component";
+import {NewsFeedComponent} from "./user-common/news-feed/news-feed.component";
 
 const routes: Routes = [
   {
     path: "",
     component: MainPageComponent,
     pathMatch: 'full'
+  },
+  {
+    path: "news",
+    component: NewsComponent,
+    children: [
+      {
+        path: "info/:id",
+        component: NewsInfoComponent,
+      },
+      {
+        path: 'feed',
+        component: NewsFeedComponent
+      }
+    ]
   },
   {
     path: "**",

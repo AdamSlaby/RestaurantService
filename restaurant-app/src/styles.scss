@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/utilities";
@@ -23,8 +26,22 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  background-image: url('~src/assets/background.jpg');
+  background-repeat: repeat;
 }
 
 a {
   text-decoration: none;
+}
+
+.header1 {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 60px;
+}
+
+@media only screen and (max-width: 800px) {
+  .header1 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 30px;
+  }
 }

@@ -9,54 +9,53 @@ import {Dish} from "../model/dish";
 export class MainPageComponent implements OnInit {
   bestDishes: Dish[] = [
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18.23,
     },
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18,
     },
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18,
     },
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18,
     },
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18,
     },
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18,
     },
     {
+      id: 1,
       name: 'Śledź',
       type: 'fish',
-      price: 18
-    },
-    {
-      name: 'Śledź',
-      type: 'fish',
-      price: 18
-    },
-    {
-      name: 'Śledź',
-      type: 'fish',
-      price: 18
-    },
-    {
-      name: 'Śledź',
-      type: 'fish',
-      price: 18
+      ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      price: 18,
     },
   ]
   constructor() { }

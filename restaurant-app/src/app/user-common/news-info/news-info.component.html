@@ -1,0 +1,22 @@
+<div class="row mt-5">
+  <div class="col-lg-6 offset-lg-3">
+    <img class="img-fluid d-flex mx-auto" src="{{news.imageUrl}}" alt="{{news.imageUrl}}">
+  </div>
+</div>
+<div class="row my-5">
+  <div class="col-lg-6 offset-lg-3 mb-2">
+    <h1 class="mb-4">{{news.title}}</h1>
+    <p [innerHTML]="news.content" style="font-weight: 200"></p>
+    <div class="border-bottom"></div>
+    <span class="d-flex py-2" style="font-weight: 100">
+      {{news.date | date:'longDate':'UTC+1':'pl-PL'}}
+    </span>
+    <div class="border-bottom"></div>
+    <div class="text-end mt-2">
+      <a id="read-more" style="font-size: 13px" routerLink="/news/feed">
+        Powrót do aktualności
+        <span style="font-weight: 900">&gt;</span>
+      </a>
+    </div>
+  </div>
+</div>
