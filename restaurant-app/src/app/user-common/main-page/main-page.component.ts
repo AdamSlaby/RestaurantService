@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Dish} from "../model/dish";
 import {DishType} from "../model/type";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-main-page',
@@ -62,5 +63,6 @@ export class MainPageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 }

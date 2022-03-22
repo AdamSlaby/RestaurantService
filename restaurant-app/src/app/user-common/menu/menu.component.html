@@ -10,22 +10,74 @@
   </div>
   <div class="row my-5">
     <div class="col-lg-3 offset-lg-3 px-2">
-      <ul class="dots">
-        <li *ngFor="let dish of getDishes(type.SOUP,0)" class="mb-3">
-          <span>{{dish.name}}</span>
-          <span>{{dish.price | currency :'PLN': 'symbol-narrow':'1.2-2':'pl-PL'}}</span>
-          <p style="font-size: 12px">{{dish.ingredients}}</p>
-        </li>
-      </ul>
+      <app-dish-list [dishes]="getDishes(type.SOUP, 0)"></app-dish-list>
     </div>
     <div class="col-lg-3 px-2">
-      <ul class="dots">
-        <li *ngFor="let dish of getDishes(type.SOUP, 1)" class="mb-3">
-          <span>{{dish.name}}</span>
-          <span>{{dish.price | currency :'PLN': 'symbol-narrow':'1.2-2':'pl-PL'}}</span>
-          <p style="font-size: 12px">{{dish.ingredients}}</p>
-        </li>
-      </ul>
+      <app-dish-list [dishes]="getDishes(type.SOUP, 1)"></app-dish-list>
+    </div>
+  </div>
+  <div class="row">
+    <div class="position-relative px-0" id="main-dish">
+      <div class="bg-image-main-dish"></div>
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Dania glówne
+      </h1>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-lg-3 offset-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 0)"></app-dish-list>
+    </div>
+    <div class="col-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 1)"></app-dish-list>
+    </div>
+  </div>
+  <div class="row">
+    <div class="position-relative px-0" id="fish">
+      <div class="bg-image-fish"></div>
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Ryby
+      </h1>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-lg-3 offset-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.FISH, 0)"></app-dish-list>
+    </div>
+    <div class="col-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.FISH, 1)"></app-dish-list>
+    </div>
+  </div>
+  <div class="row">
+    <div class="position-relative px-0" id="salad">
+      <div class="bg-image-salad"></div>
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Salatki
+      </h1>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-lg-3 offset-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.SALAD, 0)"></app-dish-list>
+    </div>
+    <div class="col-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.SALAD, 1)"></app-dish-list>
+    </div>
+  </div>
+  <div class="row">
+    <div class="position-relative px-0" id="dessert">
+      <div class="bg-image-dessert"></div>
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Desery
+      </h1>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-lg-3 offset-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.DESSERT, 0)"></app-dish-list>
+    </div>
+    <div class="col-lg-3 px-2">
+      <app-dish-list [dishes]="getDishes(type.DESSERT, 1)"></app-dish-list>
     </div>
   </div>
 </section>

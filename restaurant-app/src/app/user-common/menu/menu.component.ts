@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Dish} from "../model/dish";
 import {DishType} from "../model/type";
-import {cloneDeep} from 'lodash';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-menu',
@@ -47,16 +47,23 @@ export class MenuComponent implements OnInit, AfterViewInit {
       price: 28.23,
     },
   ]
-  constructor() {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    for (let i = 0; i < 5; i++) {
+      let dish = {...this.menu[i]};
+      for (let j = 1; j <= 7; j++) {
+        this.menu.push(dish);
+      }
+    }
   }
 
   ngAfterViewInit() {
-    for (let j = 1; j <= 7; j++) {
-      let dishesCopy = cloneDeep(this.menu);
-      this.menu.push.apply(this.menu, dishesCopy);
-    }
+    this.route.fragment.subscribe((fragment) => {
+      const sector = document.querySelector("#" + fragment)
+      if (sector)
+        sector.scrollIntoView();
+    })
   }
 
   getDishes(type: DishType, colNr: number) {

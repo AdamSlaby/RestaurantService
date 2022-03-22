@@ -14,6 +14,7 @@ import { NewsInfoComponent } from './user-common/news-info/news-info.component';
 import { NewsFeedComponent } from './user-common/news-feed/news-feed.component';
 import { MenuComponent } from './user-common/menu/menu.component';
 import '@angular/common/locales/global/pl';
+import { DishListComponent } from './user-common/dish-list/dish-list.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import '@angular/common/locales/global/pl';
     NewsComponent,
     NewsInfoComponent,
     NewsFeedComponent,
-    MenuComponent
+    MenuComponent,
+    DishListComponent
   ],
   imports: [
     BrowserModule,
