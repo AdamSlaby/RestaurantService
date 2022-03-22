@@ -18,11 +18,11 @@
               menu
             </a>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1" class="text-center">
-              <li><a ngbDropdownItem routerLink="/menu/#soup" routerLinkActive="active">zupy</a></li>
-              <li><a ngbDropdownItem routerLink="/menu/#main-dish" routerLinkActive="active">dania główne</a></li>
-              <li><a ngbDropdownItem routerLink="/menu/#fish" routerLinkActive="active">ryby</a></li>
-              <li><a ngbDropdownItem routerLink="/menu/#salad" routerLinkActive="active">sałatki</a></li>
-              <li><a ngbDropdownItem routerLink="/menu/#dessert" routerLinkActive="active">desery</a></li>
+              <li><a ngbDropdownItem [routerLink]="['/menu']" fragment="soup" routerLinkActive="active">zupy</a></li>
+              <li><a ngbDropdownItem [routerLink]="['/menu']" fragment="main-dish" routerLinkActive="active">dania główne</a></li>
+              <li><a ngbDropdownItem [routerLink]="['/menu']" fragment="fish" routerLinkActive="active">ryby</a></li>
+              <li><a ngbDropdownItem [routerLink]="['/menu']" fragment="salad" routerLinkActive="active">sałatki</a></li>
+              <li><a ngbDropdownItem [routerLink]="['/menu']" fragment="dessert" routerLinkActive="active">desery</a></li>
             </ul>
           </li>
           <li class="nav-item me-4 my-auto">

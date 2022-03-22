@@ -1,0 +1,32 @@
+<app-header></app-header>
+<section class="container-fluid">
+  <div class="row">
+    <div class="position-relative px-0" id="soup">
+      <div class="bg-image-soup"></div>
+      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
+        Zupy
+      </h1>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-lg-3 offset-lg-3 px-2">
+      <ul class="dots">
+        <li *ngFor="let dish of getDishes(type.SOUP,0)" class="mb-3">
+          <span>{{dish.name}}</span>
+          <span>{{dish.price | currency :'PLN': 'symbol-narrow':'1.2-2':'pl-PL'}}</span>
+          <p style="font-size: 12px">{{dish.ingredients}}</p>
+        </li>
+      </ul>
+    </div>
+    <div class="col-lg-3 px-2">
+      <ul class="dots">
+        <li *ngFor="let dish of getDishes(type.SOUP, 1)" class="mb-3">
+          <span>{{dish.name}}</span>
+          <span>{{dish.price | currency :'PLN': 'symbol-narrow':'1.2-2':'pl-PL'}}</span>
+          <p style="font-size: 12px">{{dish.ingredients}}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

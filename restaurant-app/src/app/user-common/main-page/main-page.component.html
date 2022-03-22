@@ -51,7 +51,7 @@
         <ul class="dots mx-auto">
           <li *ngFor="let dish of bestDishes" class="mb-3">
             <span>{{dish.name}}</span>
-            <span>{{dish.price | currency :'PLN': 'symbol-narrow'}}</span>
+            <span>{{dish.price | currency :'PLN': 'symbol-narrow':'1.2-2':'pl-PL'}}</span>
             <p style="font-size: 12px">{{dish.ingredients}}</p>
           </li>
         </ul>

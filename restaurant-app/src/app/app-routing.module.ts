@@ -5,12 +5,17 @@ import {MainPageComponent} from "./user-common/main-page/main-page.component";
 import {NewsComponent} from "./user-common/news/news.component";
 import {NewsInfoComponent} from "./user-common/news-info/news-info.component";
 import {NewsFeedComponent} from "./user-common/news-feed/news-feed.component";
+import {MenuComponent} from "./user-common/menu/menu.component";
 
 const routes: Routes = [
   {
     path: "",
     component: MainPageComponent,
     pathMatch: 'full'
+  },
+  {
+    path: "menu",
+    component: MenuComponent,
   },
   {
     path: "news",
