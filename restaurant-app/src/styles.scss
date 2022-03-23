@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+:root {
+  --grey: #333333;
+}
 
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -39,9 +44,21 @@ a {
   font-size: 60px;
 }
 
-@media only screen and (max-width: 800px) {
+.bg-image {
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+@media only screen and (max-width: 1200px) {
   .header1 {
     font-family: 'Permanent Marker', cursive;
-    font-size: 30px;
+    font-size: 40px;
+  }
+
+  .bg-image {
+    background-attachment: scroll;
+    min-height: 300px !important;
   }
 }

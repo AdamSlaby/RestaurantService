@@ -1,6 +1,4 @@
 .bg-image-soup {
-  background-image: url('~src/assets/soup-image.jpg');
-
   min-height: 600px;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -8,68 +6,8 @@
   background-size: cover;
 }
 
-.bg-image-main-dish {
-  background-image: url('~src/assets/main_dish_image.jpg');
-
-  min-height: 500px;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.bg-image-fish {
-  background-image: url('~src/assets/fish_image.jpg');
-
-  min-height: 500px;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.bg-image-salad {
-  background-image: url('~src/assets/salad-image.jpg');
-
-  min-height: 500px;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.bg-image-dessert {
-  background-image: url('~src/assets/dessert_image.jpg');
-
-  min-height: 500px;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1200px) {
   .bg-image-soup {
-    background-attachment: scroll;
-    min-height: 300px;
-  }
-
-  .bg-image-main-dish {
-    background-attachment: scroll;
-    min-height: 300px;
-  }
-
-  .bg-image-fish {
-    background-attachment: scroll;
-    min-height: 300px;
-  }
-
-  .bg-image-salad {
-    background-attachment: scroll;
-    min-height: 300px;
-  }
-
-  .bg-image-dessert {
     background-attachment: scroll;
     min-height: 300px;
   }

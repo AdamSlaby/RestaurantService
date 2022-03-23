@@ -1,83 +1,57 @@
 <app-header></app-header>
 <section class="container-fluid">
+  <app-topic-image [urlImage]="soupImg" [minHeight]="600" content="Zupy"></app-topic-image>
   <div class="row">
-    <div class="position-relative px-0" id="soup">
-      <div class="bg-image-soup"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Zupy
-      </h1>
+    <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.SOUP, 0)" [showBest]="true"></app-dish-list>
+    </div>
+    <div class="col-xl-4 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.SOUP, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <div class="row my-5">
-    <div class="col-lg-3 offset-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.SOUP, 0)"></app-dish-list>
-    </div>
-    <div class="col-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.SOUP, 1)"></app-dish-list>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="mainDishImg" [minHeight]="500" content="Dania glówne"></app-topic-image>
   <div class="row">
-    <div class="position-relative px-0" id="main-dish">
-      <div class="bg-image-main-dish"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Dania glówne
-      </h1>
+    <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 0)" [showBest]="true"></app-dish-list>
+    </div>
+    <div class="col-xl-4 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <div class="row my-5">
-    <div class="col-lg-3 offset-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 0)"></app-dish-list>
-    </div>
-    <div class="col-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 1)"></app-dish-list>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="fishImg" [minHeight]="500" content="Ryby"></app-topic-image>
   <div class="row">
-    <div class="position-relative px-0" id="fish">
-      <div class="bg-image-fish"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Ryby
-      </h1>
+    <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.FISH, 0)" [showBest]="true"></app-dish-list>
+    </div>
+    <div class="col-xl-4 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.FISH, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <div class="row my-5">
-    <div class="col-lg-3 offset-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.FISH, 0)"></app-dish-list>
-    </div>
-    <div class="col-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.FISH, 1)"></app-dish-list>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="saladImg" [minHeight]="500" content="Salatki"></app-topic-image>
   <div class="row">
-    <div class="position-relative px-0" id="salad">
-      <div class="bg-image-salad"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Salatki
-      </h1>
+    <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.SALAD, 0)" [showBest]="true"></app-dish-list>
+    </div>
+    <div class="col-xl-4 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.SALAD, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <div class="row my-5">
-    <div class="col-lg-3 offset-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.SALAD, 0)"></app-dish-list>
-    </div>
-    <div class="col-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.SALAD, 1)"></app-dish-list>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="dessertImg" [minHeight]="500" content="Desery"></app-topic-image>
   <div class="row">
-    <div class="position-relative px-0" id="dessert">
-      <div class="bg-image-dessert"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Desery
-      </h1>
+    <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.DESSERT, 0)" [showBest]="true"></app-dish-list>
+    </div>
+    <div class="col-xl-4 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.DESSERT, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <div class="row my-5">
-    <div class="col-lg-3 offset-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.DESSERT, 0)"></app-dish-list>
+  <app-topic-image [urlImage]="beverageImg" [minHeight]="500" content="Napoje"></app-topic-image>
+  <div class="row">
+    <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.BEVERAGE, 0)" [showBest]="true"></app-dish-list>
     </div>
-    <div class="col-lg-3 px-2">
-      <app-dish-list [dishes]="getDishes(type.DESSERT, 1)"></app-dish-list>
+    <div class="col-xl-4 px-2 px-lg-4">
+      <app-dish-list [dishes]="getDishes(type.BEVERAGE, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
 </section>

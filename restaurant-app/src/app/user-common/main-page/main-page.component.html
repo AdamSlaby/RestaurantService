@@ -1,13 +1,6 @@
 <app-header></app-header>
 <section class="container-fluid" style="background-image: url('assets/background.jpg')">
-  <div class="row">
-    <div class="position-relative px-0">
-      <div class="bg-image-welcome"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Witaj w naszej kuchni
-      </h1>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="welcomeImg" [minHeight]="700" content="Witaj w naszej kuchni"></app-topic-image>
   <div class="row my-5">
     <div class="col-12 col-lg-4 offset-lg-2 my-5">
       <img class="img-fluid px-0 d-flex mx-auto" src="assets/food.jpg" alt="food picture">
@@ -34,21 +27,14 @@
       </button>
     </div>
   </div>
-  <div class="row">
-    <div class="position-relative px-0">
-      <div class="bg-image-menu"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Najlepsze dania
-      </h1>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="menuImg" [minHeight]="500" content="Najlepsze dania"></app-topic-image>
   <div class="row">
     <div class="col-lg-6 mt-5 mb-2">
       <h2 class="text-center" style="font-family: 'Kaushan Script', cursive;">
         Najciekawsze pozycje w naszym menu
       </h2>
       <div class="mt-4">
-        <app-dish-list [dishes]="bestDishes"></app-dish-list>
+        <app-dish-list [dishes]="bestDishes" [showBest]="false"></app-dish-list>
       </div>
     </div>
     <div class="col-lg-6 mt-5 mb-2">
@@ -58,14 +44,7 @@
   <div class="row mb-5">
     <a class="btn btn-grey w-auto d-flex mx-auto" style="font-size: 18px">Zobacz menu</a>
   </div>
-  <div class="row">
-    <div class="position-relative px-0">
-      <div class="bg-image-restaurant"></div>
-      <h1 class="text-white position-absolute top-50 start-50 translate-middle p-3 text-uppercase header1">
-        Rezerwacje
-      </h1>
-    </div>
-  </div>
+  <app-topic-image [urlImage]="tableImg" [minHeight]="500" content="Rezerwacje"></app-topic-image>
   <div class="row my-5">
     <h1 class="text-center" style="font-family: 'Kaushan Script', cursive;">
       Odwiedź nas już dzisiaj

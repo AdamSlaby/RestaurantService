@@ -1,0 +1,37 @@
+<app-header></app-header>
+<section class="container-fluid">
+  <app-topic-image [urlImage]="contactImg" [minHeight]="600" content="Kontakt"></app-topic-image>
+  <div class="row my-5">
+    <div class="col-xl-3 offset-xl-3">
+      <h2 class="text-center mb-4">Restaurant</h2>
+      <span class="d-block text-black fw-bold">Adres:</span>
+      <span class="d-block fw-light py-1">ul. Niewiadomskiego 102</span>
+      <span class="d-block mb-1 fw-light py-1">25-000 Kielce</span>
+      <span class="d-block text-black fw-bold">Telefon:</span>
+      <span class="d-block mb-1 fw-light py-1">+48 600 200 300</span>
+      <span class="d-block text-black fw-bold">Email:</span>
+      <span class="d-block mb-4 fw-light py-1">restaurant24@gmail.com</span>
+      <span class="d-block text-black fw-bold">Godziny otwarcia:</span>
+      <ng-container *ngFor="let hour of openingHours">
+        <span class="d-block text-black text-capitalize fw-light py-1">{{hour.weekDayName}}: {{hour.hours}}</span>
+      </ng-container>
+    </div>
+    <div class="col-xl-3 offset-xl-1">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="name">Imie</label>
+          <input type="text" formControlName="firstName" class="form-control" id="name"
+                 [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors ||
+                    (errors.has('name') && f['firstName'].pristine)  }" />
+          <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+            <div *ngIf="f['firstName'].errors['required']">Imie jest wymagane</div>
+          </div>
+          <div *ngIf="errors.has('name') && f['firstName'].valid && f['firstName'].pristine" class="invalid-feedback d-block">
+            {{errors.get('name')}}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

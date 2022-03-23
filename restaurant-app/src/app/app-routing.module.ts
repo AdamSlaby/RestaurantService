@@ -6,6 +6,7 @@ import {NewsComponent} from "./user-common/news/news.component";
 import {NewsInfoComponent} from "./user-common/news-info/news-info.component";
 import {NewsFeedComponent} from "./user-common/news-feed/news-feed.component";
 import {MenuComponent} from "./user-common/menu/menu.component";
+import {ContactComponent} from "./user-common/contact/contact.component";
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: "menu",
     component: MenuComponent,
+  },
+  {
+    path: "contact",
+    component: ContactComponent,
   },
   {
     path: "news",

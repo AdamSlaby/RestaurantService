@@ -15,6 +15,9 @@ import { NewsFeedComponent } from './user-common/news-feed/news-feed.component';
 import { MenuComponent } from './user-common/menu/menu.component';
 import '@angular/common/locales/global/pl';
 import { DishListComponent } from './user-common/dish-list/dish-list.component';
+import { ContactComponent } from './user-common/contact/contact.component';
+import { TopicImageComponent } from './user-common/topic-image/topic-image.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -27,14 +30,17 @@ import { DishListComponent } from './user-common/dish-list/dish-list.component';
     NewsInfoComponent,
     NewsFeedComponent,
     MenuComponent,
-    DishListComponent
+    DishListComponent,
+    ContactComponent,
+    TopicImageComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    CommonModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgbModule,
+        CommonModule,
+        ReactiveFormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

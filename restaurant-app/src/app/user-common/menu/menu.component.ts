@@ -10,20 +10,44 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class MenuComponent implements OnInit, AfterViewInit {
   type = DishType;
+  soupImg: string = 'assets/soup-image.jpg';
+  mainDishImg: string = 'assets/main_dish_image.jpg';
+  fishImg: string = 'assets/fish_image.jpg';
+  saladImg: string = 'assets/salad-image.jpg';
+  dessertImg: string = 'assets/dessert_image.jpg';
+  beverageImg: string = 'assets/beverage-picture.jpg'
   menu: Dish[] = [
+    {
+      id: 6,
+      name: 'Barszcz z uszkami',
+      type: DishType.SOUP,
+      ingredients: '30g uszek',
+      price: 22.32,
+      isBest: true,
+    },
+    {
+      id: 6,
+      name: 'Pomidorowa',
+      type: DishType.SOUP,
+      ingredients: '30g makaronu',
+      price: 21.32,
+      isBest: true,
+    },
     {
       id: 1,
       name: 'Zupa szczawiowa',
       type: DishType.SOUP,
       ingredients: 'z jajkiem i kiełbasą',
-      price: 20.32
+      price: 20.32,
+      isBest: false,
     },
     {
       id: 2,
       name: 'Pierogi',
       type: DishType.MAIN_DISH,
       ingredients: 'z kapustą i mięsem',
-      price: 25.00
+      price: 25.00,
+      isBest: false,
     },
     {
       id: 3,
@@ -31,6 +55,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18.23,
+      isBest: false,
     },
     {
       id: 4,
@@ -38,6 +63,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
       type: DishType.SALAD,
       ingredients: 'i kurczakiem i serem pleśniowym',
       price: 28.23,
+      isBest: false,
     },
     {
       id: 5,
@@ -45,14 +71,23 @@ export class MenuComponent implements OnInit, AfterViewInit {
       type: DishType.DESSERT,
       ingredients: 'bita śmietana',
       price: 28.23,
+      isBest: false,
+    },
+    {
+      id: 7,
+      name: 'Mirinda 1L',
+      type: DishType.BEVERAGE,
+      ingredients: '',
+      price: 5.23,
+      isBest: false,
     },
   ]
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 2; i < 8; i++) {
       let dish = {...this.menu[i]};
-      for (let j = 1; j <= 7; j++) {
+      for (let j = 1; j <= 8; j++) {
         this.menu.push(dish);
       }
     }

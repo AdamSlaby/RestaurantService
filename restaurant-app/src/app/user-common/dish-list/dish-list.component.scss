@@ -24,3 +24,33 @@ ul.dots span + span {
   padding-left: 0.24em;
   background-image: url('~src/assets/background.jpg');
 }
+
+.best-dish {
+  border: 2px solid var(--grey);
+  margin-top: 40px;
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+}
+
+.recommend-text {
+  position: absolute;
+  left: -2px;
+  top: -30px;
+  background-color: var(--grey);
+  z-index: 100;
+  font-size: 13px;
+}
+
+.padding {
+  padding-top: 48px !important;
+  padding-bottom: 48px !important;
+}
+
+@media only screen and (max-width: 1200px) {
+  .padding {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+}

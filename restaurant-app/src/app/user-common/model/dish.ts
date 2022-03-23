@@ -6,4 +6,5 @@ export interface Dish {
   type: DishType;
   ingredients: string;
   price: number;
+  isBest: boolean;
 }

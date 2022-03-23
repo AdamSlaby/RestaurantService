@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Dish} from "../model/dish";
 import {DishType} from "../model/type";
-import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-main-page',
@@ -9,6 +8,9 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit {
+  welcomeImg: string = 'assets/restaurant.jpg';
+  menuImg: string = 'assets/menu.jpg';
+  tableImg: string = 'assets/table.jpg';
   bestDishes: Dish[] = [
     {
       id: 1,
@@ -16,6 +18,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18.23,
+      isBest: false,
     },
     {
       id: 1,
@@ -23,6 +26,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
+      isBest: false,
     },
     {
       id: 1,
@@ -30,6 +34,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
+      isBest: false,
     },
     {
       id: 1,
@@ -37,6 +42,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
+      isBest: false,
     },
     {
       id: 1,
@@ -44,6 +50,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
+      isBest: false,
     },
     {
       id: 1,
@@ -51,6 +58,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
+      isBest: false,
     },
     {
       id: 1,
@@ -58,6 +66,7 @@ export class MainPageComponent implements OnInit {
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
+      isBest: false,
     },
   ]
   constructor() { }

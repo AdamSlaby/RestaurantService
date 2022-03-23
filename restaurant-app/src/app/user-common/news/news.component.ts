@@ -7,6 +7,7 @@ import {News} from "../model/news";
   styleUrls: ['./news.component.scss']
 })
 export class NewsComponent implements OnInit {
+  newsImg: string = 'assets/news_image.jpg';
   constructor() { }
 
   ngOnInit(): void {

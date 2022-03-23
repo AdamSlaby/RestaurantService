@@ -8,6 +8,7 @@ import {Dish} from "../model/dish";
 })
 export class DishListComponent implements OnInit {
   @Input() dishes!: Dish[];
+  @Input() showBest!: boolean;
   constructor() { }
 
   ngOnInit(): void {
