@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {OpeningHour} from "../model/opening-hour";
+import {OpeningHour} from "../../model/opening-hour";
+import {faPhone, faEnvelope, faLocationDot, faCity} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-footer',
@@ -7,6 +8,10 @@ import {OpeningHour} from "../model/opening-hour";
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
+  faPhone = faPhone;
+  faEnvelope = faEnvelope;
+  faLocationDot = faLocationDot;
+  faCity = faCity;
   openingHours: OpeningHour[] = [
     {
       weekDayName: "poniedziałek",

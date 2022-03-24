@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Dish} from "../model/dish";
-import {DishType} from "../model/type";
+import {Dish} from "../../model/dish";
+import {DishType} from "../../model/type";
 
 @Component({
   selector: 'app-main-page',

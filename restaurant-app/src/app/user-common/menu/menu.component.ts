@@ -1,7 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {Dish} from "../model/dish";
-import {DishType} from "../model/type";
+import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
+import {Dish} from "../../model/dish";
+import {DishType} from "../../model/type";
 import {ActivatedRoute} from "@angular/router";
+import {ViewportScroller} from "@angular/common";
+import {first} from "rxjs";
 
 @Component({
   selector: 'app-menu',
@@ -82,7 +84,9 @@ export class MenuComponent implements OnInit, AfterViewInit {
       isBest: false,
     },
   ]
-  constructor(private route: ActivatedRoute) {}
+
+  constructor(private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
     for (let i = 2; i < 8; i++) {
@@ -94,11 +98,12 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.route.fragment.subscribe((fragment) => {
-      const sector = document.querySelector("#" + fragment)
-      if (sector)
-        sector.scrollIntoView();
-    })
+    this.route.fragment.subscribe(fragment => {
+        let element = document.querySelector("#" + fragment);
+        if (element)
+          element.scrollIntoView();
+      }
+    );
   }
 
   getDishes(type: DishType, colNr: number) {

@@ -1,6 +1,6 @@
 <app-header></app-header>
 <section class="container-fluid">
-  <app-topic-image [urlImage]="soupImg" [minHeight]="600" content="Zupy"></app-topic-image>
+  <app-topic-image id="soup" [urlImage]="soupImg" [minHeight]="600" content="Zupy"></app-topic-image>
   <div class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.SOUP, 0)" [showBest]="true"></app-dish-list>
@@ -9,7 +9,7 @@
       <app-dish-list [dishes]="getDishes(type.SOUP, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <app-topic-image [urlImage]="mainDishImg" [minHeight]="500" content="Dania glówne"></app-topic-image>
+  <app-topic-image id="main-dish" [urlImage]="mainDishImg" [minHeight]="500" content="Dania glówne"></app-topic-image>
   <div class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 0)" [showBest]="true"></app-dish-list>
@@ -18,7 +18,7 @@
       <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <app-topic-image [urlImage]="fishImg" [minHeight]="500" content="Ryby"></app-topic-image>
+  <app-topic-image id="fish" [urlImage]="fishImg" [minHeight]="500" content="Ryby"></app-topic-image>
   <div class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.FISH, 0)" [showBest]="true"></app-dish-list>
@@ -27,7 +27,7 @@
       <app-dish-list [dishes]="getDishes(type.FISH, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <app-topic-image [urlImage]="saladImg" [minHeight]="500" content="Salatki"></app-topic-image>
+  <app-topic-image id="salad" [urlImage]="saladImg" [minHeight]="500" content="Salatki"></app-topic-image>
   <div class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.SALAD, 0)" [showBest]="true"></app-dish-list>
@@ -36,7 +36,7 @@
       <app-dish-list [dishes]="getDishes(type.SALAD, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <app-topic-image [urlImage]="dessertImg" [minHeight]="500" content="Desery"></app-topic-image>
+  <app-topic-image id="dessert" [urlImage]="dessertImg" [minHeight]="500" content="Desery"></app-topic-image>
   <div class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.DESSERT, 0)" [showBest]="true"></app-dish-list>
@@ -45,7 +45,7 @@
       <app-dish-list [dishes]="getDishes(type.DESSERT, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <app-topic-image [urlImage]="beverageImg" [minHeight]="500" content="Napoje"></app-topic-image>
+  <app-topic-image id="beverage" [urlImage]="beverageImg" [minHeight]="500" content="Napoje"></app-topic-image>
   <div class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.BEVERAGE, 0)" [showBest]="true"></app-dish-list>

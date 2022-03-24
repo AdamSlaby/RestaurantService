@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {News} from "../model/news";
+import {News} from "../../model/news";
 
 @Component({
   selector: 'app-news-feed',

@@ -13,11 +13,15 @@ import { NewsComponent } from './user-common/news/news.component';
 import { NewsInfoComponent } from './user-common/news-info/news-info.component';
 import { NewsFeedComponent } from './user-common/news-feed/news-feed.component';
 import { MenuComponent } from './user-common/menu/menu.component';
-import '@angular/common/locales/global/pl';
 import { DishListComponent } from './user-common/dish-list/dish-list.component';
 import { ContactComponent } from './user-common/contact/contact.component';
 import { TopicImageComponent } from './user-common/topic-image/topic-image.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ReservationComponent } from './user-common/reservation/reservation.component';
+import '@angular/common/locales/global/pl';
+import { LOCALE_ID } from '@angular/core';
+
 
 @NgModule({
   declarations: [
@@ -32,16 +36,19 @@ import {ReactiveFormsModule} from "@angular/forms";
     MenuComponent,
     DishListComponent,
     ContactComponent,
-    TopicImageComponent
+    TopicImageComponent,
+    ReservationComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgbModule,
-        CommonModule,
-        ReactiveFormsModule
-    ],
-  providers: [],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgbModule,
+    CommonModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    FormsModule
+  ],
+  providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

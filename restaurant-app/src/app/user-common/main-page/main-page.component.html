@@ -42,9 +42,9 @@
     </div>
   </div>
   <div class="row mb-5">
-    <a class="btn btn-grey w-auto d-flex mx-auto" style="font-size: 18px">Zobacz menu</a>
+    <a [routerLink]="['/menu']" fragment="soup" class="btn btn-grey w-auto d-flex mx-auto" style="font-size: 18px">Zobacz menu</a>
   </div>
-  <app-topic-image [urlImage]="tableImg" [minHeight]="500" content="Rezerwacje"></app-topic-image>
+  <app-topic-image [urlImage]="tableImg" [minHeight]="500" content="Zamówienia"></app-topic-image>
   <div class="row my-5">
     <h1 class="text-center" style="font-family: 'Kaushan Script', cursive;">
       Odwiedź nas już dzisiaj
@@ -53,7 +53,7 @@
       Restauracja czynna 7 dni w tygodniu
     </h5>
     <div class="w-auto mx-auto mb-5">
-      <a class="btn btn-grey d-inline-block me-5 text-uppercase p-3" style="font-size: 18px">Zarezerwuj stolik</a>
+      <a routerLink="/reservation" class="btn btn-grey d-inline-block me-5 text-uppercase p-3" style="font-size: 18px">Zarezerwuj stolik</a>
       <a class="btn btn-grey d-inline-block text-uppercase p-3" style="font-size: 18px">Zamów online</a>
     </div>
   </div>
