@@ -1,0 +1,104 @@
+<div class="row my-5">
+  <div class="col-xl-6 offset-xl-3" id="customerForm">
+    <h2 class="text-center mb-4">Podaj swoje dane</h2>
+    <div class="text-center">
+      <span class="pe-2">
+        <fa-icon class="me-2" [icon]="faCalendar"></fa-icon>
+        {{getDate() | date:'fullDate':'UTC':'pl-PL'}}
+      </span>
+      <span class="pe-2">
+        <fa-icon class="me-2" [icon]="faClock"></fa-icon>
+        {{getDate() | date:'HH:mm':'UTC':'pl'}}
+      </span>
+      <span class="pe-2">
+        <fa-icon class="me-2" [icon]="faUserGroup"></fa-icon>
+        {{getPeopleNr()}}
+      </span>
+    </div>
+    <form [formGroup]="customerForm" #form="ngForm" (ngSubmit)="!customerForm.invalid && onSubmit()">
+      <div class="form-group mb-4">
+        <label for="name">Imie</label>
+        <input type="text" placeholder="Imię" formControlName="firstName" class="form-control" id="name" maxlength="32"
+               [ngClass]="{ 'is-invalid': form.submitted && f['firstName'].errors ||
+                    (errors.has('name') && f['firstName'].pristine)  }" />
+        <div *ngIf="form.submitted && f['firstName'].errors" class="invalid-feedback">
+          <div *ngIf="f['firstName'].errors['required']">
+            Imie jest wymagane
+          </div>
+          <div *ngIf="f['firstName'].errors['pattern']">
+            Imie jest nieprawidłowe
+          </div>
+        </div>
+        <div *ngIf="errors.has('name') && f['firstName'].valid && f['firstName'].pristine" class="invalid-feedback d-block">
+          {{errors.get('name')}}
+        </div>
+      </div>
+      <div class="form-group mb-4">
+        <label for="surname">Nazwisko</label>
+        <input type="text" placeholder="Nazwisko" formControlName="surname" class="form-control" id="surname" maxlength="32"
+               [ngClass]="{ 'is-invalid': form.submitted && f['surname'].errors ||
+                    (errors.has('surname') && f['surname'].pristine)  }" />
+        <div *ngIf="form.submitted && f['surname'].errors" class="invalid-feedback">
+          <div *ngIf="f['surname'].errors['required']">
+            Nazwisko jest wymagane
+          </div>
+          <div *ngIf="f['surname'].errors['pattern']">
+            Nazwisko jest nieprawidłowe
+          </div>
+        </div>
+        <div *ngIf="errors.has('surname') && f['surname'].valid && f['surname'].pristine" class="invalid-feedback d-block">
+          {{errors.get('surname')}}
+        </div>
+      </div>
+      <div class="form-group mb-4">
+        <label for="email">E-mail</label>
+        <input type="text" placeholder="Email" formControlName="email" class="form-control" id="email"
+               [ngClass]="{ 'is-invalid': form.submitted && f['email'].errors ||
+                    (errors.has('email') && f['email'].pristine)  }" />
+        <div *ngIf="form.submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">
+            Email jest wymagany
+          </div>
+          <div *ngIf="f['email'].errors['email']">
+            Email jest nieprawidłowy
+          </div>
+        </div>
+        <div *ngIf="errors.has('email') && f['email'].valid && f['email'].pristine" class="invalid-feedback d-block">
+          {{errors.get('email')}}
+        </div>
+      </div>
+      <div class="form-group mb-4">
+        <label for="phoneNumber">Numer telefonu</label>
+        <input type="text" placeholder="Numer telefonu" formControlName="phoneNumber" class="form-control" id="phoneNumber"
+               [ngClass]="{ 'is-invalid': form.submitted && f['phoneNumber'].errors ||
+                    (errors.has('phoneNumber') && f['phoneNumber'].pristine)  }" />
+        <div *ngIf="form.submitted && f['phoneNumber'].errors" class="invalid-feedback">
+          <div *ngIf="f['phoneNumber'].errors['required']">
+            Numer telefonu jest wymagany
+          </div>
+          <div *ngIf="f['phoneNumber'].errors['pattern']">
+            Numer telefonu jest nieprawidłowy
+          </div>
+        </div>
+        <div *ngIf="errors.has('phoneNumber') && f['phoneNumber'].valid && f['phoneNumber'].pristine" class="invalid-feedback d-block">
+          {{errors.get('phoneNumber')}}
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-grey">
+            Zarezerwuj
+          </button>
+        </div>
+      </div>
+      <div *ngIf="form.submitted && form.invalid" class="invalid-feedback d-block">
+        Formularz zawiera błędy
+      </div>
+    </form>
+    <div class="mt-4">
+      <a [routerLink]="['/reservation']" fragment="form" class="fw-light text-grey back-anchor">
+        <span style="font-weight: 900">&lt;</span> Wróć
+      </a>
+    </div>
+  </div>
+</div>

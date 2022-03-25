@@ -1,12 +1,11 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {News} from "../../model/news";
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit{
   newsImg: string = 'assets/news_image.jpg';
   constructor() { }
 

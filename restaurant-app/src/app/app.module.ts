@@ -3,11 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './user-common/header/header.component';
-import { FooterComponent } from './user-common/footer/footer.component';
+import { HeaderComponent } from './common/header/header.component';
+import { FooterComponent } from './common/footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {CommonModule} from "@angular/common";
-import { PageNotFoundComponent } from './user-common/page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './common/page-not-found/page-not-found.component';
 import { MainPageComponent } from './user-common/main-page/main-page.component';
 import { NewsComponent } from './user-common/news/news.component';
 import { NewsInfoComponent } from './user-common/news-info/news-info.component';
@@ -21,6 +21,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReservationComponent } from './user-common/reservation/reservation.component';
 import '@angular/common/locales/global/pl';
 import { LOCALE_ID } from '@angular/core';
+import { DateReservationComponent } from './user-common/date-reservation/date-reservation.component';
+import { CustomerReservationComponent } from './user-common/customer-reservation/customer-reservation.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { LOCALE_ID } from '@angular/core';
     DishListComponent,
     ContactComponent,
     TopicImageComponent,
-    ReservationComponent
+    ReservationComponent,
+    DateReservationComponent,
+    CustomerReservationComponent
   ],
   imports: [
     BrowserModule,

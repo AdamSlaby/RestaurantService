@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {News} from "../../model/news";
 
@@ -7,7 +7,7 @@ import {News} from "../../model/news";
   templateUrl: './news-info.component.html',
   styleUrls: ['./news-info.component.scss']
 })
-export class NewsInfoComponent implements OnInit {
+export class NewsInfoComponent implements OnInit, AfterViewInit {
   newsId!: number;
   news: News = {
     newsId: 1,
@@ -28,4 +28,11 @@ export class NewsInfoComponent implements OnInit {
     // call to backend to receive full news info
   }
 
+  ngAfterViewInit() {
+    this.route.fragment.subscribe((fragment) => {
+      let element = document.querySelector('#' + fragment);
+      if (element)
+        element.scrollIntoView();
+    })
+  }
 }

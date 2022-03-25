@@ -1,0 +1,49 @@
+<div class="row my-5">
+  <div class="col-xl-6 offset-xl-3" id="form">
+    <h2 class="text-center mb-4">Zarezerwuj stolik już dzisiaj</h2>
+    <div>
+      <div>
+        <div style="font-size: 20px" class="pb-2">
+          <fa-icon class="me-2" [icon]="faUserGroup"></fa-icon>
+          Liczba osób
+        </div>
+        <div class="">
+          <button [class.active]="selectedGuestsNumber === number" (click)="selectButton(number)"
+                  class="d-inline-block btn btn-outline-grey px-4 me-2 mb-2"
+                  *ngFor="let number of guestsNumberArray">
+            {{number}}
+          </button>
+        </div>
+        <div class="pt-2">
+          <span class="me-2 d-inline-block">Grupa osób</span>
+          <select class="p-1 bg-white" style="border-radius: 5px" (change)="onGroupChange()"
+                  aria-label="Select number of guests in group"
+                  [(ngModel)]="selectedGroupGuests">
+            <option [selected]="!selectedGroupGuests" [ngValue]="undefined"></option>
+            <option *ngFor="let number of guestsGroupNumberArray"
+                    [selected]="selectedGroupGuests === number" [ngValue]="number">
+              {{number}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="pt-2 row m-0 mt-5">
+        <div *ngIf="selectedGuestsNumber || selectedGroupGuests" style="font-size: 20px"
+             class="pb-2 col-xl-6 d-inline-block">
+          <span class="mb-2 d-block"><fa-icon class="me-2" [icon]="faCalendar"></fa-icon> Wybierz datę</span>
+          <ngb-datepicker [minDate]="today" [(ngModel)]="selectedDay" [startDate]="selectedDay"
+                          (dateSelect)="onDateSelect($event)"
+                          class="d-inline-block w-auto" #d></ngb-datepicker>
+        </div>
+        <div *ngIf="(selectedGuestsNumber || selectedGroupGuests) && selectedDate"
+             style="font-size: 20px" class="pb-2 col-xl-6 d-inline-block">
+          <span class="mb-2 d-flex"><fa-icon class="me-2" [icon]="faClock"></fa-icon> Wybierz czas</span>
+          <a *ngFor="let hour of availableHours" (click)="hourClick(hour)"
+             class="btn btn-outline-grey me-2 mb-2">
+            {{hour.getTime() | date: 'HH:mm':'UTC+1':'pl-PL'}}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
