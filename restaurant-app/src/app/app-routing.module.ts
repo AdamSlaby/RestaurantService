@@ -11,6 +11,8 @@ import {ReservationComponent} from "./user-common/reservation/reservation.compon
 import {DateReservationComponent} from "./user-common/date-reservation/date-reservation.component";
 import {CustomerReservationComponent} from "./user-common/customer-reservation/customer-reservation.component";
 import {ReservationGuard} from "./guard/reservation.guard";
+import {OrderComponent} from "./user-common/order/order.component";
+import {OrderFoodComponent} from "./user-common/order-food/order-food.component";
 
 const routes: Routes = [
   {
@@ -25,6 +27,16 @@ const routes: Routes = [
   {
     path: "contact",
     component: ContactComponent,
+  },
+  {
+    path: "order",
+    component: OrderComponent,
+    children: [
+      {
+        path: '',
+        component: OrderFoodComponent,
+      }
+    ],
   },
   {
     path: "reservation",

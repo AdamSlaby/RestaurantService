@@ -1,0 +1,79 @@
+<div class="row my-5">
+  <div class="col-xl-9">
+    <div class="col-xl-8 offset-xl-2 py-3 bg-white">
+      <div>
+        <ul ngbNav #nav="ngbNav" class="nav-pills border-bottom border-top py-2">
+          <li *ngIf="!showSearchInput">
+            <a style="cursor: pointer" (click)="onSearchClick()">
+              <fa-icon style="font-size: 24px" [icon]="faMagnifyingGlass"></fa-icon>
+            </a>
+          </li>
+          <li *ngIf="!showSearchInput" [ngbNavItem]="1">
+            <a (click)="getDishesByType(type.SOUP)" ngbNavLink>Zupy</a>
+            <ng-template ngbNavContent>
+              <app-order-list [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+            </ng-template>
+          </li>
+          <li *ngIf="!showSearchInput" [ngbNavItem]="2">
+            <a (click)="getDishesByType(type.MAIN_DISH)" ngbNavLink>Dania główne</a>
+            <ng-template ngbNavContent>
+              <app-order-list [dishes]="searchedDishes"></app-order-list>
+            </ng-template>
+          </li>
+          <li *ngIf="!showSearchInput" [ngbNavItem]="3">
+            <a (click)="getDishesByType(type.FISH)" ngbNavLink>Ryby</a>
+            <ng-template ngbNavContent>
+              <app-order-list [dishes]="searchedDishes"></app-order-list>
+            </ng-template>
+          </li>
+          <li *ngIf="!showSearchInput" [ngbNavItem]="4">
+            <a (click)="getDishesByType(type.SALAD)" ngbNavLink>Sałatki</a>
+            <ng-template ngbNavContent>
+              <app-order-list [dishes]="searchedDishes"></app-order-list>
+            </ng-template>
+          </li>
+          <li *ngIf="!showSearchInput" [ngbNavItem]="5">
+            <a (click)="getDishesByType(type.DESSERT)" ngbNavLink>Desery</a>
+            <ng-template ngbNavContent>
+              <app-order-list [dishes]="searchedDishes"></app-order-list>
+            </ng-template>
+          </li>
+          <li *ngIf="!showSearchInput" [ngbNavItem]="6">
+            <a (click)="getDishesByType(type.BEVERAGE)" ngbNavLink>Napoje</a>
+            <ng-template ngbNavContent>
+              <app-order-list [dishes]="searchedDishes"></app-order-list>
+            </ng-template>
+          </li>
+
+          <li *ngIf="showSearchInput" class="w-100" [ngbNavItem]="7">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">
+                  <fa-icon style="font-size: 20px" [icon]="faMagnifyingGlass"></fa-icon>
+                </span>
+              </div>
+              <input type="text" class="form-control" placeholder="Szukaj" (input)="search()"
+                     [(ngModel)]="searchPhrase"
+                     aria-label="Szukaj" aria-describedby="searchInput">
+              <div class="input-group-append">
+                <span class="input-group-text bg-danger" style="cursor: pointer" (click)="onCloseClick()">
+                  <fa-icon style="font-size: 20px" [icon]="faXmark"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+        <div *ngIf="showSearchInput">
+          <app-order-list [dishes]="searchedDishes"></app-order-list>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 bg-white py-3" style="border-radius: 10px">
+    <h4 class="text-grey pb-3 border-bottom text-center mb-3">Zamówienie</h4>
+    <div class="d-grid gap-2">
+      <a class="btn btn-outline-grey">Przejdź do kasy</a>
+    </div>
+  </div>
+</div>

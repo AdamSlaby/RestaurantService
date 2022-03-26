@@ -1,0 +1,13 @@
+ul > li > a {
+  padding: 5px 24px;
+  border-radius: 20px;
+}
+
+.nav-pills .nav-link.active{
+  background-color: var(--grey);
+  color: white;
+}
+
+.nav-pills .nav-link{
+  color: black;
+}

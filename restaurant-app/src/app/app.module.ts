@@ -23,6 +23,9 @@ import '@angular/common/locales/global/pl';
 import { LOCALE_ID } from '@angular/core';
 import { DateReservationComponent } from './user-common/date-reservation/date-reservation.component';
 import { CustomerReservationComponent } from './user-common/customer-reservation/customer-reservation.component';
+import { OrderComponent } from './user-common/order/order.component';
+import { OrderFoodComponent } from './user-common/order-food/order-food.component';
+import { OrderListComponent } from './user-common/order-list/order-list.component';
 
 
 @NgModule({
@@ -41,7 +44,10 @@ import { CustomerReservationComponent } from './user-common/customer-reservation
     TopicImageComponent,
     ReservationComponent,
     DateReservationComponent,
-    CustomerReservationComponent
+    CustomerReservationComponent,
+    OrderComponent,
+    OrderFoodComponent,
+    OrderListComponent
   ],
   imports: [
     BrowserModule,
