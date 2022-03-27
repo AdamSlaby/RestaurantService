@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {DishOrderView} from "../../model/dish-order-view";
 import {DishType} from "../../model/type";
-import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faMagnifyingGlass, faMinus, faPlus, faXmark, faBasketShopping} from "@fortawesome/free-solid-svg-icons";
+import {Order} from "../../model/order";
 
 @Component({
   selector: 'app-order-food',
@@ -11,18 +12,25 @@ import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
 export class OrderFoodComponent implements OnInit {
   showSearchInput: boolean = false;
   type = DishType;
+  deliveryFee: number = 5;
+  fullPrice!: number;
+  minimalPrice!: number;
   searchPhrase: string = '';
   faMagnifyingGlass = faMagnifyingGlass;
+  faBasketShopping = faBasketShopping;
   faXmark = faXmark;
+  faMinus = faMinus;
+  faPlus = faPlus;
   searchedDishes: DishOrderView[] = [];
-  basket: DishOrderView[] = [];
+  basket: Order[] = [];
   dishes: DishOrderView[] = [
     {
-      id: 6,
+      id: 10,
       name: 'Ogórkowa',
       imageUrl: 'assets/soup.jpg',
       type: DishType.SOUP,
       ingredients: '30g makaronu',
+      amount: 1,
       price: 21.32,
     },
     {
@@ -31,6 +39,7 @@ export class OrderFoodComponent implements OnInit {
       imageUrl: 'assets/soup.jpg',
       type: DishType.SOUP,
       ingredients: '30g makaronu',
+      amount: 1,
       price: 21.32,
     },
     {
@@ -39,6 +48,7 @@ export class OrderFoodComponent implements OnInit {
       imageUrl: 'assets/soup.jpg',
       type: DishType.MAIN_DISH,
       ingredients: 'z kapustą i mięsem',
+      amount: 1,
       price: 25.00,
     },
     {
@@ -47,6 +57,7 @@ export class OrderFoodComponent implements OnInit {
       imageUrl: 'assets/soup.jpg',
       type: DishType.FISH,
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
+      amount: 1,
       price: 18.23,
     },
     {
@@ -55,6 +66,7 @@ export class OrderFoodComponent implements OnInit {
       imageUrl: 'assets/soup.jpg',
       type: DishType.SALAD,
       ingredients: 'i kurczakiem i serem pleśniowym',
+      amount: 1,
       price: 28.23,
     },
     {
@@ -63,6 +75,7 @@ export class OrderFoodComponent implements OnInit {
       imageUrl: 'assets/soup.jpg',
       type: DishType.DESSERT,
       ingredients: 'bita śmietana',
+      amount: 1,
       price: 28.23,
     },
     {
@@ -71,6 +84,7 @@ export class OrderFoodComponent implements OnInit {
       imageUrl: 'assets/soup.jpg',
       type: DishType.BEVERAGE,
       ingredients: '',
+      amount: 1,
       price: 5.23,
     },
   ]
@@ -86,6 +100,7 @@ export class OrderFoodComponent implements OnInit {
       }
     }
     this.getDishesByType(this.type.SOUP);
+    this.minimalPrice = 30.00;
   }
 
   onSearchClick() {
@@ -105,5 +120,48 @@ export class OrderFoodComponent implements OnInit {
       this.searchedDishes = this.dishes
         .filter(dish => dish.name.toLowerCase().includes(this.searchPhrase.toLowerCase()));
     }
+  }
+
+  getDishById(id: number): DishOrderView {
+    return this.dishes.filter(dish => dish.id === id)[0];
+  }
+
+  onScroll() {
+    let element = document.getElementById('basket');
+    if (element) {
+      if (window.scrollY >= 735 && !element.classList.contains('position-fixed')) {
+        element.classList.add('position-fixed', 'top-0', 'end-0');
+      } else if (window.scrollY < 735 && element.classList.contains('position-fixed')) {
+        element.classList.remove('position-fixed', 'top-0', 'end-0');
+      }
+    }
+  }
+
+  removeDish(order: Order) {
+    if (order.amount == 1) {
+      const index = this.basket.indexOf(order, 0);
+      if (index > -1) {
+        this.basket.splice(index, 1);
+      }
+    } else {
+      let price = order.price / order.amount;
+      order.amount--;
+      order.price -= price;
+    }
+    this.setFullPrice();
+  }
+
+  addDish(order: Order) {
+    let price = order.price / order.amount;
+    order.amount++;
+    order.price += price;
+    this.setFullPrice();
+  }
+
+  setFullPrice() {
+    let sum = 0;
+    for (let order of this.basket)
+      sum += order.price;
+    this.fullPrice = sum + this.deliveryFee;
   }
 }

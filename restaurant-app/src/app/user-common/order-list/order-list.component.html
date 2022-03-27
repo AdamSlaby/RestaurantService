@@ -2,14 +2,27 @@
   <div class="col-md-4">
     <img class="img-fluid" [src]="dish.imageUrl" alt="dish"/>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-5">
     <h5>{{dish.name}}</h5>
     <p>{{dish.ingredients}}</p>
   </div>
-  <div class="col-md-2">
-    <span class="d-flex pb-4" style="padding-left: 12px">
-      {{dish.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+  <div class="col-md-3">
+    <span class="d-block pb-3 text-center">
+      {{dish.price * dish.amount | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
     </span>
-    <button (click)="addToBasket(dish)" class="btn btn-outline-grey">Zamów</button>
+    <div class="pb-3 d-flex justify-content-center align-items-center">
+      <button (click)="removeDish(dish)" [disabled]="dish.amount === 1" class="btn btn-outline-grey">
+        <fa-icon [icon]="faMinus"></fa-icon>
+      </button>
+      <span style="cursor: auto" class="btn">{{dish.amount}}</span>
+      <button (click)="addDish(dish)" class="btn btn-outline-grey">
+        <fa-icon [icon]="faPlus"></fa-icon>
+      </button>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+      <button (click)="addToBasket(dish)" class="btn btn-outline-grey">
+        Zamów
+      </button>
+    </div>
   </div>
 </div>

@@ -6,5 +6,6 @@ export interface DishOrderView {
   name: string;
   type: DishType;
   ingredients: string;
+  amount: number;
   price: number;
 }
