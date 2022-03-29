@@ -11,37 +11,43 @@
           <li *ngIf="!showSearchInput" [ngbNavItem]="1">
             <a (click)="getDishesByType(type.SOUP)" ngbNavLink>Zupy</a>
             <ng-template ngbNavContent>
-              <app-order-list (changePrice)="setFullPrice()" [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+              <app-order-list (addOrder)="addOrder($event)"
+                              [dishes]="searchedDishes"></app-order-list>
             </ng-template>
           </li>
           <li *ngIf="!showSearchInput" [ngbNavItem]="2">
             <a (click)="getDishesByType(type.MAIN_DISH)" ngbNavLink>Dania główne</a>
             <ng-template ngbNavContent>
-              <app-order-list (changePrice)="setFullPrice()"  [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+              <app-order-list (addOrder)="addOrder($event)"
+                              [dishes]="searchedDishes"></app-order-list>
             </ng-template>
           </li>
           <li *ngIf="!showSearchInput" [ngbNavItem]="3">
             <a (click)="getDishesByType(type.FISH)" ngbNavLink>Ryby</a>
             <ng-template ngbNavContent>
-              <app-order-list (changePrice)="setFullPrice()"  [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+              <app-order-list (addOrder)="addOrder($event)"
+                              [dishes]="searchedDishes"></app-order-list>
             </ng-template>
           </li>
           <li *ngIf="!showSearchInput" [ngbNavItem]="4">
             <a (click)="getDishesByType(type.SALAD)" ngbNavLink>Sałatki</a>
             <ng-template ngbNavContent>
-              <app-order-list (changePrice)="setFullPrice()"  [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+              <app-order-list (addOrder)="addOrder($event)"
+                              [dishes]="searchedDishes"></app-order-list>
             </ng-template>
           </li>
           <li *ngIf="!showSearchInput" [ngbNavItem]="5">
             <a (click)="getDishesByType(type.DESSERT)" ngbNavLink>Desery</a>
             <ng-template ngbNavContent>
-              <app-order-list (changePrice)="setFullPrice()"  [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+              <app-order-list (addOrder)="addOrder($event)"
+                              [dishes]="searchedDishes"></app-order-list>
             </ng-template>
           </li>
           <li *ngIf="!showSearchInput" [ngbNavItem]="6">
             <a (click)="getDishesByType(type.BEVERAGE)" ngbNavLink>Napoje</a>
             <ng-template ngbNavContent>
-              <app-order-list (changePrice)="setFullPrice()"  [basket]="basket" [dishes]="searchedDishes"></app-order-list>
+              <app-order-list (addOrder)="addOrder($event)"
+                              [dishes]="searchedDishes"></app-order-list>
             </ng-template>
           </li>
 
@@ -70,51 +76,59 @@
       </div>
     </div>
   </div>
-  <div (window:scroll)="onScroll()" id="basket" class="col-xl-3 bg-white py-3" style="border-radius: 10px">
-    <h4 class="text-grey pb-3 border-bottom text-center">Zamówienie</h4>
-    <div class="py-3 border-bottom" *ngFor="let order of basket">
-      <div class="pb-2">
-        <span class="float-start pe-2">{{order.amount}}x</span>
-        <span>{{getDishById(order.dishId).name}}</span>
-        <span class="float-end">
-          {{order.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+  <ng-container *ngIf="innerWidth > 1200">
+    <div (window:scroll)="onScroll()" id="basket" [style.height]="showScroll ? (heightDif + 'px') : 'auto'"
+         [class.overflow-auto]="showScroll"
+         class="col-xl-3 bg-white py-3" style="border-radius: 10px; min-height: 400px">
+      <h4 class="text-grey pb-3 border-bottom text-center">Zamówienie</h4>
+      <div id="order-content" class="py-3 border-bottom" *ngFor="let order of basket | keyvalue">
+        <div class="pb-2">
+          <span class="float-start pe-2">{{order.value.amount}}x</span>
+          <span>{{getDishById(order.value.dishId).name}}</span>
+          <span class="float-end">
+          {{order.value.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
         </span>
-        <div style="clear: both"></div>
-      </div>
-      <div>
-        <div style="font-size: 13px" class="float-start fw-light ps-3">{{getDishById(order.dishId).ingredients}}</div>
-        <div class="float-end">
-          <fa-icon (click)="removeDish(order)" class="plus-minus me-1" style="font-size: 10px" [icon]="faMinus"></fa-icon>
-          <fa-icon (click)="addDish(order)" class="plus-minus me-2" style="font-size: 10px" [icon]="faPlus"></fa-icon>
+          <div style="clear: both"></div>
         </div>
-        <div style="clear: both"></div>
+        <div>
+          <div style="font-size: 13px" class="float-start fw-light ps-3">{{getDishById(order.value.dishId).ingredients}}</div>
+          <div class="float-end">
+            <fa-icon (click)="removeDish(order.value)" class="plus-minus me-1" style="font-size: 10px"
+                     [icon]="faMinus"></fa-icon>
+            <fa-icon (click)="addDish(order.value)" class="plus-minus me-2" style="font-size: 10px" [icon]="faPlus"></fa-icon>
+          </div>
+          <div style="clear: both"></div>
+        </div>
       </div>
-    </div>
-    <div *ngIf="basket.length === 0" class="py-5 my-5">
-      <div class="d-flex justify-content-center align-items-center">
-        <fa-icon class="fa-4x" [icon]="faBasketShopping"></fa-icon>
+      <div *ngIf="basket.size === 0" class="py-5 my-5">
+        <div class="d-flex justify-content-center align-items-center">
+          <fa-icon class="fa-4x" [icon]="faBasketShopping"></fa-icon>
+        </div>
+        <div class="pt-3 text-center fw-bolder">Koszyk jest pusty</div>
       </div>
-      <div class="pt-3 text-center fw-bolder">Koszyk jest pusty</div>
-    </div>
-    <div class="mt-4" *ngIf="basket.length > 0">
-      <div *ngIf="fullPrice <= minimalPrice" class="bg-info text-center py-2 mb-2" style="border-radius: 10px">
-        Minimalna wartość zamówienia z dostawą wynosi
-        {{minimalPrice}} zł (brakuje {{deliveryFee + minimalPrice - fullPrice}} zł).
-        Dodaj dania do koszyka.
-      </div>
-      <span class="float-start fw-bolder">Dostawa</span>
-      <span class="float-end fw-bolder">
+      <div id="price-information">
+        <div class="mt-4" *ngIf="basket.size > 0">
+          <div *ngIf="fullPrice <= minimalPrice" class="bg-info text-center py-2 mb-2" style="border-radius: 10px">
+            Minimalna wartość zamówienia z dostawą wynosi
+            {{minimalPrice}} zł (brakuje
+            {{deliveryFee + minimalPrice - fullPrice | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}).
+            Dodaj dania do koszyka.
+          </div>
+          <span class="float-start fw-bolder">Dostawa</span>
+          <span class="float-end fw-bolder">
         {{deliveryFee | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
       </span>
-      <div style="clear: both" class="mb-2"></div>
-      <span class="float-start fw-bolder">Razem</span>
-      <span class="float-end fw-bolder">
+          <div style="clear: both" class="mb-2"></div>
+          <span class="float-start fw-bolder">Razem</span>
+          <span class="float-end fw-bolder">
         {{fullPrice | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
       </span>
-      <div style="clear: both" class="mb-4"></div>
+          <div style="clear: both" class="mb-4"></div>
+        </div>
+        <div *ngIf="basket.size > 0" class="d-grid gap-2">
+          <button [disabled]="fullPrice <= minimalPrice" class="btn btn-outline-grey">Przejdź do kasy</button>
+        </div>
+      </div>
     </div>
-    <div *ngIf="basket.length > 0" class="d-grid gap-2">
-      <button [disabled]="fullPrice <= minimalPrice" class="btn btn-outline-grey">Przejdź do kasy</button>
-    </div>
-  </div>
+  </ng-container>
 </div>

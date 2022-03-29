@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DishOrderView} from "../../model/dish-order-view";
 import {Order} from "../../model/order";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
@@ -10,8 +10,7 @@ import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 })
 export class OrderListComponent implements OnInit, AfterViewInit {
   @Input() dishes!: DishOrderView[];
-  @Input() basket!: Order[];
-  @Output() changePrice = new EventEmitter<void>();
+  @Output() addOrder = new EventEmitter<DishOrderView>();
   faMinus = faMinus;
   faPlus = faPlus;
 
@@ -27,12 +26,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   }
 
   addToBasket(dish: DishOrderView) {
-    this.basket.push({
-      dishId: dish.id,
-      amount: dish.amount,
-      price: (dish.price * dish.amount),
-    });
-    this.changePrice.emit();
+    this.addOrder.emit(dish);
   }
 
   removeDish(dish: DishOrderView) {
