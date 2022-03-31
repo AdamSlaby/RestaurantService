@@ -1,0 +1,10 @@
+.plus-minus {
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.plus-minus:hover {
+  background-color: var(--grey);
+  color: white;
+}

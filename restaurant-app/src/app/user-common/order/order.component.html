@@ -1,6 +1,33 @@
 <app-header></app-header>
 <section class="container-fluid">
   <app-topic-image [urlImage]="orderImgUrl" [minHeight]="600" content="Zamówienia"></app-topic-image>
-  <router-outlet></router-outlet>
+  <div class="row my-5 position-relative">
+    <div class="col-xl-9">
+      <div class="col-xl-8 offset-xl-2 py-3 bg-white">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <ng-container *ngIf="innerWidth < 1200">
+      <ng-template #content let-modal>
+        <div class="modal-header">
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+          <app-basket [dishes]="dishes"></app-basket>
+        </div>
+      </ng-template>
+
+      <button class="btn btn-grey w-auto position-fixed"
+              style="right: 20px; bottom: 20px; font-size: 20px" (click)="open(content)">
+        <fa-icon class="me-2" [icon]="faBasketShopping"></fa-icon>Koszyk
+      </button>
+    </ng-container>
+    <ng-container *ngIf="innerWidth > 1200">
+      <div id="basket" [style.height]="heightDif"
+           class="col-xl-3 bg-white py-3 overflow-auto sticky-top" style="border-radius: 10px;height: 100vh">
+        <app-basket [dishes]="dishes"></app-basket>
+      </div>
+    </ng-container>
+  </div>
 </section>
 <app-footer></app-footer>

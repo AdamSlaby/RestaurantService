@@ -1,4 +1,13 @@
-import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {DishOrderView} from "../../model/dish-order-view";
 import {Order} from "../../model/order";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +29,9 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    let element = document.querySelector('#' + 'dish-' + (this.dishes.length - 1));
+    let element = document.getElementById('dish-' + (this.dishes.length - 1));
+    console.log('dish-' + (this.dishes.length - 1));
+    console.log(element);
     if (element)
       element.classList.remove('border-bottom');
   }

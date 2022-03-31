@@ -26,6 +26,9 @@ import { CustomerReservationComponent } from './user-common/customer-reservation
 import { OrderComponent } from './user-common/order/order.component';
 import { OrderFoodComponent } from './user-common/order-food/order-food.component';
 import { OrderListComponent } from './user-common/order-list/order-list.component';
+import { BasketComponent } from './user-common/basket/basket.component';
+import {BasketService} from "./service/basket.service";
+import { OrderFormComponent } from './user-common/order-form/order-form.component';
 
 
 @NgModule({
@@ -47,7 +50,9 @@ import { OrderListComponent } from './user-common/order-list/order-list.componen
     CustomerReservationComponent,
     OrderComponent,
     OrderFoodComponent,
-    OrderListComponent
+    OrderListComponent,
+    BasketComponent,
+    OrderFormComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +63,7 @@ import { OrderListComponent } from './user-common/order-list/order-list.componen
     FontAwesomeModule,
     FormsModule
   ],
-  providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}],
+  providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}, BasketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -13,6 +13,7 @@ import {CustomerReservationComponent} from "./user-common/customer-reservation/c
 import {ReservationGuard} from "./guard/reservation.guard";
 import {OrderComponent} from "./user-common/order/order.component";
 import {OrderFoodComponent} from "./user-common/order-food/order-food.component";
+import {OrderFormComponent} from "./user-common/order-form/order-form.component";
 
 const routes: Routes = [
   {
@@ -35,6 +36,10 @@ const routes: Routes = [
       {
         path: '',
         component: OrderFoodComponent,
+      },
+      {
+        path: 'customer',
+        component: OrderFormComponent,
       }
     ],
   },
