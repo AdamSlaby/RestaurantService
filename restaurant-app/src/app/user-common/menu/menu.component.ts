@@ -1,9 +1,7 @@
-import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Dish} from "../../model/dish";
 import {DishType} from "../../model/type";
 import {ActivatedRoute} from "@angular/router";
-import {ViewportScroller} from "@angular/common";
-import {first} from "rxjs";
 
 @Component({
   selector: 'app-menu',
@@ -112,5 +110,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
     let firstIndex = colNr * amountInCol;
     let secondIndex = firstIndex + amountInCol;
     return dishes.slice(firstIndex, secondIndex);
+  }
+
+  isSectionActive(fragment: string) {
+    let isActive = false;
+    this.route.fragment.subscribe(_fragment => {
+      isActive = _fragment === fragment
+    })
+    return isActive;
   }
 }

@@ -1,0 +1,221 @@
+<h2 id="orderForm" class="text-center mb-4">Formularz zamówienia</h2>
+<form class="px-2" [formGroup]="orderForm" #form="ngForm" (ngSubmit)="!orderForm.invalid && onSubmit()">
+  <h5>Dane klienta</h5>
+  <div class="form-group mb-4 col-md-5 d-md-inline-block">
+    <label for="name">Imie</label>
+    <input type="text" placeholder="Podaj imię" formControlName="firstName" class="form-control" id="name" maxlength="32"
+           [ngClass]="{ 'is-invalid': form.submitted && f['firstName'].errors ||
+                    (errors.has('name') && f['firstName'].pristine)  }" />
+    <div *ngIf="form.submitted && f['firstName'].errors" class="invalid-feedback">
+      <div *ngIf="f['firstName'].errors['required']">
+        Imie jest wymagane
+      </div>
+      <div *ngIf="f['firstName'].errors['pattern']">
+        Imie jest nieprawidłowe
+      </div>
+    </div>
+    <div *ngIf="errors.has('name') && f['firstName'].valid && f['firstName'].pristine" class="invalid-feedback d-block">
+      {{errors.get('name')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 col-md-5 offset-md-2 d-md-inline-block">
+    <label for="surname">Nazwisko</label>
+    <input type="text" placeholder="Podaj nazwisko" formControlName="surname" class="form-control" id="surname" maxlength="32"
+           [ngClass]="{ 'is-invalid': form.submitted && f['surname'].errors ||
+                    (errors.has('surname') && f['surname'].pristine)  }" />
+    <div *ngIf="form.submitted && f['surname'].errors" class="invalid-feedback">
+      <div *ngIf="f['surname'].errors['required']">
+        Nazwisko jest wymagane
+      </div>
+      <div *ngIf="f['surname'].errors['pattern']">
+        Nazwisko jest nieprawidłowe
+      </div>
+    </div>
+    <div *ngIf="errors.has('surname') && f['surname'].valid && f['surname'].pristine" class="invalid-feedback d-block">
+      {{errors.get('surname')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 col-md-5 d-md-inline-block">
+    <label for="email">E-mail</label>
+    <input type="text" placeholder="Podaj email" formControlName="email" class="form-control" id="email"
+           [ngClass]="{ 'is-invalid': form.submitted && f['email'].errors ||
+                    (errors.has('email') && f['email'].pristine)  }" />
+    <div *ngIf="form.submitted && f['email'].errors" class="invalid-feedback">
+      <div *ngIf="f['email'].errors['required']">
+        Email jest wymagany
+      </div>
+      <div *ngIf="f['email'].errors['email']">
+        Email jest nieprawidłowy
+      </div>
+    </div>
+    <div *ngIf="errors.has('email') && f['email'].valid && f['email'].pristine" class="invalid-feedback d-block">
+      {{errors.get('email')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 offset-md-2 col-md-5 d-md-inline-block">
+    <label for="phoneNumber">Numer telefonu</label>
+    <input type="text" placeholder="Podaj numer telefonu" formControlName="phoneNumber" class="form-control" id="phoneNumber"
+           [ngClass]="{ 'is-invalid': form.submitted && f['phoneNumber'].errors ||
+                    (errors.has('phoneNumber') && f['phoneNumber'].pristine)  }" />
+    <div *ngIf="form.submitted && f['phoneNumber'].errors" class="invalid-feedback">
+      <div *ngIf="f['phoneNumber'].errors['required']">
+        Numer telefonu jest wymagany
+      </div>
+      <div *ngIf="f['phoneNumber'].errors['pattern']">
+        Numer telefonu jest nieprawidłowy
+      </div>
+    </div>
+    <div *ngIf="errors.has('phoneNumber') && f['phoneNumber'].valid && f['phoneNumber'].pristine" class="invalid-feedback d-block">
+      {{errors.get('phoneNumber')}}
+    </div>
+  </div>
+  <div class="border-bottom mb-3"></div>
+  <h5>Adres dostawy</h5>
+  <div class="form-group mb-4 col-md-5 d-md-inline-block">
+    <label for="citySelect">Miasto:</label>
+    <select class="form-select" id="citySelect"
+            [ngClass]="{ 'is-invalid': form.submitted && f['city'].errors}"
+            formControlName="city" aria-label="City select">
+      <option [selected]="f['city'].value === ''" ngValue="">Wybierz miasto</option>
+      <option *ngFor="let city of availableCities" [ngValue]="city">{{city}}</option>
+    </select>
+    <div *ngIf="form.submitted && f['city'].errors" class="invalid-feedback">
+      <div *ngIf="f['city'].errors['required']">
+        Miasto jest wymagane
+      </div>
+    </div>
+  </div>
+  <div class="form-group mb-4 offset-md-2 col-md-5 d-md-inline-block">
+    <label for="street">Ulica:</label>
+    <input type="text" placeholder="Podaj ulicę" formControlName="street" class="form-control" id="street"
+           [ngClass]="{ 'is-invalid': form.submitted && f['street'].errors ||
+                    (errors.has('street') && f['street'].pristine)  }" />
+    <div *ngIf="form.submitted && f['street'].errors" class="invalid-feedback">
+      <div *ngIf="f['street'].errors['required']">
+        Nazwa ulicy jest wymagana
+      </div>
+      <div *ngIf="f['street'].errors['pattern']">
+        Nazwa ulicy jest nieprawidłowa
+      </div>
+    </div>
+    <div *ngIf="errors.has('street') && f['street'].valid && f['street'].pristine" class="invalid-feedback d-block">
+      {{errors.get('street')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 col-md-5 d-md-inline-block">
+    <label for="houseNr">Numer domu:</label>
+    <input type="text" placeholder="Podaj numer domu" formControlName="houseNr" class="form-control" id="houseNr"
+           [ngClass]="{ 'is-invalid': form.submitted && f['houseNr'].errors ||
+                    (errors.has('houseNr') && f['houseNr'].pristine)  }" />
+    <div *ngIf="form.submitted && f['houseNr'].errors" class="invalid-feedback">
+      <div *ngIf="f['houseNr'].errors['required']">
+        Numer domu jest wymagany
+      </div>
+      <div *ngIf="f['houseNr'].errors['pattern']">
+        Numer domu jest nieprawidłowy
+      </div>
+    </div>
+    <div *ngIf="errors.has('houseNr') && f['houseNr'].valid && f['houseNr'].pristine" class="invalid-feedback d-block">
+      {{errors.get('houseNr')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 offset-md-2 col-md-5 d-md-inline-block">
+    <label for="flatNr">Numer mieszkania:</label>
+    <input type="text" placeholder="Podaj numer mieszkania" formControlName="flatNr" class="form-control" id="flatNr"
+           [ngClass]="{ 'is-invalid': form.submitted && f['flatNr'].errors ||
+                    (errors.has('flatNr') && f['flatNr'].pristine)  }" />
+    <div *ngIf="form.submitted && f['flatNr'].errors" class="invalid-feedback">
+      <div *ngIf="f['flatNr'].errors['required']">
+        Numer mieszkania jest wymagany
+      </div>
+      <div *ngIf="f['flatNr'].errors['pattern']">
+        Numer mieszkania jest nieprawidłowy
+      </div>
+    </div>
+    <div *ngIf="errors.has('flatNr') && f['flatNr'].valid && f['flatNr'].pristine" class="invalid-feedback d-block">
+      {{errors.get('flatNr')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 col-md-5 d-md-inline-block">
+    <label for="postcode">Kod pocztowy:</label>
+    <input type="text" placeholder="Podaj kod pocztowy" formControlName="postcode" class="form-control" id="postcode"
+           [ngClass]="{ 'is-invalid': form.submitted && f['postcode'].errors ||
+                    (errors.has('postcode') && f['postcode'].pristine)  }" />
+    <div *ngIf="form.submitted && f['postcode'].errors" class="invalid-feedback">
+      <div *ngIf="f['postcode'].errors['required']">
+        Kod pocztowy jest wymagany
+      </div>
+      <div *ngIf="f['postcode'].errors['pattern']">
+        Kod pocztowy jest nieprawidłowy
+      </div>
+    </div>
+    <div *ngIf="errors.has('postcode') && f['postcode'].valid && f['postcode'].pristine" class="invalid-feedback d-block">
+      {{errors.get('postcode')}}
+    </div>
+  </div>
+  <div class="form-group mb-4 offset-md-2 col-md-5 d-md-inline-block">
+    <label for="floor">Piętro (opcjonalne):</label>
+    <input type="number" placeholder="Podaj numer piętra" formControlName="floor" class="form-control" id="floor"
+           [ngClass]="{ 'is-invalid': form.submitted && f['floor'].errors ||
+                    (errors.has('floor') && f['floor'].pristine)  }" />
+    <div *ngIf="errors.has('floor') && f['floor'].valid && f['floor'].pristine" class="invalid-feedback d-block">
+      {{errors.get('floor')}}
+    </div>
+  </div>
+  <div class="border-bottom mb-3"></div>
+  <h5>Forma płatności</h5>
+  <div class="d-flex justify-content-center align-items-center"
+       [class.mb-4]="(form.submitted && !f['paymentMethod'].errors) || !form.submitted">
+    <div class="me-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <fa-icon class="d-block fa-2x mx-auto" [icon]="faMoneyBill1Wave"></fa-icon>
+      </div>
+      <input class="form-check-input d-block mx-auto" [value]="payment.CASH" formControlName="paymentMethod" type="radio" id="cash">
+      <label class="d-block" for="cash">
+        Gotówka
+      </label>
+    </div>
+    <div class="me-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <fa-icon class="d-block fa-2x mx-auto" [icon]="faCreditCard"></fa-icon>
+      </div>
+      <input class="form-check-input d-block mx-auto" [value]="payment.CARD" formControlName="paymentMethod" type="radio" id="debitCard">
+      <label class="d-block" for="debitCard">
+        Karta
+      </label>
+    </div>
+    <div class="me-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <fa-icon class="d-block fa-2x mx-auto" [icon]="faPaypal"></fa-icon>
+      </div>
+      <input class="form-check-input d-block mx-auto" [value]="payment.PAYPAL" formControlName="paymentMethod"  type="radio" id="paypal">
+      <label class="d-block" for="paypal">
+        Paypal
+      </label>
+    </div>
+    <div class="me-5">
+      <div class="d-flex justify-content-center align-items-center">
+        <img class="img-fluid" src="assets/PAYU_LOGO_LIME.png" alt="payU" height="40" width="75">
+      </div>
+      <input class="form-check-input d-block mx-auto" [value]="payment.PAYU" formControlName="paymentMethod"  type="radio" id="payU">
+      <label class="d-block text-center" for="payU">
+        PayU
+      </label>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-grid gap-2">
+      <button class="btn btn-outline-grey">
+        Zamów i zapłać
+      </button>
+    </div>
+  </div>
+  <div *ngIf="form.submitted && form.invalid" class="invalid-feedback d-block">
+    Formularz zawiera błędy
+  </div>
+</form>
+<div class="mt-4 ps-2">
+  <a [routerLink]="['/order']" class="fw-light text-grey back-anchor">
+    <span style="font-weight: 900">&lt;</span> Wróć
+  </a>
+</div>

@@ -8,8 +8,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {DishOrderView} from "../../model/dish-order-view";
-import {Order} from "../../model/order";
+import {DishOrderView} from "../../../model/dish-order-view";
+import {Order} from "../../../model/order";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 
 @Component({

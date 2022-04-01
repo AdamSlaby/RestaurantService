@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {NgbCalendar, NgbDate} from "@ng-bootstrap/ng-bootstrap";
 import {faUserGroup, faCalendar, faClock} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Time} from "../../model/time";
+import {Time} from "../../../model/time";
 
 @Component({
   selector: 'app-date-reservation',

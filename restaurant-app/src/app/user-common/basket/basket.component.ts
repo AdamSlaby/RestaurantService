@@ -27,7 +27,6 @@ export class BasketComponent implements OnInit {
       this.setFullPrice();
     })
     router.events.subscribe(val => {
-      console.log(this.router.url);
       this.showFormBtn = !this.router.url.includes('order/customer');
     })
   }

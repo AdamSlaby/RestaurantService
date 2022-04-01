@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {DishOrderView} from "../../model/dish-order-view";
-import {DishType} from "../../model/type";
+import {DishOrderView} from "../../../model/dish-order-view";
+import {DishType} from "../../../model/type";
 import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {BasketService} from "../../service/basket.service";
+import {BasketService} from "../../../service/basket.service";
 
 @Component({
   selector: 'app-order-food',

@@ -54,5 +54,29 @@
       <app-dish-list [dishes]="getDishes(type.BEVERAGE, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
+  <a class="btn btn-outline-grey p-2 position-fixed"
+     [class.active]="isSectionActive('soup')" [routerLink]="['/menu']" fragment="soup"
+     style="top: 41vh; right: 30px">
+  </a>
+  <a class="btn btn-outline-grey p-2 position-fixed"
+     [class.active]="isSectionActive('main-dish')" [routerLink]="['/menu']" fragment="main-dish"
+     style="top: 44vh; right: 30px">
+  </a>
+  <a class="btn btn-outline-grey p-2 position-fixed"
+     [class.active]="isSectionActive('fish')" [routerLink]="['/menu']" fragment="fish"
+     style="top: 47vh; right: 30px">
+  </a>
+  <a class="btn btn-outline-grey p-2 position-fixed"
+     [class.active]="isSectionActive('salad')" [routerLink]="['/menu']" fragment="salad"
+     style="top: 50vh; right: 30px">
+  </a>
+  <a class="btn btn-outline-grey p-2 position-fixed"
+     [class.active]="isSectionActive('dessert')" [routerLink]="['/menu']" fragment="dessert"
+     style="top: 53vh; right: 30px">
+  </a>
+  <a class="btn btn-outline-grey p-2 position-fixed"
+     [class.active]="isSectionActive('beverage')" [routerLink]="['/menu']" fragment="beverage"
+     style="top: 56vh; right: 30px">
+  </a>
 </section>
 <app-footer></app-footer>
