@@ -1,4 +1,5 @@
 export interface OpeningHour {
-  weekDayName: string;
-  hours: string;
+  weekDayNr: number;
+  from_hour: Date;
+  to_hour: Date;
 }

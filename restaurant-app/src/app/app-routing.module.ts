@@ -1,25 +1,31 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {PageNotFoundComponent} from "./common/page-not-found/page-not-found.component";
-import {MainPageComponent} from "./user-common/main-page/main-page.component";
-import {NewsComponent} from "./user-common/news-page/news/news.component";
-import {NewsInfoComponent} from "./user-common/news-page/news-info/news-info.component";
-import {NewsFeedComponent} from "./user-common/news-page/news-feed/news-feed.component";
-import {MenuComponent} from "./user-common/menu/menu.component";
-import {ContactComponent} from "./user-common/contact/contact.component";
-import {ReservationComponent} from "./user-common/reservation-page/reservation/reservation.component";
-import {DateReservationComponent} from "./user-common/reservation-page/date-reservation/date-reservation.component";
-import {CustomerReservationComponent} from "./user-common/reservation-page/customer-reservation/customer-reservation.component";
+import {MainPageComponent} from "./user-pages/main-page/main-page.component";
+import {NewsComponent} from "./user-pages/news-page/news/news.component";
+import {NewsInfoComponent} from "./user-pages/news-page/news-info/news-info.component";
+import {NewsFeedComponent} from "./user-pages/news-page/news-feed/news-feed.component";
+import {MenuComponent} from "./user-pages/menu-page/menu/menu.component";
+import {ContactComponent} from "./user-pages/contact/contact.component";
+import {ReservationComponent} from "./user-pages/reservation-page/reservation/reservation.component";
+import {DateReservationComponent} from "./user-pages/reservation-page/date-reservation/date-reservation.component";
+import {CustomerReservationComponent} from "./user-pages/reservation-page/customer-reservation/customer-reservation.component";
 import {ReservationGuard} from "./guard/reservation.guard";
-import {OrderComponent} from "./user-common/order-page/order/order.component";
-import {OrderFoodComponent} from "./user-common/order-page/order-food/order-food.component";
-import {OrderFormComponent} from "./user-common/order-page/order-form/order-form.component";
+import {OrderComponent} from "./user-pages/order-page/order/order.component";
+import {OrderFoodComponent} from "./user-pages/order-page/order-food/order-food.component";
+import {OrderFormComponent} from "./user-pages/order-page/order-form/order-form.component";
+import {RestaurantPageComponent} from "./user-pages/restaurant-page/restaurant-page.component";
+import {LoginPageComponent} from "./worker-pages/login-page/login-page.component";
 
 const routes: Routes = [
   {
     path: "",
-    component: MainPageComponent,
+    component: RestaurantPageComponent,
     pathMatch: 'full'
+  },
+  {
+    path: "main-site",
+    component: MainPageComponent,
   },
   {
     path: "menu",
@@ -68,13 +74,17 @@ const routes: Routes = [
       },
       {
         path: '',
-        component: NewsFeedComponent
+        component: NewsFeedComponent,
       }
     ]
   },
   {
+    path: "admin",
+    component: LoginPageComponent,
+  },
+  {
     path: "**",
-    component: PageNotFoundComponent
+    component: PageNotFoundComponent,
   },
 ];
 

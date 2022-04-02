@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, Validators} from "@angular/forms";
 import {faUserGroup, faCalendar, faClock} from "@fortawesome/free-solid-svg-icons";
+import {RegexPattern} from "../../../model/regex-pattern";
 
 @Component({
   selector: 'app-customer-reservation',
@@ -15,10 +16,10 @@ export class CustomerReservationComponent implements OnInit, AfterViewInit {
   faClock = faClock;
   errors: Map<string, string> = new Map<string, string>();
   customerForm = this.fb.group({
-    firstName: ['', [Validators.required, Validators.pattern("^[a-zA-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż]{3,32}$")]],
-    surname: ['', [Validators.required, Validators.pattern("^[a-zA-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż]{3,32}$")]],
+    firstName: ['', [Validators.required, Validators.pattern(RegexPattern.NAME)]],
+    surname: ['', [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
     email: ['', [Validators.required, Validators.email]],
-    phoneNumber: ['', [Validators.required, Validators.pattern("^(?<!\\w)(\\(?(\\+|00)?48\\)?)?[ -]?\\d{3}[ -]?\\d{3}[ -]?\\d{3}(?!\\w)$")]],
+    phoneNumber: ['', [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
   });
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder) { }

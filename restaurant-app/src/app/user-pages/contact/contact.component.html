@@ -5,15 +5,31 @@
     <div class="col-xl-3 offset-xl-3 mb-3">
       <h2 class="text-center mb-4">Restaurant</h2>
       <span class="d-block text-black fw-bold">Adres:</span>
-      <span class="d-block fw-light py-1"><fa-icon class="pe-1" [icon]="faLocationDot"></fa-icon>ul. Niewiadomskiego 102</span>
-      <span class="d-block mb-1 fw-light py-1"><fa-icon class="pe-1" [icon]="faCity"></fa-icon>25-000 Kielce</span>
+      <span class="d-block fw-light py-1">
+        <fa-icon class="pe-1" [icon]="faLocationDot"></fa-icon>
+        ul. {{restaurantInfo.address.street}} {{restaurantInfo.address.houseNr}}
+        <ng-container *ngIf="restaurantInfo.address.flatNr.length > 0"> / {{restaurantInfo.address.flatNr}}</ng-container>
+      </span>
+      <span class="d-block mb-1 fw-light py-1">
+        <fa-icon class="pe-1" [icon]="faCity"></fa-icon>
+        {{restaurantInfo.address.postcode}} {{restaurantInfo.address.city}}
+      </span>
       <span class="d-block text-black fw-bold">Telefon:</span>
-      <span class="d-block mb-1 fw-light py-1"><fa-icon class="pe-1" [icon]="faPhone"></fa-icon>+48 600 200 300</span>
+      <span class="d-block mb-1 fw-light py-1">
+        <fa-icon class="pe-1" [icon]="faPhone"></fa-icon>
+        {{restaurantInfo.phoneNr | phone:'PL'}}
+      </span>
       <span class="d-block text-black fw-bold">Email:</span>
-      <span class="d-block mb-4 fw-light py-1"><fa-icon class="pe-1" [icon]="faEnvelope"></fa-icon>restaurant24@gmail.com</span>
+      <span class="d-block mb-4 fw-light py-1">
+        <fa-icon class="pe-1" [icon]="faEnvelope"></fa-icon>
+        {{restaurantInfo.email}}
+      </span>
       <span class="d-block text-black fw-bold">Godziny otwarcia:</span>
       <ng-container *ngFor="let hour of openingHours">
-        <span class="d-block text-black text-capitalize fw-light py-1">{{hour.weekDayName}}: {{hour.hours}}</span>
+        <span class="d-block text-black text-capitalize fw-light py-1">
+          <span class="fw-normal">{{hour.weekDayNr | day}}</span>: {{hour.from_hour | date:'HH:mm':'+0000':'pl-PL'}} -
+          {{hour.to_hour | date:'HH:mm':'+0000':'pl-PL'}}
+        </span>
       </ng-container>
     </div>
     <div class="col-xl-3 offset-xl-1">
