@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Order} from "../../model/order";
-import {DishOrderView} from "../../model/dish-order-view";
+import {Order} from "../../../model/order";
+import {DishOrderView} from "../../../model/dish-order-view";
 import {faMinus, faPlus, faBasketShopping} from "@fortawesome/free-solid-svg-icons";
-import {BasketService} from "../../service/basket.service";
+import {BasketService} from "../../../service/basket.service";
 import {Router} from "@angular/router";
 
 @Component({

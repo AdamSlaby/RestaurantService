@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {Dish} from "../../model/dish";
-import {DishType} from "../../model/type";
+import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
+import {Dish} from "../../../model/dish";
+import {DishType} from "../../../model/type";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
@@ -10,6 +10,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class MenuComponent implements OnInit, AfterViewInit {
   type = DishType;
+  innerWidth!: number;
   soupImg: string = 'assets/soup-image.jpg';
   mainDishImg: string = 'assets/main_dish_image.jpg';
   fishImg: string = 'assets/fish_image.jpg';
@@ -102,6 +103,12 @@ export class MenuComponent implements OnInit, AfterViewInit {
           element.scrollIntoView();
       }
     );
+    this.innerWidth = window.innerWidth;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize($event: any) {
+    this.innerWidth = window.innerWidth;
   }
 
   getDishes(type: DishType, colNr: number) {
@@ -113,10 +120,57 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   isSectionActive(fragment: string) {
-    let isActive = false;
-    this.route.fragment.subscribe(_fragment => {
-      isActive = _fragment === fragment
-    })
-    return isActive;
+    let image = document.getElementById(fragment);
+    let content = document.getElementById(fragment + 'Content');
+    if (image && content)
+      return window.scrollY >= window.scrollY + image.getBoundingClientRect().top &&
+        window.scrollY < window.scrollY + content.getBoundingClientRect().bottom;
+    return false;
+  }
+
+  onScroll() {
+    let images: HTMLElement[] = [];
+    let links: HTMLElement[] = [];
+    let imagesDivIds = ['soup', 'main-dish', 'fish', 'salad', 'dessert', 'beverage'];
+    let linkIds = ['soupLink', 'mainDishLink', 'fishLink', 'saladLink', 'dessertLink', 'beverageLink'];
+    for (let i = 0; i < imagesDivIds.length; i++) {
+      let image = document.getElementById(imagesDivIds[i]);
+      let link = document.getElementById(linkIds[i]);
+      if (image)
+        images.push(image);
+      if (link)
+        links.push(link);
+    }
+    for (let image of images) {
+      if (this.checkSideNavOverlapImage(image, links[0], links[links.length - 1])) {
+        for (let link of links) {
+          link.classList.remove('btn-outline-grey')
+          if (!link.classList.contains('btn-outline-light'))
+            link.classList.add('btn-outline-light');
+        }
+        break;
+      } else {
+        for (let link of links) {
+          link.classList.remove('btn-outline-light')
+          if (!link.classList.contains('btn-outline-grey'))
+            link.classList.add('btn-outline-grey');
+        }
+      }
+    }
+  }
+
+  checkSideNavOverlapImage(imageDiv: HTMLElement, linkTop: HTMLElement, linkBottom: HTMLElement): boolean {
+    let topImageBorder = imageDiv.getBoundingClientRect().top;
+    let bottomImageBorder = imageDiv.getBoundingClientRect().bottom;
+    let topLinkBorder = linkTop.getBoundingClientRect().top;
+    let bottomLinkBorder = linkBottom.getBoundingClientRect().bottom;
+
+    return topImageBorder < topLinkBorder && bottomImageBorder > bottomLinkBorder;
+  }
+
+  scrollToSection(section: string) {
+    let element = document.getElementById(section);
+    if (element)
+      element.scrollIntoView();
   }
 }

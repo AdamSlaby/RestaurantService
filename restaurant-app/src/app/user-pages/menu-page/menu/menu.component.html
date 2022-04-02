@@ -1,7 +1,7 @@
 <app-header></app-header>
 <section class="container-fluid">
   <app-topic-image id="soup" [urlImage]="soupImg" [minHeight]="600" content="Zupy"></app-topic-image>
-  <div class="row">
+  <div id="soupContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.SOUP, 0)" [showBest]="true"></app-dish-list>
     </div>
@@ -10,7 +10,7 @@
     </div>
   </div>
   <app-topic-image id="main-dish" [urlImage]="mainDishImg" [minHeight]="500" content="Dania glówne"></app-topic-image>
-  <div class="row">
+  <div id="main-dishContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 0)" [showBest]="true"></app-dish-list>
     </div>
@@ -19,7 +19,7 @@
     </div>
   </div>
   <app-topic-image id="fish" [urlImage]="fishImg" [minHeight]="500" content="Ryby"></app-topic-image>
-  <div class="row">
+  <div id="fishContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.FISH, 0)" [showBest]="true"></app-dish-list>
     </div>
@@ -28,7 +28,7 @@
     </div>
   </div>
   <app-topic-image id="salad" [urlImage]="saladImg" [minHeight]="500" content="Salatki"></app-topic-image>
-  <div class="row">
+  <div id="saladContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.SALAD, 0)" [showBest]="true"></app-dish-list>
     </div>
@@ -37,7 +37,7 @@
     </div>
   </div>
   <app-topic-image id="dessert" [urlImage]="dessertImg" [minHeight]="500" content="Desery"></app-topic-image>
-  <div class="row">
+  <div id="dessertContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.DESSERT, 0)" [showBest]="true"></app-dish-list>
     </div>
@@ -46,7 +46,7 @@
     </div>
   </div>
   <app-topic-image id="beverage" [urlImage]="beverageImg" [minHeight]="500" content="Napoje"></app-topic-image>
-  <div class="row">
+  <div id="beverageContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
       <app-dish-list [dishes]="getDishes(type.BEVERAGE, 0)" [showBest]="true"></app-dish-list>
     </div>
@@ -54,29 +54,31 @@
       <app-dish-list [dishes]="getDishes(type.BEVERAGE, 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
-  <a class="btn btn-outline-grey p-2 position-fixed"
-     [class.active]="isSectionActive('soup')" [routerLink]="['/menu']" fragment="soup"
-     style="top: 41vh; right: 30px">
-  </a>
-  <a class="btn btn-outline-grey p-2 position-fixed"
-     [class.active]="isSectionActive('main-dish')" [routerLink]="['/menu']" fragment="main-dish"
-     style="top: 44vh; right: 30px">
-  </a>
-  <a class="btn btn-outline-grey p-2 position-fixed"
-     [class.active]="isSectionActive('fish')" [routerLink]="['/menu']" fragment="fish"
-     style="top: 47vh; right: 30px">
-  </a>
-  <a class="btn btn-outline-grey p-2 position-fixed"
-     [class.active]="isSectionActive('salad')" [routerLink]="['/menu']" fragment="salad"
-     style="top: 50vh; right: 30px">
-  </a>
-  <a class="btn btn-outline-grey p-2 position-fixed"
-     [class.active]="isSectionActive('dessert')" [routerLink]="['/menu']" fragment="dessert"
-     style="top: 53vh; right: 30px">
-  </a>
-  <a class="btn btn-outline-grey p-2 position-fixed"
-     [class.active]="isSectionActive('beverage')" [routerLink]="['/menu']" fragment="beverage"
-     style="top: 56vh; right: 30px">
-  </a>
+  <ng-container *ngIf="innerWidth >= 800">
+    <a (window:scroll)="onScroll()" id="soupLink" class="btn btn-outline-grey p-2 position-fixed"
+       [class.active]="isSectionActive('soup')" (click)="scrollToSection('soup')"
+       style="top: 41vh; right: 30px">
+    </a>
+    <a id="mainDishLink" class="btn p-2 position-fixed"
+       [class.active]="isSectionActive('main-dish')" (click)="scrollToSection('main-dish')"
+       style="top: 44vh; right: 30px">
+    </a>
+    <a id="fishLink" class="btn p-2 position-fixed"
+       [class.active]="isSectionActive('fish')" (click)="scrollToSection('fish')"
+       style="top: 47vh; right: 30px">
+    </a>
+    <a id="saladLink" class="btn p-2 position-fixed"
+       [class.active]="isSectionActive('salad')" (click)="scrollToSection('salad')"
+       style="top: 50vh; right: 30px">
+    </a>
+    <a id="dessertLink" class="btn p-2 position-fixed"
+       [class.active]="isSectionActive('dessert')" (click)="scrollToSection('dessert')"
+       style="top: 53vh; right: 30px">
+    </a>
+    <a id="beverageLink" class="btn p-2 position-fixed"
+       [class.active]="isSectionActive('beverage')" (click)="scrollToSection('beverage')"
+       style="top: 56vh; right: 30px">
+    </a>
+  </ng-container>
 </section>
 <app-footer></app-footer>
