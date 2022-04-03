@@ -33,6 +33,8 @@ import { PhonePipe } from './pipe/phone.pipe';
 import { DayPipe } from './pipe/day.pipe';
 import { RestaurantPageComponent } from './user-pages/restaurant-page/restaurant-page.component';
 import { LoginPageComponent } from './worker-pages/login-page/login-page.component';
+import { MainNavComponent } from './worker-pages/main-nav/main-nav.component';
+import {DashboardComponent} from "./worker-pages/dashboard/dashboard.component";
 
 
 @NgModule({
@@ -60,7 +62,9 @@ import { LoginPageComponent } from './worker-pages/login-page/login-page.compone
     PhonePipe,
     DayPipe,
     RestaurantPageComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    MainNavComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

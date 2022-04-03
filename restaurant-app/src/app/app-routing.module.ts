@@ -16,6 +16,8 @@ import {OrderFoodComponent} from "./user-pages/order-page/order-food/order-food.
 import {OrderFormComponent} from "./user-pages/order-page/order-form/order-form.component";
 import {RestaurantPageComponent} from "./user-pages/restaurant-page/restaurant-page.component";
 import {LoginPageComponent} from "./worker-pages/login-page/login-page.component";
+import {DashboardComponent} from "./worker-pages/dashboard/dashboard.component";
+import {MainNavComponent} from "./worker-pages/main-nav/main-nav.component";
 
 const routes: Routes = [
   {
@@ -79,8 +81,18 @@ const routes: Routes = [
     ]
   },
   {
-    path: "admin",
+    path: "login",
     component: LoginPageComponent,
+  },
+  {
+    path: "admin",
+    component: MainNavComponent,
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      }
+    ]
   },
   {
     path: "**",

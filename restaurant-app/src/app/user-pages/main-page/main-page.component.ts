@@ -3,7 +3,7 @@ import {Dish} from "../../model/dish";
 import {DishType} from "../../model/type";
 
 @Component({
-  selector: 'app-main-page',
+  selector: 'app-dashboard',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
