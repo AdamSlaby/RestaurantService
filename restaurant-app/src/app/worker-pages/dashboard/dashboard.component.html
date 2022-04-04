@@ -1,1 +1,194 @@
+<div class="row m-0 px-2">
+  <div class="col-lg-6 col-xl-3 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <div>
+        <fa-icon class="me-2" [icon]="faClock"></fa-icon>
+        <span>Stan na godzinę {{lastUpdateTime | date:'HH:MM':'+0000':'pl-PL'}}</span>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div class="float-start">
+          <fa-icon style="font-size: 36px; color: #79e879" [icon]="faCoins"></fa-icon>
+        </div>
+        <div class="float-end">
+          <div class="d-block">
+            <span class="d-flex fw-light" style="font-size: 16px">Dzisiejszy dochód</span>
+            <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
+              {{1900 | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+            </span>
+          </div>
+        </div>
+        <div style="clear: both"></div>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+          <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
+          <span>Zaktualizuj</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="col-lg-6 col-xl-3 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <div>
+        <fa-icon class="me-2" [icon]="faClock"></fa-icon>
+        <span>Stan na godzinę {{lastUpdateTime | date:'HH:MM':'+0000':'pl-PL'}}</span>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div class="float-start">
+          <fa-icon style="font-size: 36px; color: silver" [icon]="faCartPlus"></fa-icon>
+        </div>
+        <div class="float-end">
+          <div class="d-block">
+            <span class="d-flex fw-light" style="font-size: 16px">Obsłużone zamówienia</span>
+            <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
+              {{30}}
+            </span>
+          </div>
+        </div>
+        <div style="clear: both"></div>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+          <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
+          <span>Zaktualizuj</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-xl-3 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <div>
+        <fa-icon class="me-2" [icon]="faClock"></fa-icon>
+        <span>Stan na godzinę {{lastUpdateTime | date:'HH:MM':'+0000':'pl-PL'}}</span>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div class="float-start">
+          <fa-icon style="font-size: 36px; color: #f6f679" [icon]="faBowlFood"></fa-icon>
+        </div>
+        <div class="float-end">
+          <div class="d-block">
+            <span class="d-flex fw-light" style="font-size: 16px">Wydane potrawy</span>
+            <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
+              {{60}}
+            </span>
+          </div>
+        </div>
+        <div style="clear: both"></div>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+          <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
+          <span>Zaktualizuj</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-xl-3 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <div>
+        <fa-icon class="me-2" [icon]="faClock"></fa-icon>
+        <span>Stan na godzinę {{lastUpdateTime | date:'HH:MM':'+0000':'pl-PL'}}</span>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div class="float-start">
+          <fa-icon style="font-size: 36px; color: lightcoral" [icon]="faHourglassStart"></fa-icon>
+        </div>
+        <div class="float-end">
+          <div class="d-block">
+            <span class="d-flex fw-light" style="font-size: 16px">Aktywne zamówienia</span>
+            <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
+              {{dishes.length}}
+            </span>
+          </div>
+        </div>
+        <div style="clear: both"></div>
+      </div>
+      <hr class="my-2">
+      <div>
+        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+          <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
+          <span>Zaktualizuj</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <div class="text-center">
+        <h5>Aktywne zamówienia</h5>
+      </div>
+      <div>
+        <table class="table table-striped table-hover text-center">
+          <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Danie</th>
+            <th scope="col">Ilość</th>
+            <th scope="col">Godzina zamówienia</th>
+            <th scope="col">Opcje</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let dish of dishes">
+            <tr *ngFor="let info of dish.dishInfo; index as i">
+
+              <th *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishInfo.length" scope="rowgroup">{{dish.id}}</th>
+              <td>{{info.name}}</td>
+              <td>{{info.amount}}</td>
+              <td *ngIf="i === 0" [rowSpan]="dish.dishInfo.length" style="vertical-align: middle">
+                {{dish.orderDate | date:'HH:mm':'+0000':'pl-PL'}}
+              </td>
+              <td *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishInfo.length">
+                <fa-icon placement="top" ngbTooltip="Zrealizuj" (click)="open(content, dish)"
+                         style="color: green;cursor: pointer" [icon]="faCheck"></fa-icon>
+              </td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 pb-3">
+    <div id="orderChart" class="bg-white p-2" style="border-radius: 10px;height: 400px">
+      <ngx-charts-line-chart
+        [scheme]="'forest'"
+        [view]="view"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxis]="true"
+        [yAxis]="true"
+        [xAxisLabel]="'Godziny'"
+        [yAxisLabel]="'Liczba zamówień'"
+        [timeline]="true"
+        [results]="data">
+      </ngx-charts-line-chart>
+    </div>
+  </div>
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Czy zrealizować zamówienie {{chosenDish.id}}?</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="btn btn-outline-success me-4" (click)="completeOrder(modal)">Tak</button>
+        <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
+      </div>
+    </div>
+  </ng-template>
+</div>

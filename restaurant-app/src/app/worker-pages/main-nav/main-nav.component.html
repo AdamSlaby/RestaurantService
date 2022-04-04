@@ -12,12 +12,54 @@
           <img *ngIf="isCollapsed" class="img-fluid" src="assets/icon.jpg" alt="Restaurant Icon">
         </a>
         <hr>
-        <ul class="nav nav-pills flex-column mb-auto text-light active">
+        <ul class="nav navbar-light nav-pills flex-column mb-auto active">
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/dashboard" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faHouseChimney"></fa-icon>
               <span class="text-uppercase" *ngIf="!isCollapsed">Panel główny</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center text-light align-items-center"
+               style="font-size: 18px" routerLink="/admin/orders" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faCartShopping"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Zamówienia</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center text-light align-items-center"
+               style="font-size: 18px" routerLink="/admin/employees" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faPeopleGroup"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Pracownicy</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center text-light align-items-center"
+               style="font-size: 18px" routerLink="/admin/supply" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faBoxesStacked"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Zaopatrzenie</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center text-light align-items-center"
+               style="font-size: 18px" routerLink="/admin/news" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faNewspaper"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Aktualności</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center text-light align-items-center"
+               style="font-size: 18px" routerLink="/admin/menu" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faUtensils"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center text-light align-items-center"
+               style="font-size: 18px" routerLink="/admin/statistics" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faChartLine"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Statystyki</span>
             </a>
           </li>
         </ul>
@@ -38,7 +80,7 @@
         </div>
       </nav>
     </div>
-    <div id="content" class="px-0"
+    <div id="content" class="px-0" style="background-color: #f1f1f1"
          [class.col-12]="isNavCollapsed && (innerWidth <= 1200)"
          [class.col-11]="(!isNavCollapsed && (innerWidth <= 1200 && innerWidth > 760)) ||
          (isNavCollapsed && (innerWidth > 1200 && innerWidth > 760))"
@@ -50,11 +92,11 @@
                    style="font-size: 26px; cursor: pointer" [icon]="faBars"></fa-icon>
           <fa-icon *ngIf="!isCollapsed" class="ps-3 me-2" (click)="showMenu()"
                    style="font-size: 26px; cursor: pointer" [icon]="faXmark"></fa-icon>
-          <span class="ps-3 mb-0 fw-bold" style="font-size: 26px">Panel główny</span>
+          <span class="ps-3 mb-0 fw-bold" style="font-size: 26px">{{contentHeader}}</span>
         </div>
       </div>
       <hr class="my-0">
-      <div class="row m-0 py-3">
+      <div class="m-0 py-3 overflow-auto">
         <router-outlet></router-outlet>
       </div>
     </div>

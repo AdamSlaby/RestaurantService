@@ -1,5 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, Input, OnInit} from '@angular/core';
-import {faUser, faHouseChimney, faBars, faXmark, faArrowRightFromBracket} from "@fortawesome/free-solid-svg-icons";
+import {faUser, faHouseChimney, faBars, faXmark,faBoxesStacked, faNewspaper, faCartShopping, faUtensils, faChartLine,
+  faArrowRightFromBracket, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main-nav',
@@ -10,14 +12,26 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   faBars = faBars;
   faXmark = faXmark;
   faArrowRightFromBracket = faArrowRightFromBracket;
+  faPeopleGroup = faPeopleGroup;
+  faUser = faUser;
+  faHouseChimney = faHouseChimney;
+  faBoxesStacked = faBoxesStacked;
+  faNewspaper = faNewspaper;
+  faCartShopping = faCartShopping;
+  faUtensils = faUtensils;
+  faChartLine = faChartLine;
+  contentHeader!: string;
   isCollapsed!: boolean;
   isNavCollapsed!: boolean;
   innerWidth!: number;
   innerHeight!: number;
-  faUser = faUser;
-  faHouseChimney = faHouseChimney;
 
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private cd: ChangeDetectorRef, private router: Router) {
+    this.router.events.subscribe(val => {
+      let url = this.router.url;
+      this.contentHeader = this.getHeader(url);
+    });
+  }
 
   ngOnInit(): void {
     this.isNavCollapsed = true;
@@ -52,5 +66,18 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   private resizeMenu() {
     this.isNavCollapsed = true;
     this.isCollapsed = this.isNavCollapsed;
+  }
+
+  private getHeader(url: string): string {
+    switch (url) {
+      case '/admin/dashboard': return 'Panel główny';
+      case '/admin/orders': return 'Zamówienia';
+      case '/admin/employees': return 'Pracownicy';
+      case '/admin/supply': return 'Zaopatrzenie';
+      case '/admin/news': return 'Aktualności';
+      case '/admin/menu': return 'Menu';
+      case '/admin/statistics': return 'Statystyki';
+      default: throw new Error('Page not found');
+    }
   }
 }
