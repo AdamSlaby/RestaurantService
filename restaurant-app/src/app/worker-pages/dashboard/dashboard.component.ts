@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
 import {
   faArrowsRotate,
   faBowlFood,
@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {ActiveOrder} from "../../model/active-order";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {DailyOrdersAmount} from "../../model/daily-orders-amount";
 
 @Component({
   selector: 'app-dashboard',
@@ -28,31 +29,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   lastUpdateTime!: Date;
   chosenDish!: ActiveOrder;
   view!: [number, number];
-  data: any[] = [
+  ordersAmount: DailyOrdersAmount[] = [
     {
-      "name": "Liczba zamówień w ciągu dnia",
-      "series": [
-        {
-          "name": "10:00",
-          "value": 5,
-        },
-        {
-          "name": "11:00",
-          "value": 2,
-        },
-        {
-          "name": "12:00",
-          "value": 3,
-        },
-        {
-          "name": "13:00",
-          "value": 10,
-        },
-        {
-          "name": "14:00",
-          "value": 11,
-        },
-      ]
+      name: "10:00",
+      value: 5,
+    },
+    {
+      name: "11:00",
+      value: 2,
+    },
+    {
+      name: "12:00",
+      value: 3,
+    },
+    {
+      name: "13:00",
+      value: 10,
+    },
+    {
+      name: "14:00",
+      value: 11,
+    },
+  ]
+  chartData: any[] = [
+    {
+      name: "Liczba zamówień w ciągu dnia",
+      series: []
     }
   ];
   dishes: ActiveOrder[] = [
@@ -97,19 +99,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ]
 
   constructor(private modalService: NgbModal,
-              private zone: NgZone) {
+              private zone: NgZone, private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     this.lastUpdateTime = new Date();
+    this.chartData[0].series = this.ordersAmount;
   }
 
   ngAfterViewInit() {
     let orderChart = document.getElementById('orderChart');
     this.view = [this.getElementWidth(orderChart), 400];
+    this.cd.detectChanges();
     this.observer = new ResizeObserver(entries => {
       this.zone.run(() => {
         this.view = [entries[0].contentRect.width, 400];
+        this.cd.detectChanges();
       });
     });
     if (orderChart)

@@ -38,6 +38,8 @@ import {MainNavComponent} from './worker-pages/main-nav/main-nav.component';
 import {DashboardComponent} from "./worker-pages/dashboard/dashboard.component";
 import {NgxChartsModule} from "@swimlane/ngx-charts";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { EmployeesPageComponent } from './worker-pages/employees-page/employees-page.component';
+import { NgbdSortableHeaderDirective } from './directive/ngbd-sortable-header.directive';
 
 
 @NgModule({
@@ -67,7 +69,9 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     RestaurantPageComponent,
     LoginPageComponent,
     MainNavComponent,
-    DashboardComponent
+    DashboardComponent,
+    EmployeesPageComponent,
+    NgbdSortableHeaderDirective,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,103 @@
+<div id="employeesContent" class="row m-0 py-3 px-2 overflow-auto" [style.height.px]="contentHeight">
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Filtrowanie</h4>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenEmployee" placeholder="Identyfikator pracownika"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getEmployeeById()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="keyword" placeholder="Nazwisko pracownika"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getEmployeeBySurname()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" minlength="2" [(ngModel)]="chosenRestaurant"
+               placeholder="Miasto, ulica restauracji" list="cities"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getEmployeesByRestaurant()">Szukaj</button>
+        <datalist id="cities">
+          <option *ngFor="let restaurant of restaurants">
+            {{restaurant.restaurantId}} {{restaurant.city}}, {{restaurant.street}}
+          </option>
+        </datalist>
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <button class="btn btn-outline-grey">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center">Lista pracowników</h4>
+      <div>
+        <table class="table table-striped table-hover text-center overflow-auto">
+          <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col" sortable="surname" (sort)="onSort($event)">Nazwisko</th>
+            <th scope="col" sortable="name" (sort)="onSort($event)">Imię</th>
+            <th scope="col" sortable="workstation" (sort)="onSort($event)">Stanowisko</th>
+            <th scope="col">Opcje</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let employee of employeesList.employees">
+            <th scope="row">{{employee.id}}</th>
+            <td>{{employee.surname}}</td>
+            <td>{{employee.name}}</td>
+            <td>
+              {{employee.workstation}}
+            </td>
+            <td>
+              <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top" ngbTooltip="Zobacz pełne informacje"
+                       (click)="seeDetails(employee.id)" [icon]="faEye"></fa-icon>
+              <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
+                       (click)="edit(employee.id)" [icon]="faPenToSquare"></fa-icon>
+              <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Zwolnij"
+                       (click)="dismiss(employee.id)" [icon]="faXmark"></fa-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+          <ngb-pagination [collectionSize]="employeesList.maxPage * maxSize"
+                          [(page)]="pageNr"
+                          [maxSize]="5"
+                          [rotate]="true"
+                          [boundaryLinks]="true"
+                          (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center pt-2">Informacje na temat pracownika</h4>
+      <div class="row m-0">
+        <div class="col-xl-3">
+          <div class="d-flex justify-content-center align-items-center">
+            <fa-icon class="fa-9x" [icon]="faUserCircle"></fa-icon>
+          </div>
+        </div>
+        <div class="col-xl-9 mt-5">
+          <h5 class="fw-light">Informacje osobowe</h5>
+          <div class="row m-0">
+            <div class="col-md-4">
+              <span class="d-block fw-bolder" style="font-size: 18px">Imię</span>
+              <span>Adam</span>
+            </div>
+            <div class="col-md-4">
+              <span class="d-block fw-bolder" style="font-size: 18px">Nazwisko</span>
+              <span>Słaby</span>
+            </div>
+            <div class="col-md-4">
+              <span class="d-block fw-bolder" style="font-size: 18px">Numer telefonu</span>
+              <span>+48 602 602 602</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

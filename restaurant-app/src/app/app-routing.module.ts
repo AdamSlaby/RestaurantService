@@ -18,6 +18,7 @@ import {RestaurantPageComponent} from "./user-pages/restaurant-page/restaurant-p
 import {LoginPageComponent} from "./worker-pages/login-page/login-page.component";
 import {DashboardComponent} from "./worker-pages/dashboard/dashboard.component";
 import {MainNavComponent} from "./worker-pages/main-nav/main-nav.component";
+import {EmployeesPageComponent} from "./worker-pages/employees-page/employees-page.component";
 
 const routes: Routes = [
   {
@@ -89,8 +90,16 @@ const routes: Routes = [
     component: MainNavComponent,
     children: [
       {
+        path: '',
+        component: DashboardComponent,
+      },
+      {
         path: 'dashboard',
         component: DashboardComponent,
+      },
+      {
+        path: 'employees',
+        component: EmployeesPageComponent,
       }
     ]
   },

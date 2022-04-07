@@ -12,14 +12,17 @@ export class RestaurantPageComponent implements OnInit {
     {
       restaurantId: 1,
       city: 'Kielce',
+      street: 'al. XI wieków Kielc'
     },
     {
       restaurantId: 2,
       city: 'Warszawa',
+      street: 'Jagiellońska'
     },
     {
       restaurantId: 3,
       city: 'Kraków',
+      street: 'Warszawska'
     }
   ]
 
