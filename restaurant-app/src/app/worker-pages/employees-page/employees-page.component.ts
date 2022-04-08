@@ -4,14 +4,19 @@ import {
   Component,
   HostListener,
   OnInit,
-  QueryList,
+  QueryList, ViewChild,
   ViewChildren
 } from '@angular/core';
-import {faEye, faPenToSquare, faXmark, faUserCircle} from "@fortawesome/free-solid-svg-icons";
+import {faEye, faPenToSquare, faUserCircle, faXmark, faCalendarDays} from "@fortawesome/free-solid-svg-icons";
 import {EmployeeList} from "../../model/employee-list";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
 import {RestaurantShortInfo} from "../../model/restaurant-short-info";
+import {EmployeeInfo} from "../../model/employee-info";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {CalendarOptions} from "@fullcalendar/angular";
+import plLocale from '@fullcalendar/core/locales/pl';
+import {Schedule} from "../../model/schedule";
 
 @Component({
   selector: 'app-employees-page',
@@ -22,7 +27,6 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   @ViewChildren(NgbdSortableHeaderDirective) headers!: QueryList<NgbdSortableHeaderDirective>;
   faEye = faEye;
   faPenToSquare = faPenToSquare;
-  faUserCircle = faUserCircle
   faXmark = faXmark;
   innerHeight!: number;
   contentHeight!: number;
@@ -115,7 +119,7 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     ]
   }
 
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private cd: ChangeDetectorRef, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.pageNr = 1;
@@ -131,6 +135,10 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   onResize($event: any) {
     this.innerHeight = document.body.clientHeight;
     this.setContentHeight();
+  }
+
+  open(content: any) {
+    this.modalService.open(content, {}).result.then((result) => {});
   }
 
   seeDetails(id: string) {

@@ -40,7 +40,15 @@ import {NgxChartsModule} from "@swimlane/ngx-charts";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { EmployeesPageComponent } from './worker-pages/employees-page/employees-page.component';
 import { NgbdSortableHeaderDirective } from './directive/ngbd-sortable-header.directive';
+import { BankAccountPipe } from './pipe/bank-account.pipe';
+import {FullCalendarModule} from "@fullcalendar/angular";
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { EmployeeInfoComponent } from './worker-pages/employee-info/employee-info.component';
 
+FullCalendarModule.registerPlugins([
+  timeGridPlugin,
+  // interactionPlugin
+]);
 
 @NgModule({
   declarations: [
@@ -72,6 +80,8 @@ import { NgbdSortableHeaderDirective } from './directive/ngbd-sortable-header.di
     DashboardComponent,
     EmployeesPageComponent,
     NgbdSortableHeaderDirective,
+    BankAccountPipe,
+    EmployeeInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,7 +92,8 @@ import { NgbdSortableHeaderDirective } from './directive/ngbd-sortable-header.di
     ReactiveFormsModule,
     FontAwesomeModule,
     FormsModule,
-    NgxChartsModule
+    NgxChartsModule,
+    FullCalendarModule,
   ],
   providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}, BasketService],
   bootstrap: [AppComponent]

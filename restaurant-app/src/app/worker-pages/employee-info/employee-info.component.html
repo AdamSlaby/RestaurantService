@@ -1,0 +1,203 @@
+<div class="pb-3">
+  <div class="bg-white p-2" style="border-radius: 10px;">
+    <h4 class="text-center pt-2">Informacje na temat pracownika</h4>
+    <div class="row m-0">
+      <div class="col-xl-3">
+        <div class="d-flex justify-content-center align-items-center">
+          <fa-icon class="fa-9x" [icon]="faUserCircle"></fa-icon>
+        </div>
+      </div>
+      <div class="col-xl-9 mt-4">
+        <h5 class="fw-light">Informacje osobowe</h5>
+        <div class="row m-0">
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Numer pesel</span>
+            <span>{{employeeInfo.shortInfo.id}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Imię</span>
+            <span>{{employeeInfo.shortInfo.name}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Nazwisko</span>
+            <span>{{employeeInfo.shortInfo.surname}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Numer telefonu</span>
+            <span>{{employeeInfo.phoneNr | phone:'PL'}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Numer konta bankowego</span>
+            <span>{{employeeInfo.accountNr | bankAccount}}</span>
+          </div>
+        </div>
+        <hr>
+        <h5 class="fw-light">Adres zamieszkania</h5>
+        <div class="row m-0">
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Miasto</span>
+            <span>{{employeeInfo.address.city}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Ulica</span>
+            <span>ul. {{employeeInfo.address.street}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Numer domu</span>
+            <span>{{employeeInfo.address.houseNr}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Numer mieszkania</span>
+            <span>{{employeeInfo.address.flatNr}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Kod pocztowy</span>
+            <span>{{employeeInfo.address.postcode}}</span>
+          </div>
+        </div>
+        <hr>
+        <h5 class="fw-light">Informacje zawodowe</h5>
+        <div class="row m-0">
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Data zatrudnienia</span>
+            <span>{{employeeInfo.employmentDate | date:'fullDate':'+0000':'pl-PL'}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Data zwolnienia</span>
+            <span *ngIf="employeeInfo.dismissalDate">
+                {{employeeInfo.dismissalDate | date:'fullDate':'+0000':'pl-PL'}}
+              </span>
+            <span *ngIf="!employeeInfo.dismissalDate">
+                Brak danych
+              </span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Pracownik aktywny</span>
+            <span>{{employeeInfo.active ? 'TAK' : 'NIE'}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Stanowisko pracy</span>
+            <span>{{employeeInfo.shortInfo.workstation}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Pensja</span>
+            <span>{{employeeInfo.salary | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}</span>
+          </div>
+          <div class="col-md-4 mb-2 mb-md-4">
+            <span class="d-block fw-bolder" style="font-size: 18px">Miejsce pracy</span>
+            <span>{{employeeInfo.restaurantInfo.city + ', ul. ' + employeeInfo.restaurantInfo.street}}</span>
+          </div>
+        </div>
+        <hr>
+        <h5 class="fw-light">Oceny pracownika</h5>
+        <div class="row m-0">
+          <table class="table table-striped table-hover text-center">
+            <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Data wystawienia</th>
+              <th scope="col">Ocena</th>
+              <th scope="col">Opcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let appraisal of employeeInfo.appraisalInfo">
+              <th scope="row">{{appraisal.id}}</th>
+              <td>{{appraisal.date | date:'longDate':'+0000':'pl-PL'}}</td>
+              <td>
+                {{appraisal.overall + '/100'}}
+              </td>
+              <td>
+                <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top" ngbTooltip="Opis"
+                         (click)="open(content)" [icon]="faEye"></fa-icon>
+                <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
+                         (click)="open(content)" [icon]="faPenToSquare"></fa-icon>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr>
+        <h5 class="fw-light">Harmonogram</h5>
+        <div class="row m-0">
+          <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="dateOfBirth">Date of birth</label>
+        <div class="input-group">
+          <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                 #dp="ngbDatepicker">
+          <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
+
+
+<ng-template #addEvent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Dodaj nowe godziny pracy</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss(modal)"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addScheduleForm" #form="ngForm" (ngSubmit)="!addScheduleForm.invalid && onSubmit(modal)">
+      <div class="form-group mb-3">
+        <label for="startShift">Data rozpoczęcia</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd"
+                 [ngClass]="{ 'is-invalid': form.submitted && f['startShiftDate'].errors}"
+                 id="startShift" formControlName="startShiftDate" ngbDatepicker #d="ngbDatepicker">
+          <button class="btn btn-outline-grey calendar" (click)="d.toggle()" type="button"></button>
+        </div>
+        <div *ngIf="form.submitted && f['startShiftDate'].errors" class="invalid-feedback">
+          <div *ngIf="f['startShiftDate'].errors['required']">
+            Data rozpoczęcia pracy jest wymagana
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="startHour">Godzina rozpoczęcia pracy</label>
+        <div id="startHour" class="d-flex justify-content-center align-items-center">
+          <ngb-timepicker formControlName="startShiftTime"></ngb-timepicker>
+        </div>
+        <div *ngIf="form.submitted && f['startShiftTime'].errors" class="invalid-feedback">
+          <div *ngIf="f['startShiftTime'].errors['required']">
+            Godzina rozpoczęcia pracy jest wymagana
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="endHour">Godzina zakończenia pracy</label>
+        <div id="endHour" class="d-flex justify-content-center align-items-center">
+          <ngb-timepicker formControlName="endShiftTime"></ngb-timepicker>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-grey">
+            Dodaj
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
