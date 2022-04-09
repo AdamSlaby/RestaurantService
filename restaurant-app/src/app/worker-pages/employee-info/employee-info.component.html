@@ -89,38 +89,9 @@
           </div>
         </div>
         <hr>
-        <h5 class="fw-light">Oceny pracownika</h5>
-        <div class="row m-0">
-          <table class="table table-striped table-hover text-center">
-            <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Data wystawienia</th>
-              <th scope="col">Ocena</th>
-              <th scope="col">Opcje</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let appraisal of employeeInfo.appraisalInfo">
-              <th scope="row">{{appraisal.id}}</th>
-              <td>{{appraisal.date | date:'longDate':'+0000':'pl-PL'}}</td>
-              <td>
-                {{appraisal.overall + '/100'}}
-              </td>
-              <td>
-                <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top" ngbTooltip="Opis"
-                         (click)="open(content)" [icon]="faEye"></fa-icon>
-                <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
-                         (click)="open(content)" [icon]="faPenToSquare"></fa-icon>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <hr>
         <h5 class="fw-light">Harmonogram</h5>
         <div class="row m-0">
-          <full-calendar [options]="calendarOptions"></full-calendar>
+          <full-calendar #calendar [options]="calendarOptions"></full-calendar>
         </div>
       </div>
     </div>
@@ -153,7 +124,7 @@
 <ng-template #addEvent let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Dodaj nowe godziny pracy</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss(modal)"></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
     <form [formGroup]="addScheduleForm" #form="ngForm" (ngSubmit)="!addScheduleForm.invalid && onSubmit(modal)">
@@ -162,7 +133,7 @@
         <div class="input-group">
           <input class="form-control" placeholder="yyyy-mm-dd"
                  [ngClass]="{ 'is-invalid': form.submitted && f['startShiftDate'].errors}"
-                 id="startShift" formControlName="startShiftDate" ngbDatepicker #d="ngbDatepicker">
+                 id="startShift" formControlName="startShiftDate" [minDate]="startDate" ngbDatepicker #d="ngbDatepicker">
           <button class="btn btn-outline-grey calendar" (click)="d.toggle()" type="button"></button>
         </div>
         <div *ngIf="form.submitted && f['startShiftDate'].errors" class="invalid-feedback">
@@ -177,7 +148,7 @@
         <div id="startHour" class="d-flex justify-content-center align-items-center">
           <ngb-timepicker formControlName="startShiftTime"></ngb-timepicker>
         </div>
-        <div *ngIf="form.submitted && f['startShiftTime'].errors" class="invalid-feedback">
+        <div *ngIf="form.submitted && f['startShiftTime'].errors" class="invalid-feedback d-block">
           <div *ngIf="f['startShiftTime'].errors['required']">
             Godzina rozpoczęcia pracy jest wymagana
           </div>
@@ -188,6 +159,11 @@
         <label for="endHour">Godzina zakończenia pracy</label>
         <div id="endHour" class="d-flex justify-content-center align-items-center">
           <ngb-timepicker formControlName="endShiftTime"></ngb-timepicker>
+        </div>
+        <div *ngIf="form.submitted && f['endShiftTime'].errors" class="invalid-feedback d-block">
+          <div *ngIf="f['endShiftTime'].errors['required']">
+            Godzina zakończenia pracy jest wymagana
+          </div>
         </div>
       </div>
 
