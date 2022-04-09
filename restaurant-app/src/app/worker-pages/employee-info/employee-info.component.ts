@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {faEye, faPenToSquare, faUserCircle} from "@fortawesome/free-solid-svg-icons";
 import {CalendarOptions, FullCalendarComponent} from "@fullcalendar/angular";
 import plLocale from "@fullcalendar/core/locales/pl";
 import {Schedule} from "../../model/schedule";
 import {EmployeeInfo} from "../../model/employee-info";
-import {NgbCalendar, NgbDate, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {FormBuilder, Validators} from "@angular/forms";
-import {NgbTime} from "@ng-bootstrap/ng-bootstrap/timepicker/ngb-time";
+import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -14,12 +14,15 @@ import {NgbTime} from "@ng-bootstrap/ng-bootstrap/timepicker/ngb-time";
   templateUrl: './employee-info.component.html',
   styleUrls: ['./employee-info.component.scss']
 })
-export class EmployeeInfoComponent implements OnInit, AfterViewInit {
-  @ViewChild('addEvent', {static: false}) private addEvent: any;
+export class EmployeeInfoComponent implements OnInit {
+  @ViewChild('eventForm', {static: false}) private addEvent: any;
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   faEye = faEye;
   faPenToSquare = faPenToSquare;
   faUserCircle = faUserCircle;
+  editScheduleId: any;
+  errors: Map<string, string> = new Map<string, string>();
+  loading = false;
   startDate = this.calendar.getToday();
   calendarOptions: CalendarOptions = {
     locale: plLocale,
@@ -43,10 +46,16 @@ export class EmployeeInfoComponent implements OnInit, AfterViewInit {
     },
     eventContent: (event) => {
       return {
-        html: '<span style="font-size: 18px">'+ event.timeText +'</span>' +
-          '<span class="text-white removeBtn" id="event-'+ event.event.id + '" style="float: right; margin-right: 2px;cursor: pointer;font-size: 18px">X</span>' +
-          '<div style="clear: both"></div>'
+        html: '<span style="font-size: 16px">'+ event.timeText +'</span>' +
+          '<span class="editBtn" id="edit-' + event.event.id + '"></span>' +
+          '<span class="removeBtn" id="remove-'+ event.event.id + '"></span>'
       };
+    },
+    eventDidMount: (event) => {
+      let removeBtn = event.el.children[0].children[2];
+      removeBtn.addEventListener('click', this.removeEvent.bind(this, removeBtn))
+      let editBtn = event.el.children[0].children[1];
+      editBtn.addEventListener('click', this.editEvent.bind(this, editBtn));
     }
   };
   schedule!: Schedule;
@@ -107,14 +116,6 @@ export class EmployeeInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    let elements = document.getElementsByClassName('removeBtn');
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].addEventListener('click', this.removeEvent.bind(this, elements[i]));
-    }
-    console.log(elements);
-  }
-
   get f() {
     return this.addScheduleForm.controls;
   }
@@ -132,12 +133,28 @@ export class EmployeeInfoComponent implements OnInit, AfterViewInit {
       endShift: this.convertNgbDateTimeToDate(this.addScheduleForm.get('startShiftDate')?.value,
         this.addScheduleForm.get('endShiftTime')?.value)
     }
-    this.addScheduleToCalendar(schedule, 10);
+    if (this.editScheduleId) {
+      this.editScheduleFromCalendar(schedule, this.editScheduleId)
+      this.editScheduleId = undefined;
+    } else {
+      this.addScheduleToCalendar(schedule, 10);
+    }
     modal.close();
   }
 
-  convertNgbDateTimeToDate(date: NgbDate, time: NgbTime): Date {
+  convertNgbDateTimeToDate(date: NgbDate, time: NgbTimeStruct): Date {
     return new Date(Date.UTC(date.year, date.month - 1, date.day, time.hour, time.minute, time.second));
+  }
+
+  editScheduleFromCalendar(schedule: any, id: string) {
+    let events = this.calendarOptions.events as Array<any>
+    events.splice(events.indexOf(events.filter(el => el.id === id)[0]), 1);
+    events.push({
+      id: id,
+      start: schedule.startShift,
+      end: schedule.endShift,
+    })
+    this.calendarOptions.events = Object.assign([], events);
   }
 
   addScheduleToCalendar(schedule: any, id: number) {
@@ -150,8 +167,42 @@ export class EmployeeInfoComponent implements OnInit, AfterViewInit {
     this.calendarOptions.events = Object.assign([], events);
   }
 
-  removeEvent(event: any) {
-    let id = event.id.split('-')[1];
+  removeEvent(htmlElement: any) {
+    let id = htmlElement.id.split('-')[1];
     this.calendarComponent.getApi().getEventById(id)?.remove();
+    let events = this.calendarOptions.events as Array<any>
+    let index = events.indexOf(events.filter(el => el.id === id)[0], 0);
+    events.splice(index, 1);
+    this.calendarOptions.events = events;
+  }
+
+  editEvent(htmlElement: any) {
+    let id = htmlElement.id.split('-')[1];
+    let event = this.calendarComponent.getApi().getEventById(id);
+    //todo set initial value to calendar
+    if (event?.start) {
+      let startDate: NgbDateStruct = {
+        year: event.start.getFullYear(),
+        month: event?.start?.getMonth(),
+        day: event?.start?.getDate(),
+      }
+      this.addScheduleForm.get('startShiftDate')?.setValue(startDate);
+    }
+    if (event?.start && event?.end) {
+      let startTime: NgbTimeStruct = {
+        hour: event?.start?.getUTCHours(),
+        minute: event?.start?.getUTCMinutes(),
+        second: event?.start?.getUTCSeconds(),
+      }
+      this.addScheduleForm.get('startShiftTime')?.setValue(startTime);
+      let endTime: NgbTimeStruct = {
+        hour: event?.end?.getUTCHours(),
+        minute: event?.end?.getUTCMinutes(),
+        second: event?.end?.getUTCSeconds(),
+      }
+      this.addScheduleForm.get('endShiftTime')?.setValue(endTime);
+    }
+    this.editScheduleId = id;
+    this.open(this.addEvent);
   }
 }
