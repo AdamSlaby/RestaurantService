@@ -46,7 +46,7 @@
             <td>{{employee.surname}}</td>
             <td>{{employee.name}}</td>
             <td>
-              {{employee.workstation}}
+              {{getWorkstationById(employee.workstationId)}}
             </td>
             <td>
               <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
@@ -72,5 +72,5 @@
     </div>
   </div>
 
-  <app-employee-info></app-employee-info>
+  <app-employee-info id="employeeInfo" *ngIf="selectedEmployeeId" [workstations]="workstations"></app-employee-info>
 </div>

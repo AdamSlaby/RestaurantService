@@ -1,6 +1,5 @@
 import {EmployeeShortInfo} from "./employee-short-info";
 import {Address} from "./address";
-import {AppraisalInfo} from "./appraisal-info";
 import {RestaurantShortInfo} from "./restaurant-short-info";
 import {ScheduleInfo} from "./schedule-info";
 
@@ -10,10 +9,9 @@ export interface EmployeeInfo {
   accountNr: string;
   salary: number;
   active: boolean;
-  employmentDate: Date;
+  employmentDate: Date | any;
   dismissalDate: any;
   address: Address;
-  appraisalInfo: AppraisalInfo[];
   restaurantInfo: RestaurantShortInfo;
   scheduleInfo: ScheduleInfo[];
 }

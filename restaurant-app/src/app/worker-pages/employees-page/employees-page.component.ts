@@ -4,19 +4,18 @@ import {
   Component,
   HostListener,
   OnInit,
-  QueryList, ViewChild,
+  QueryList,
   ViewChildren
 } from '@angular/core';
-import {faEye, faPenToSquare, faUserCircle, faXmark, faCalendarDays} from "@fortawesome/free-solid-svg-icons";
+import {faEye, faPenToSquare, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {EmployeeList} from "../../model/employee-list";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
 import {RestaurantShortInfo} from "../../model/restaurant-short-info";
-import {EmployeeInfo} from "../../model/employee-info";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {CalendarOptions} from "@fullcalendar/angular";
-import plLocale from '@fullcalendar/core/locales/pl';
-import {Schedule} from "../../model/schedule";
+import {Workstation} from "../../model/workstation";
+import {WorkstationListView} from "../../model/workstation-list-view";
+import {timeout} from "rxjs";
 
 @Component({
   selector: 'app-employees-page',
@@ -36,6 +35,21 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   chosenEmployee!: string;
   pageNr!: number;
   maxSize: number = 10;
+  selectedEmployeeId: any;
+  workstations: WorkstationListView[] = [
+    {
+      id: 1,
+      name: Workstation.CHEF,
+    },
+    {
+      id: 2,
+      name: Workstation.KITCHEN_MANAGER,
+    },
+    {
+      id: 3,
+      name: Workstation.COOK,
+    },
+  ];
   restaurants: RestaurantShortInfo[] = [
     {
       restaurantId: 1,
@@ -60,61 +74,61 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Adam',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marcin',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Łukasz',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
       {
         id: '77102017553',
         name: 'Marek',
         surname: 'Bykowski',
-        workstation: 'Kucharz',
+        workstationId: 1,
       },
     ]
   }
@@ -142,11 +156,19 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   }
 
   seeDetails(id: string) {
-    //todo
+    this.selectedEmployeeId = id;
+    setTimeout(() => {
+      let employeeInfo = document.getElementById('employeeInfo');
+      this.scrollIntoElement(employeeInfo);
+    }, 1);
   }
 
   edit(id: string) {
-    //todo
+    this.selectedEmployeeId = id;
+    setTimeout(() => {
+      let employeeInfo = document.getElementById('employeeInfo');
+      this.scrollIntoElement(employeeInfo);
+    }, 1)
   }
 
   dismiss(id: string) {
@@ -182,5 +204,14 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
       this.contentHeight = Math.floor(this.innerHeight - header.getBoundingClientRect().height - 1);
       this.cd.detectChanges();
     }
+  }
+
+  getWorkstationById(id: number): string {
+    return this.workstations.filter(el => el.id === id)[0].name.toString();
+  }
+
+  scrollIntoElement(element: HTMLElement | null) {
+    if (element)
+      element.scrollIntoView({behavior: "smooth"});
   }
 }

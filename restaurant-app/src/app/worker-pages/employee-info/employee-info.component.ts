@@ -1,12 +1,16 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {faEye, faPenToSquare, faUserCircle} from "@fortawesome/free-solid-svg-icons";
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {faUserCircle} from "@fortawesome/free-solid-svg-icons";
 import {CalendarOptions, FullCalendarComponent} from "@fullcalendar/angular";
 import plLocale from "@fullcalendar/core/locales/pl";
 import {Schedule} from "../../model/schedule";
 import {EmployeeInfo} from "../../model/employee-info";
-import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
 import {FormBuilder, Validators} from "@angular/forms";
-import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import {minDateValidator} from "../../validators/min-date-validator";
+import {RegexPattern} from "../../model/regex-pattern";
+import {personIdValidator} from "../../validators/pesel-validator";
+import {WorkstationListView} from "../../model/workstation-list-view";
+import {RestaurantShortInfo} from "../../model/restaurant-short-info";
 
 
 @Component({
@@ -17,8 +21,8 @@ import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 export class EmployeeInfoComponent implements OnInit {
   @ViewChild('eventForm', {static: false}) private addEvent: any;
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
-  faEye = faEye;
-  faPenToSquare = faPenToSquare;
+  @Input() workstations!: WorkstationListView[];
+  @Input() employeeId!: number;
   faUserCircle = faUserCircle;
   editScheduleId: any;
   errors: Map<string, string> = new Map<string, string>();
@@ -64,7 +68,7 @@ export class EmployeeInfoComponent implements OnInit {
       id: '77102017553',
       name: 'Marek',
       surname: 'Bykowski',
-      workstation: 'Kucharz',
+      workstationId: 1,
     },
     address: {
       city: 'Kielce',
@@ -78,20 +82,12 @@ export class EmployeeInfoComponent implements OnInit {
     salary: 3000.50,
     active: true,
     employmentDate: new Date(),
-    dismissalDate: undefined,
+    dismissalDate: null,
     restaurantInfo: {
       restaurantId: 1,
       city: 'Kielce',
       street: 'Warszawska'
     },
-    appraisalInfo: [
-      {
-        id: 1,
-        date: new Date(),
-        overall: 84.4,
-        comment: 'Sumienny pracownik.',
-      }
-    ],
     scheduleInfo: [
       {
         id: 1,
@@ -100,11 +96,56 @@ export class EmployeeInfoComponent implements OnInit {
       }
     ]
   }
-  addScheduleForm = this.fb.group({
-    startShiftDate: ['', [Validators.required]],
+  restaurants: RestaurantShortInfo[] = [
+    {
+      restaurantId: 1,
+      city: 'Kielce',
+      street: 'al. XI wieków Kielc'
+    },
+    {
+      restaurantId: 2,
+      city: 'Warszawa',
+      street: 'Jagiellońska'
+    },
+    {
+      restaurantId: 3,
+      city: 'Kraków',
+      street: 'Warszawska'
+    }
+  ]
+
+  scheduleForm = this.fb.group({
+    startShiftDate: ['', [Validators.required, minDateValidator(this.calendar)]],
     startShiftTime: ['', [Validators.required]],
     endShiftTime: ['', [Validators.required]],
   });
+
+  employeeForm = this.fb.group({
+    personId: [this.employeeInfo.shortInfo.id, [Validators.required, Validators.pattern(RegexPattern.ID), personIdValidator()]],
+    firstName: [this.employeeInfo.shortInfo.name, [Validators.required, Validators.pattern(RegexPattern.NAME)]],
+    surname: [this.employeeInfo.shortInfo.surname, [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
+    phoneNr: [this.employeeInfo.phoneNr, [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
+    accountNr: [this.employeeInfo.accountNr, [Validators.required, Validators.pattern(RegexPattern.ACCOUNT_NR)]],
+    city: [this.employeeInfo.address.city, [Validators.required, Validators.pattern(RegexPattern.CITY)]],
+    street: [this.employeeInfo.address.street, [Validators.required, Validators.pattern(RegexPattern.STREET)]],
+    houseNr: [this.employeeInfo.address.houseNr, [Validators.required, Validators.pattern(RegexPattern.HOUSE_NR)]],
+    flatNr: [this.employeeInfo.address.flatNr, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
+    postcode: [this.employeeInfo.address.postcode, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
+    employmentDate: [{
+      year: this.employeeInfo.employmentDate.getFullYear(),
+      month: this.employeeInfo.employmentDate.getMonth() + 1,
+      day: this.employeeInfo.employmentDate.getDate()
+    } as NgbDateStruct, [Validators.required, minDateValidator(this.calendar)]],
+    dismissalDate: [this.employeeInfo.dismissalDate ? {
+      year: this.employeeInfo.dismissalDate?.getFullYear(),
+      month: this.employeeInfo.dismissalDate?.getMonth() + 1,
+      day: this.employeeInfo.dismissalDate?.getDate(),
+    } as NgbDateStruct : null],
+    active: [this.employeeInfo.active],
+    workstation: [this.employeeInfo.shortInfo.workstationId, [Validators.required]],
+    salary: [this.employeeInfo.salary, [Validators.required, Validators.min(1)]],
+    restaurant: [this.employeeInfo.restaurantInfo.restaurantId, [Validators.required]],
+  })
 
   constructor(private modalService: NgbModal, private fb: FormBuilder,
               private calendar: NgbCalendar) {
@@ -116,8 +157,12 @@ export class EmployeeInfoComponent implements OnInit {
     }
   }
 
-  get f() {
-    return this.addScheduleForm.controls;
+  get fs() {
+    return this.scheduleForm.controls;
+  }
+
+  get fe() {
+    return this.employeeForm.controls;
   }
 
   open(content: any) {
@@ -128,14 +173,14 @@ export class EmployeeInfoComponent implements OnInit {
   onSubmit(modal: any) {
     //todo
     let schedule: Schedule = {
-      startShift: this.convertNgbDateTimeToDate(this.addScheduleForm.get('startShiftDate')?.value,
-        this.addScheduleForm.get('startShiftTime')?.value),
-      endShift: this.convertNgbDateTimeToDate(this.addScheduleForm.get('startShiftDate')?.value,
-        this.addScheduleForm.get('endShiftTime')?.value)
+      startShift: this.convertNgbDateTimeToDate(this.scheduleForm.get('startShiftDate')?.value,
+        this.scheduleForm.get('startShiftTime')?.value),
+      endShift: this.convertNgbDateTimeToDate(this.scheduleForm.get('startShiftDate')?.value,
+        this.scheduleForm.get('endShiftTime')?.value)
     }
     if (this.editScheduleId) {
       this.editScheduleFromCalendar(schedule, this.editScheduleId)
-      this.editScheduleId = undefined;
+      this.editScheduleId = null;
     } else {
       this.addScheduleToCalendar(schedule, 10);
     }
@@ -144,6 +189,13 @@ export class EmployeeInfoComponent implements OnInit {
 
   convertNgbDateTimeToDate(date: NgbDate, time: NgbTimeStruct): Date {
     return new Date(Date.UTC(date.year, date.month - 1, date.day, time.hour, time.minute, time.second));
+  }
+
+  convertNgbDateToDate(date: NgbDate): Date | null {
+    if (date !== undefined)
+      return new Date(Date.UTC(date.year, date.month - 1, date.day));
+    else
+      return null;
   }
 
   editScheduleFromCalendar(schedule: any, id: string) {
@@ -179,14 +231,13 @@ export class EmployeeInfoComponent implements OnInit {
   editEvent(htmlElement: any) {
     let id = htmlElement.id.split('-')[1];
     let event = this.calendarComponent.getApi().getEventById(id);
-    //todo set initial value to calendar
     if (event?.start) {
       let startDate: NgbDateStruct = {
         year: event.start.getFullYear(),
-        month: event?.start?.getMonth(),
+        month: event?.start?.getMonth() + 1,
         day: event?.start?.getDate(),
       }
-      this.addScheduleForm.get('startShiftDate')?.setValue(startDate);
+      this.scheduleForm.get('startShiftDate')?.setValue(startDate);
     }
     if (event?.start && event?.end) {
       let startTime: NgbTimeStruct = {
@@ -194,15 +245,61 @@ export class EmployeeInfoComponent implements OnInit {
         minute: event?.start?.getUTCMinutes(),
         second: event?.start?.getUTCSeconds(),
       }
-      this.addScheduleForm.get('startShiftTime')?.setValue(startTime);
+      this.scheduleForm.get('startShiftTime')?.setValue(startTime);
       let endTime: NgbTimeStruct = {
         hour: event?.end?.getUTCHours(),
         minute: event?.end?.getUTCMinutes(),
         second: event?.end?.getUTCSeconds(),
       }
-      this.addScheduleForm.get('endShiftTime')?.setValue(endTime);
+      this.scheduleForm.get('endShiftTime')?.setValue(endTime);
     }
     this.editScheduleId = id;
     this.open(this.addEvent);
+  }
+
+  dismiss(modal: any) {
+    this.editScheduleId = undefined;
+    modal.dismiss();
+  }
+
+  onEmployeeFormSubmit() {
+    let employeeInfo: EmployeeInfo = {
+      shortInfo: {
+        id: this.employeeForm.get('personId')?.value,
+        name: this.employeeForm.get('firstName')?.value,
+        surname: this.employeeForm.get('surname')?.value,
+        workstationId: this.employeeForm.get('workstation')?.value,
+      },
+      phoneNr: this.employeeForm.get('phoneNr')?.value,
+      salary: this.employeeForm.get('salary')?.value,
+      active: this.employeeForm.get('active')?.value,
+      accountNr: this.employeeForm.get('accountNr')?.value,
+      employmentDate: this.convertNgbDateToDate(this.employeeForm.get('employmentDate')?.value),
+      dismissalDate: this.employeeForm.get('dismissalDate')?.value ?
+        this.convertNgbDateToDate(this.employeeForm.get('dismissalDate')?.value) : null,
+      address: {
+        city: this.employeeForm.get('city')?.value,
+        street: this.employeeForm.get('street')?.value,
+        houseNr: this.employeeForm.get('houseNr')?.value,
+        flatNr: this.employeeForm.get('flatNr')?.value,
+        postcode: this.employeeForm.get('postcode')?.value,
+      },
+      scheduleInfo: [],
+      restaurantInfo: {
+        restaurantId: this.employeeForm.get('restaurant')?.value,
+        city: '',
+        street: '',
+      }
+    }
+    console.log(employeeInfo);
+  }
+
+  getInvalidControl() {
+    let controls = this.fe;
+    for (let name in controls) {
+      if (controls[name].invalid)
+        console.log(controls[name]);
+    }
+    return true;
   }
 }
