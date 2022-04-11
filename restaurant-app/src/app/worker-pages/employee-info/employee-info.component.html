@@ -1,6 +1,16 @@
 <div class="pb-3">
   <div class="bg-white p-2" style="border-radius: 10px;">
-    <h4 class="text-center pt-2">Informacje na temat pracownika</h4>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+
+      </div>
+      <div>
+        <h4 class="text-center pt-2">Informacje na temat pracownika</h4>
+      </div>
+      <div>
+        <fa-icon (click)="closeComponent()" style="font-size: 1.5rem;cursor: pointer" [icon]="faXmark"></fa-icon>
+      </div>
+    </div>
     <div class="row m-0">
       <div class="col-xl-3">
         <div class="d-flex justify-content-center align-items-center">
@@ -9,14 +19,16 @@
       </div>
       <div class="col-xl-9 mt-4">
         <h5 class="fw-light">Informacje osobowe</h5>
-        <form [formGroup]="employeeForm" #form="ngForm" (ngSubmit)="getInvalidControl() && !employeeForm.invalid && onEmployeeFormSubmit()">
+        <form [formGroup]="employeeForm" #form="ngForm"
+              (ngSubmit)="getInvalidControl() && !employeeForm.invalid && onEmployeeFormSubmit()">
           <div class="row m-0">
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="personId">Numer pesel</label>
-                <input type="text" placeholder="Wpisz numer pesel pracownika" formControlName="personId" class="form-control" id="personId"
+                <input type="text" placeholder="Wpisz numer pesel pracownika" formControlName="personId"
+                       class="form-control" id="personId"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['personId'].errors ||
-                    (errors.has('personId') && fe['personId'].pristine)  }" />
+                    (errors.has('personId') && fe['personId'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['personId'].errors" class="invalid-feedback">
                   <div *ngIf="fe['personId'].errors['required']">
                     Pesel jest wymagany
@@ -28,7 +40,8 @@
                     Pesel jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('personId') && fe['personId'].valid && fe['personId'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('personId') && fe['personId'].valid && fe['personId'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('personId')}}
                 </div>
               </div>
@@ -36,10 +49,11 @@
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="firstName">Imię</label>
-                <input type="text" placeholder="Wpisz imię pracownika" formControlName="firstName" class="form-control" id="firstName"
+                <input type="text" placeholder="Wpisz imię pracownika" formControlName="firstName" class="form-control"
+                       id="firstName"
                        maxlength="32" minlength="3"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['firstName'].errors ||
-                    (errors.has('firstName') && fe['firstName'].pristine)  }" />
+                    (errors.has('firstName') && fe['firstName'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['firstName'].errors" class="invalid-feedback">
                   <div *ngIf="fe['firstName'].errors['required']">
                     Imie jest wymagane
@@ -48,7 +62,8 @@
                     Wpisane imie jest nieprawidłowe
                   </div>
                 </div>
-                <div *ngIf="errors.has('firstName') && fe['firstName'].valid && fe['firstName'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('firstName') && fe['firstName'].valid && fe['firstName'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('firstName')}}
                 </div>
               </div>
@@ -56,9 +71,10 @@
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="surname">Nazwisko</label>
-                <input type="text" placeholder="Wpisz nazwisko pracownika" formControlName="surname" class="form-control" id="surname"
+                <input type="text" placeholder="Wpisz nazwisko pracownika" formControlName="surname"
+                       class="form-control" id="surname"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['surname'].errors ||
-                    (errors.has('surname') && fe['surname'].pristine)  }" />
+                    (errors.has('surname') && fe['surname'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['surname'].errors" class="invalid-feedback">
                   <div *ngIf="fe['surname'].errors['required']">
                     Nazwisko jest wymagane
@@ -67,7 +83,8 @@
                     Nazwisko jest nieprawidłowe
                   </div>
                 </div>
-                <div *ngIf="errors.has('surname') && fe['surname'].valid && fe['surname'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('surname') && fe['surname'].valid && fe['surname'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('surname')}}
                 </div>
               </div>
@@ -75,9 +92,10 @@
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="phoneNr">Numer telefonu</label>
-                <input type="text" placeholder="Wpisz numer telefonu pracownika" formControlName="phoneNr" class="form-control" id="phoneNr"
+                <input type="text" placeholder="Wpisz numer telefonu pracownika" formControlName="phoneNr"
+                       class="form-control" id="phoneNr"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['phoneNr'].errors ||
-                    (errors.has('phoneNr') && fe['phoneNr'].pristine)  }" />
+                    (errors.has('phoneNr') && fe['phoneNr'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['phoneNr'].errors" class="invalid-feedback">
                   <div *ngIf="fe['phoneNr'].errors['required']">
                     Numer telefonu jest wymagany
@@ -86,7 +104,8 @@
                     Numer telefonu jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('phoneNr') && fe['phoneNr'].valid && fe['phoneNr'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('phoneNr') && fe['phoneNr'].valid && fe['phoneNr'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('phoneNr')}}
                 </div>
               </div>
@@ -97,7 +116,7 @@
                 <input type="text" placeholder="Wpisz numer konta bankowego pracownika" formControlName="accountNr"
                        class="form-control" id="accountNr"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['accountNr'].errors ||
-                    (errors.has('accountNr') && fe['accountNr'].pristine)  }" />
+                    (errors.has('accountNr') && fe['accountNr'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['accountNr'].errors" class="invalid-feedback">
                   <div *ngIf="fe['accountNr'].errors['required']">
                     Numer konta bankowego jest wymagany
@@ -106,7 +125,8 @@
                     Numer konta bankowego jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('accountNr') && fe['accountNr'].valid && fe['accountNr'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('accountNr') && fe['accountNr'].valid && fe['accountNr'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('accountNr')}}
                 </div>
               </div>
@@ -121,7 +141,7 @@
                 <input type="text" placeholder="Wpisz miasto zamieszkania pracownika" formControlName="city"
                        class="form-control" id="city"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['city'].errors ||
-                    (errors.has('city') && fe['city'].pristine)  }" />
+                    (errors.has('city') && fe['city'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['city'].errors" class="invalid-feedback">
                   <div *ngIf="fe['city'].errors['required']">
                     Miasto jest wymagane
@@ -130,17 +150,18 @@
                     Miasto jest nieprawidłowe
                   </div>
                 </div>
-                <div *ngIf="errors.has('city') && fe['city'].valid && fe['city'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('city') && fe['city'].valid && fe['city'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('city')}}
                 </div>
               </div>
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="street">Ulica:</label>
+                <label class="fw-bolder" for="street">Ulica:</label>
                 <input type="text" placeholder="Podaj ulicę" formControlName="street" class="form-control" id="street"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['street'].errors ||
-                    (errors.has('street') && fe['street'].pristine)  }" />
+                    (errors.has('street') && fe['street'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['street'].errors" class="invalid-feedback">
                   <div *ngIf="fe['street'].errors['required']">
                     Nazwa ulicy jest wymagana
@@ -149,17 +170,19 @@
                     Nazwa ulicy jest nieprawidłowa
                   </div>
                 </div>
-                <div *ngIf="errors.has('street') && fe['street'].valid && fe['street'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('street') && fe['street'].valid && fe['street'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('street')}}
                 </div>
               </div>
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="houseNr">Numer domu:</label>
-                <input type="text" placeholder="Podaj numer domu" formControlName="houseNr" class="form-control" id="houseNr"
+                <label class="fw-bolder" for="houseNr">Numer domu:</label>
+                <input type="text" placeholder="Podaj numer domu" formControlName="houseNr" class="form-control"
+                       id="houseNr"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['houseNr'].errors ||
-                    (errors.has('houseNr') && fe['houseNr'].pristine)  }" />
+                    (errors.has('houseNr') && fe['houseNr'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['houseNr'].errors" class="invalid-feedback">
                   <div *ngIf="fe['houseNr'].errors['required']">
                     Numer domu jest wymagany
@@ -168,17 +191,19 @@
                     Numer domu jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('houseNr') && fe['houseNr'].valid && fe['houseNr'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('houseNr') && fe['houseNr'].valid && fe['houseNr'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('houseNr')}}
                 </div>
               </div>
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="flatNr">Numer mieszkania:</label>
-                <input type="text" placeholder="Podaj numer mieszkania" formControlName="flatNr" class="form-control" id="flatNr"
+                <label class="fw-bolder" for="flatNr">Numer mieszkania:</label>
+                <input type="text" placeholder="Podaj numer mieszkania" formControlName="flatNr" class="form-control"
+                       id="flatNr"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['flatNr'].errors ||
-                    (errors.has('flatNr') && fe['flatNr'].pristine)  }" />
+                    (errors.has('flatNr') && fe['flatNr'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['flatNr'].errors" class="invalid-feedback">
                   <div *ngIf="fe['flatNr'].errors['required']">
                     Numer mieszkania jest wymagany
@@ -187,17 +212,19 @@
                     Numer mieszkania jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('flatNr') && fe['flatNr'].valid && fe['flatNr'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('flatNr') && fe['flatNr'].valid && fe['flatNr'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('flatNr')}}
                 </div>
               </div>
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="postcode">Kod pocztowy:</label>
-                <input type="text" placeholder="Podaj kod pocztowy" formControlName="postcode" class="form-control" id="postcode"
+                <label class="fw-bolder" for="postcode">Kod pocztowy:</label>
+                <input type="text" placeholder="Podaj kod pocztowy" formControlName="postcode" class="form-control"
+                       id="postcode"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['postcode'].errors ||
-                    (errors.has('postcode') && fe['postcode'].pristine)  }" />
+                    (errors.has('postcode') && fe['postcode'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['postcode'].errors" class="invalid-feedback">
                   <div *ngIf="fe['postcode'].errors['required']">
                     Kod pocztowy jest wymagany
@@ -206,7 +233,8 @@
                     Kod pocztowy jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('postcode') && fe['postcode'].valid && fe['postcode'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('postcode') && fe['postcode'].valid && fe['postcode'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('postcode')}}
                 </div>
               </div>
@@ -217,12 +245,13 @@
           <div class="row m-0">
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="employmentDate">Data zatrudnienia:</label>
+                <label class="fw-bolder" for="employmentDate">Data zatrudnienia:</label>
                 <div class="input-group">
                   <input class="form-control" placeholder="yyyy-mm-dd"
                          [ngClass]="{ 'is-invalid': form.submitted && fe['employmentDate'].errors ||
                     (errors.has('employmentDate') && fe['employmentDate'].pristine)}"
-                         id="employmentDate" formControlName="employmentDate" [minDate]="startDate" ngbDatepicker #d="ngbDatepicker">
+                         id="employmentDate" formControlName="employmentDate" [minDate]="startDate" ngbDatepicker
+                         #d="ngbDatepicker">
                   <button class="btn btn-outline-grey calendar" (click)="d.toggle()" type="button"></button>
                 </div>
                 <div *ngIf="form.submitted && fe['employmentDate'].errors" class="invalid-feedback d-block">
@@ -241,13 +270,13 @@
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="dismissalDate">Data zwolnienia:</label>
+                <label class="fw-bolder" for="dismissalDate">Data zwolnienia:</label>
                 <div class="input-group">
                   <input class="form-control" placeholder="yyyy-mm-dd"
                          [ngClass]="{ 'is-invalid': form.submitted && fe['dismissalDate'].errors ||
                     (errors.has('dismissalDate') && fe['dismissalDate'].pristine) }"
-                         id="dismissalDate" formControlName="dismissalDate" ngbDatepicker #d="ngbDatepicker">
-                  <button class="btn btn-outline-grey calendar" (click)="d.toggle()" type="button"></button>
+                         id="dismissalDate" formControlName="dismissalDate" ngbDatepicker #ngd="ngbDatepicker">
+                  <button class="btn btn-outline-grey calendar" (click)="ngd.toggle()" type="button"></button>
                 </div>
                 <div *ngIf="errors.has('dismissalDate') && fe['dismissalDate'].valid && fe['dismissalDate'].pristine"
                      class="invalid-feedback d-block">
@@ -257,7 +286,7 @@
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="dismissalDate">Pracownik aktywny:</label>
+                <label class="fw-bolder" for="dismissalDate">Pracownik aktywny:</label>
                 <div class="form-check">
                   <input class="form-check-input" [value]="true" formControlName="active" type="radio" id="activeYes">
                   <label class="form-check-label" for="activeYes">
@@ -274,12 +303,15 @@
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="workstation">Stanowisko pracy:</label>
+                <label class="fw-bolder" for="workstation">Stanowisko pracy:</label>
                 <select class="form-select" id="workstation"
                         [ngClass]="{ 'is-invalid': form.submitted && fe['workstation'].errors}"
                         formControlName="workstation" aria-label="Workstation select">
-                  <option disabled hidden [selected]="fe['workstation']?.value === null" [ngValue]="null">Wybierz stanowisko pracy</option>
-                  <option *ngFor="let workstation of workstations" [ngValue]="workstation.id">{{workstation.name}}</option>
+                  <option disabled hidden [selected]="fe['workstation']?.value === null" [ngValue]="null">Wybierz
+                    stanowisko pracy
+                  </option>
+                  <option *ngFor="let workstation of workstations"
+                          [ngValue]="workstation.id">{{workstation.name}}</option>
                 </select>
                 <div *ngIf="form.submitted && fe['workstation'].errors" class="invalid-feedback">
                   <div *ngIf="fe['workstation'].errors['required']">
@@ -290,10 +322,11 @@
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="salary">Pensja:</label>
-                <input type="number" placeholder="Podaj pensję pracownika" formControlName="salary" class="form-control" id="salary"
+                <label class="fw-bolder" for="salary">Pensja:</label>
+                <input type="number" placeholder="Podaj pensję pracownika" formControlName="salary" class="form-control"
+                       id="salary"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['salary'].errors ||
-                    (errors.has('salary') && fe['salary'].pristine)  }" />
+                    (errors.has('salary') && fe['salary'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['salary'].errors" class="invalid-feedback">
                   <div *ngIf="fe['salary'].errors['required']">
                     Pensja jest wymagana
@@ -302,17 +335,18 @@
                     Pensja musi być liczbą dodatnią
                   </div>
                 </div>
-                <div *ngIf="errors.has('salary') && fe['salary'].valid && fe['salary'].pristine" class="invalid-feedback d-block">
+                <div *ngIf="errors.has('salary') && fe['salary'].valid && fe['salary'].pristine"
+                     class="invalid-feedback d-block">
                   {{errors.get('salary')}}
                 </div>
               </div>
             </div>
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
-                <label for="restaurant">Miejsce pracy:</label>
+                <label class="fw-bolder" for="restaurant">Miejsce pracy:</label>
                 <select class="form-select" id="restaurant"
                         [ngClass]="{ 'is-invalid': form.submitted && fe['restaurant'].errors}"
-                        formControlName="workstation" aria-label="Restaurant select">
+                        formControlName="restaurant" aria-label="Restaurant select">
                   <option disabled hidden [selected]="fe['restaurant']?.value === null" [ngValue]="null">
                     Wybierz miejsce pracy
                   </option>
@@ -334,7 +368,7 @@
                 </button>
               </div>
             </div>
-            <div *ngIf="form.submitted && form.invalid" class="invalid-feedback d-block">
+            <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
               <div class="d-flex justify-content-center align-items-center">
                 Formularz zawiera błędy
               </div>
@@ -363,12 +397,16 @@
         <div class="input-group">
           <input class="form-control" placeholder="yyyy-mm-dd"
                  [ngClass]="{ 'is-invalid': form.submitted && fs['startShiftDate'].errors}"
-                 id="startShift" formControlName="startShiftDate" [minDate]="startDate" ngbDatepicker #d="ngbDatepicker">
+                 id="startShift" formControlName="startShiftDate" [minDate]="startDate" ngbDatepicker
+                 #d="ngbDatepicker">
           <button class="btn btn-outline-grey calendar" (click)="d.toggle()" type="button"></button>
         </div>
         <div *ngIf="form.submitted && fs['startShiftDate'].errors" class="invalid-feedback d-block">
           <div *ngIf="fs['startShiftDate'].errors['required']">
             Data rozpoczęcia pracy jest wymagana
+          </div>
+          <div *ngIf="fs['startShiftDate'].errors['pattern']">
+            Data rozpoczęcia pracy musi być w formacie yyyy-mm-dd
           </div>
           <div *ngIf="fs['startShiftDate'].errors['invalidDate']">
             Data rozpoczęcia pracy nie może być z przeszłości.

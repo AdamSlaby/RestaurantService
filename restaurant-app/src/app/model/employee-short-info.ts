@@ -1,5 +1,5 @@
 export interface EmployeeShortInfo {
-  id: string;
+  id: number;
   name: string;
   surname: string;
   workstationId: number;

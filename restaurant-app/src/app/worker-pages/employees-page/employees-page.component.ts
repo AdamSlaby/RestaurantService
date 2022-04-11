@@ -7,7 +7,7 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import {faEye, faPenToSquare, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faEye, faPenToSquare, faXmark, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {EmployeeList} from "../../model/employee-list";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
@@ -15,7 +15,6 @@ import {RestaurantShortInfo} from "../../model/restaurant-short-info";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Workstation} from "../../model/workstation";
 import {WorkstationListView} from "../../model/workstation-list-view";
-import {timeout} from "rxjs";
 
 @Component({
   selector: 'app-employees-page',
@@ -27,6 +26,7 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   faEye = faEye;
   faPenToSquare = faPenToSquare;
   faXmark = faXmark;
+  faUserPlus = faUserPlus;
   innerHeight!: number;
   contentHeight!: number;
   keyword!: string;
@@ -36,6 +36,7 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   pageNr!: number;
   maxSize: number = 10;
   selectedEmployeeId: any;
+  showEmployeeDetails: boolean = false;
   workstations: WorkstationListView[] = [
     {
       id: 1,
@@ -71,61 +72,61 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     maxPage: 10,
     employees: [
       {
-        id: '77102017553',
+        id: 1,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 2,
         name: 'Adam',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 3,
         name: 'Marcin',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 4,
         name: 'Łukasz',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 5,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 6,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 7,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 8,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 9,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
       },
       {
-        id: '77102017553',
+        id: 10,
         name: 'Marek',
         surname: 'Bykowski',
         workstationId: 1,
@@ -155,7 +156,8 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     this.modalService.open(content, {}).result.then((result) => {});
   }
 
-  seeDetails(id: string) {
+  seeEmployeeDetails(id: number) {
+    this.showEmployeeDetails = true;
     this.selectedEmployeeId = id;
     setTimeout(() => {
       let employeeInfo = document.getElementById('employeeInfo');
@@ -163,7 +165,8 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     }, 1);
   }
 
-  edit(id: string) {
+  editEmployee(id: number) {
+    this.showEmployeeDetails = true;
     this.selectedEmployeeId = id;
     setTimeout(() => {
       let employeeInfo = document.getElementById('employeeInfo');
@@ -171,14 +174,20 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     }, 1)
   }
 
-  dismiss(id: string) {
+  openDismissModal(id: number, dismissEmployeeForm: any) {
     //todo
+    this.selectedEmployeeId = id;
+    this.open(dismissEmployeeForm);
   }
 
   loadPage(page: number) {
     if (this.previousPage !== this.pageNr) {
       this.previousPage = this.pageNr;
     }
+  }
+
+  closeEmployeeDetails() {
+    this.showEmployeeDetails = false;
   }
 
   onSort(event: SortEvent) {
@@ -213,5 +222,18 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
   scrollIntoElement(element: HTMLElement | null) {
     if (element)
       element.scrollIntoView({behavior: "smooth"});
+  }
+
+  addNewEmployee() {
+    this.showEmployeeDetails = true;
+    this.selectedEmployeeId = -1;
+    setTimeout(() => {
+      let employeeInfo = document.getElementById('employeeInfo');
+      this.scrollIntoElement(employeeInfo);
+    }, 1)
+  }
+
+  dismissEmployee(dismissEmployeeForm: any) {
+    dismissEmployeeForm.close();
   }
 }

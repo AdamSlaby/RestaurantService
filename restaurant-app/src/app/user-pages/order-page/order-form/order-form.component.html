@@ -210,7 +210,7 @@
       </button>
     </div>
   </div>
-  <div *ngIf="form.submitted && form.invalid" class="invalid-feedback d-block">
+  <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
     Formularz zawiera błędy
   </div>
 </form>

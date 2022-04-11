@@ -2,6 +2,8 @@ import {AbstractControl, ValidationErrors, ValidatorFn} from "@angular/forms";
 
 export function personIdValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value)
+      return {invalidPersonId: true};
     let wages: number[] = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
     let pesel = control.value;
     let sum = 0;

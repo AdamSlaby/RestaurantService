@@ -6,6 +6,7 @@ import {ScheduleInfo} from "./schedule-info";
 export interface EmployeeInfo {
   shortInfo: EmployeeShortInfo;
   phoneNr: string;
+  pesel: string;
   accountNr: string;
   salary: number;
   active: boolean;

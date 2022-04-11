@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {faUserCircle} from "@fortawesome/free-solid-svg-icons";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {faUserCircle, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {CalendarOptions, FullCalendarComponent} from "@fullcalendar/angular";
 import plLocale from "@fullcalendar/core/locales/pl";
 import {Schedule} from "../../model/schedule";
@@ -11,7 +11,7 @@ import {RegexPattern} from "../../model/regex-pattern";
 import {personIdValidator} from "../../validators/pesel-validator";
 import {WorkstationListView} from "../../model/workstation-list-view";
 import {RestaurantShortInfo} from "../../model/restaurant-short-info";
-
+import {Employee} from "../../model/employee";
 
 @Component({
   selector: 'app-employee-info',
@@ -19,11 +19,13 @@ import {RestaurantShortInfo} from "../../model/restaurant-short-info";
   styleUrls: ['./employee-info.component.scss']
 })
 export class EmployeeInfoComponent implements OnInit {
-  @ViewChild('eventForm', {static: false}) private addEvent: any;
+  @ViewChild('eventForm', {static: false}) private eventForm: any;
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   @Input() workstations!: WorkstationListView[];
-  @Input() employeeId!: number;
+  @Input() employeeId!: any;
+  @Output() closeEmployeeDetails = new EventEmitter<void>();
   faUserCircle = faUserCircle;
+  faXmark = faXmark;
   editScheduleId: any;
   errors: Map<string, string> = new Map<string, string>();
   loading = false;
@@ -41,7 +43,7 @@ export class EmployeeInfoComponent implements OnInit {
       addEventButton: {
         text: 'Dodaj godziny pracy',
         click: () => {
-          this.open(this.addEvent)
+          this.open(this.eventForm)
         },
       }
     },
@@ -62,40 +64,6 @@ export class EmployeeInfoComponent implements OnInit {
       editBtn.addEventListener('click', this.editEvent.bind(this, editBtn));
     }
   };
-  schedule!: Schedule;
-  employeeInfo: EmployeeInfo = {
-    shortInfo: {
-      id: '77102017553',
-      name: 'Marek',
-      surname: 'Bykowski',
-      workstationId: 1,
-    },
-    address: {
-      city: 'Kielce',
-      street: 'Warszawska',
-      postcode: '25-734',
-      houseNr: '100',
-      flatNr: '20',
-    },
-    phoneNr: '+48 602 602 602',
-    accountNr: '85 9159 1036 1388 9882 8976 0258',
-    salary: 3000.50,
-    active: true,
-    employmentDate: new Date(),
-    dismissalDate: null,
-    restaurantInfo: {
-      restaurantId: 1,
-      city: 'Kielce',
-      street: 'Warszawska'
-    },
-    scheduleInfo: [
-      {
-        id: 1,
-        startShift: new Date('8 April 2022 08:00:00 UTC'),
-        endShift: new Date('8 April 2022 16:00:00 UTC'),
-      }
-    ]
-  }
   restaurants: RestaurantShortInfo[] = [
     {
       restaurantId: 1,
@@ -113,6 +81,8 @@ export class EmployeeInfoComponent implements OnInit {
       street: 'Warszawska'
     }
   ]
+  schedule!: Schedule;
+  employeeInfo!: EmployeeInfo;
 
   scheduleForm = this.fb.group({
     startShiftDate: ['', [Validators.required, minDateValidator(this.calendar)]],
@@ -121,30 +91,30 @@ export class EmployeeInfoComponent implements OnInit {
   });
 
   employeeForm = this.fb.group({
-    personId: [this.employeeInfo.shortInfo.id, [Validators.required, Validators.pattern(RegexPattern.ID), personIdValidator()]],
-    firstName: [this.employeeInfo.shortInfo.name, [Validators.required, Validators.pattern(RegexPattern.NAME)]],
-    surname: [this.employeeInfo.shortInfo.surname, [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
-    phoneNr: [this.employeeInfo.phoneNr, [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
-    accountNr: [this.employeeInfo.accountNr, [Validators.required, Validators.pattern(RegexPattern.ACCOUNT_NR)]],
-    city: [this.employeeInfo.address.city, [Validators.required, Validators.pattern(RegexPattern.CITY)]],
-    street: [this.employeeInfo.address.street, [Validators.required, Validators.pattern(RegexPattern.STREET)]],
-    houseNr: [this.employeeInfo.address.houseNr, [Validators.required, Validators.pattern(RegexPattern.HOUSE_NR)]],
-    flatNr: [this.employeeInfo.address.flatNr, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
-    postcode: [this.employeeInfo.address.postcode, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
-    employmentDate: [{
-      year: this.employeeInfo.employmentDate.getFullYear(),
-      month: this.employeeInfo.employmentDate.getMonth() + 1,
-      day: this.employeeInfo.employmentDate.getDate()
-    } as NgbDateStruct, [Validators.required, minDateValidator(this.calendar)]],
-    dismissalDate: [this.employeeInfo.dismissalDate ? {
-      year: this.employeeInfo.dismissalDate?.getFullYear(),
-      month: this.employeeInfo.dismissalDate?.getMonth() + 1,
-      day: this.employeeInfo.dismissalDate?.getDate(),
+    personId: [this.employeeInfo?.pesel, [Validators.required, Validators.pattern(RegexPattern.ID), personIdValidator()]],
+    firstName: [this.employeeInfo?.shortInfo?.name, [Validators.required, Validators.pattern(RegexPattern.NAME)]],
+    surname: [this.employeeInfo?.shortInfo?.surname, [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
+    phoneNr: [this.employeeInfo?.phoneNr, [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
+    accountNr: [this.employeeInfo?.accountNr, [Validators.required, Validators.pattern(RegexPattern.ACCOUNT_NR)]],
+    city: [this.employeeInfo?.address?.city, [Validators.required, Validators.pattern(RegexPattern.CITY)]],
+    street: [this.employeeInfo?.address?.street, [Validators.required, Validators.pattern(RegexPattern.STREET)]],
+    houseNr: [this.employeeInfo?.address?.houseNr, [Validators.required, Validators.pattern(RegexPattern.HOUSE_NR)]],
+    flatNr: [this.employeeInfo?.address?.flatNr, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
+    postcode: [this.employeeInfo?.address?.postcode, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
+    employmentDate: [this.employeeInfo?.employmentDate ? {
+      year: this.employeeInfo?.employmentDate?.getFullYear(),
+      month: this.employeeInfo?.employmentDate?.getMonth() + 1,
+      day: this.employeeInfo?.employmentDate?.getDate()
+    } as NgbDateStruct : null, [Validators.required, minDateValidator(this.calendar)]],
+    dismissalDate: [this.employeeInfo?.dismissalDate ? {
+      year: this.employeeInfo?.dismissalDate?.getFullYear(),
+      month: this.employeeInfo?.dismissalDate?.getMonth() + 1,
+      day: this.employeeInfo?.dismissalDate?.getDate(),
     } as NgbDateStruct : null],
-    active: [this.employeeInfo.active],
-    workstation: [this.employeeInfo.shortInfo.workstationId, [Validators.required]],
-    salary: [this.employeeInfo.salary, [Validators.required, Validators.min(1)]],
-    restaurant: [this.employeeInfo.restaurantInfo.restaurantId, [Validators.required]],
+    active: [this.employeeInfo?.active ? this.employeeInfo?.active : true],
+    workstation: [this.employeeInfo?.shortInfo?.workstationId, [Validators.required]],
+    salary: [this.employeeInfo?.salary, [Validators.required, Validators.min(1)]],
+    restaurant: [this.employeeInfo?.restaurantInfo?.restaurantId, [Validators.required]],
   })
 
   constructor(private modalService: NgbModal, private fb: FormBuilder,
@@ -152,8 +122,70 @@ export class EmployeeInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    for (let schedule of this.employeeInfo.scheduleInfo) {
-      this.addScheduleToCalendar(schedule, schedule.id);
+    if (this.employeeId !== -1) {
+      this.employeeInfo = {
+        shortInfo: {
+          id: 1,
+          name: 'Marek',
+          surname: 'Bykowski',
+          workstationId: 1,
+        },
+        address: {
+          city: 'Kielce',
+          street: 'Warszawska',
+          postcode: '25-734',
+          houseNr: '100',
+          flatNr: '20',
+        },
+        pesel: '75041326745',
+        phoneNr: '+48 602 602 602',
+        accountNr: '85 9159 1036 1388 9882 8976 0258',
+        salary: 3000.50,
+        active: true,
+        employmentDate: new Date(),
+        dismissalDate: null,
+        restaurantInfo: {
+          restaurantId: 1,
+          city: 'Kielce',
+          street: 'Warszawska'
+        },
+        scheduleInfo: [
+          {
+            id: 1,
+            startShift: new Date('8 April 2022 08:00:00 UTC'),
+            endShift: new Date('8 April 2022 16:00:00 UTC'),
+          }
+        ]
+      }
+      this.employeeForm.patchValue({
+        personId: this.employeeInfo?.pesel,
+        firstName: this.employeeInfo?.shortInfo?.name,
+        surname: this.employeeInfo?.shortInfo?.surname,
+        phoneNr: this.employeeInfo?.phoneNr,
+        accountNr: this.employeeInfo?.accountNr,
+        city: this.employeeInfo?.address?.city,
+        street: this.employeeInfo?.address?.street,
+        houseNr: this.employeeInfo?.address?.houseNr,
+        flatNr: this.employeeInfo?.address?.flatNr,
+        postcode: this.employeeInfo?.address?.postcode,
+        employmentDate: this.employeeInfo?.employmentDate ? {
+          year: this.employeeInfo?.employmentDate?.getFullYear(),
+          month: this.employeeInfo?.employmentDate?.getMonth() + 1,
+          day: this.employeeInfo?.employmentDate?.getDate()
+        } as NgbDateStruct : null,
+        dismissalDate: this.employeeInfo?.dismissalDate ? {
+          year: this.employeeInfo?.dismissalDate?.getFullYear(),
+          month: this.employeeInfo?.dismissalDate?.getMonth() + 1,
+          day: this.employeeInfo?.dismissalDate?.getDate(),
+        } as NgbDateStruct : null,
+        active: this.employeeInfo?.active ? this.employeeInfo?.active : true,
+        workstation: this.employeeInfo?.shortInfo?.workstationId,
+        salary: this.employeeInfo?.salary,
+        restaurant: this.employeeInfo?.restaurantInfo?.restaurantId,
+      });
+      for (let schedule of this.employeeInfo.scheduleInfo) {
+        this.addScheduleToCalendar(schedule, schedule.id);
+      }
     }
   }
 
@@ -254,7 +286,7 @@ export class EmployeeInfoComponent implements OnInit {
       this.scheduleForm.get('endShiftTime')?.setValue(endTime);
     }
     this.editScheduleId = id;
-    this.open(this.addEvent);
+    this.open(this.eventForm);
   }
 
   dismiss(modal: any) {
@@ -263,13 +295,11 @@ export class EmployeeInfoComponent implements OnInit {
   }
 
   onEmployeeFormSubmit() {
-    let employeeInfo: EmployeeInfo = {
-      shortInfo: {
-        id: this.employeeForm.get('personId')?.value,
-        name: this.employeeForm.get('firstName')?.value,
-        surname: this.employeeForm.get('surname')?.value,
-        workstationId: this.employeeForm.get('workstation')?.value,
-      },
+    let employeeInfo: Employee = {
+      name: this.employeeForm.get('firstName')?.value,
+      surname: this.employeeForm.get('surname')?.value,
+      workstationId: this.employeeForm.get('workstation')?.value,
+      pesel: this.employeeForm.get('personId')?.value,
       phoneNr: this.employeeForm.get('phoneNr')?.value,
       salary: this.employeeForm.get('salary')?.value,
       active: this.employeeForm.get('active')?.value,
@@ -284,12 +314,7 @@ export class EmployeeInfoComponent implements OnInit {
         flatNr: this.employeeForm.get('flatNr')?.value,
         postcode: this.employeeForm.get('postcode')?.value,
       },
-      scheduleInfo: [],
-      restaurantInfo: {
-        restaurantId: this.employeeForm.get('restaurant')?.value,
-        city: '',
-        street: '',
-      }
+      restaurantId: this.employeeForm.get('restaurant')?.value,
     }
     console.log(employeeInfo);
   }
@@ -301,5 +326,9 @@ export class EmployeeInfoComponent implements OnInit {
         console.log(controls[name]);
     }
     return true;
+  }
+
+  closeComponent() {
+    this.closeEmployeeDetails.emit();
   }
 }

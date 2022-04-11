@@ -24,6 +24,16 @@
         <button class="btn btn-outline-grey">Reset</button>
       </div>
     </div>
+
+    <div class="bg-white p-2 mt-3" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Opcje</h4>
+      <div class="d-grid">
+        <button class="btn btn-outline-grey" (click)="addNewEmployee()">
+          <fa-icon class="me-2" [icon]="faUserPlus"></fa-icon>
+          <span>Dodaj nowego pracownika</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="col-xl-6 pb-3">
@@ -51,11 +61,11 @@
             <td>
               <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
                        ngbTooltip="Zobacz pełne informacje"
-                       (click)="seeDetails(employee.id)" [icon]="faEye"></fa-icon>
+                       (click)="seeEmployeeDetails(employee.id)" [icon]="faEye"></fa-icon>
               <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
-                       (click)="edit(employee.id)" [icon]="faPenToSquare"></fa-icon>
+                       (click)="editEmployee(employee.id)" [icon]="faPenToSquare"></fa-icon>
               <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Zwolnij"
-                       (click)="dismiss(employee.id)" [icon]="faXmark"></fa-icon>
+                       (click)="openDismissModal(employee.id, dismissEmployeeForm)" [icon]="faXmark"></fa-icon>
             </td>
           </tr>
           </tbody>
@@ -72,5 +82,19 @@
     </div>
   </div>
 
-  <app-employee-info id="employeeInfo" *ngIf="selectedEmployeeId" [workstations]="workstations"></app-employee-info>
+  <ng-template #dismissEmployeeForm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Czy zwolnić pracownika o identyfikatorze {{selectedEmployeeId}}?</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" class="btn btn-outline-success me-4" (click)="dismissEmployee(dismissEmployeeForm)">Tak</button>
+        <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
+      </div>
+    </div>
+  </ng-template>
+
+  <app-employee-info id="employeeInfo" *ngIf="showEmployeeDetails" (closeEmployeeDetails)="closeEmployeeDetails()"
+                     [employeeId]="selectedEmployeeId" [workstations]="workstations"></app-employee-info>
 </div>
