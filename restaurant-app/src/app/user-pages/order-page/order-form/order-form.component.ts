@@ -5,7 +5,7 @@ import {RegexPattern} from "../../../model/regex-pattern";
 import {faCreditCard, faMoneyBill1Wave} from "@fortawesome/free-solid-svg-icons";
 import {faPaypal} from "@fortawesome/free-brands-svg-icons";
 import {PaymentMethod} from "../../../model/payment-method";
-import {OrderInfo} from "../../../model/order-info";
+import {OrderInfo} from "../../../model/dish/order-info";
 
 @Component({
   selector: 'app-order-form',

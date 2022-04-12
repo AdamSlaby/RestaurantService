@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {RestaurantShortInfo} from "../../model/restaurant-short-info";
+import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {Router} from "@angular/router";
 
 @Component({

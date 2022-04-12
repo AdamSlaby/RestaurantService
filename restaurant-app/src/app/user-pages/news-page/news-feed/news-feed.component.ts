@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {News} from "../../../model/news";
+import {NewsInfo} from "../../../model/news/news-info";
 
 @Component({
   selector: 'app-news-feed',
@@ -8,7 +8,7 @@ import {News} from "../../../model/news";
 })
 export class NewsFeedComponent implements OnInit, AfterViewInit {
   newsPage!: number
-  newsFeed: News[] = [
+  newsFeed: NewsInfo[] = [
     {
       newsId: 1,
       imageUrl: 'assets/mexican_food.jpg',

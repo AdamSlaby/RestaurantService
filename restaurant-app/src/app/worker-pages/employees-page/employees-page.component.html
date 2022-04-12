@@ -1,4 +1,4 @@
-<div id="employeesContent" class="row m-0 py-3 px-2 overflow-auto" [style.height.px]="contentHeight">
+<div id="employeesContent" class="row m-0 py-3 px-2">
   <div class="col-xl-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center mb-4">Filtrowanie</h4>
@@ -21,7 +21,7 @@
         </datalist>
       </div>
       <div class="d-flex justify-content-center align-items-center">
-        <button class="btn btn-outline-grey">Reset</button>
+        <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
             <td>
               <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
                        ngbTooltip="Zobacz pełne informacje"
-                       (click)="seeEmployeeDetails(employee.id)" [icon]="faEye"></fa-icon>
+                       (click)="editEmployee(employee.id)" [icon]="faEye"></fa-icon>
               <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
                        (click)="editEmployee(employee.id)" [icon]="faPenToSquare"></fa-icon>
               <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Zwolnij"
@@ -71,7 +71,7 @@
           </tbody>
         </table>
         <div class="d-flex justify-content-center align-items-center">
-          <ngb-pagination [collectionSize]="employeesList.maxPage * maxSize"
+          <ngb-pagination [collectionSize]="employeesList.maxPage * pageSize"
                           [(page)]="pageNr"
                           [maxSize]="5"
                           [rotate]="true"
@@ -82,19 +82,19 @@
     </div>
   </div>
 
-  <ng-template #dismissEmployeeForm let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Czy zwolnić pracownika o identyfikatorze {{selectedEmployeeId}}?</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body">
-      <div class="d-flex justify-content-center align-items-center">
-        <button type="button" class="btn btn-outline-success me-4" (click)="dismissEmployee(dismissEmployeeForm)">Tak</button>
-        <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
-      </div>
-    </div>
-  </ng-template>
-
   <app-employee-info id="employeeInfo" *ngIf="showEmployeeDetails" (closeEmployeeDetails)="closeEmployeeDetails()"
                      [employeeId]="selectedEmployeeId" [workstations]="workstations"></app-employee-info>
 </div>
+
+<ng-template #dismissEmployeeForm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Czy zwolnić pracownika o identyfikatorze {{selectedEmployeeId}}?</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="btn btn-outline-success me-4" (click)="dismissEmployee(dismissEmployeeForm)">Tak</button>
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
+    </div>
+  </div>
+</ng-template>

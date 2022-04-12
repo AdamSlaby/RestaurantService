@@ -2,16 +2,16 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {faUserCircle, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {CalendarOptions, FullCalendarComponent} from "@fullcalendar/angular";
 import plLocale from "@fullcalendar/core/locales/pl";
-import {Schedule} from "../../model/schedule";
-import {EmployeeInfo} from "../../model/employee-info";
+import {Schedule} from "../../model/schedule/schedule";
+import {EmployeeInfo} from "../../model/employee/employee-info";
 import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
 import {FormBuilder, Validators} from "@angular/forms";
 import {minDateValidator} from "../../validators/min-date-validator";
 import {RegexPattern} from "../../model/regex-pattern";
 import {personIdValidator} from "../../validators/pesel-validator";
-import {WorkstationListView} from "../../model/workstation-list-view";
-import {RestaurantShortInfo} from "../../model/restaurant-short-info";
-import {Employee} from "../../model/employee";
+import {WorkstationListView} from "../../model/workstation/workstation-list-view";
+import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
+import {Employee} from "../../model/employee/employee";
 
 @Component({
   selector: 'app-employee-info',
@@ -52,16 +52,18 @@ export class EmployeeInfoComponent implements OnInit {
     },
     eventContent: (event) => {
       return {
-        html: '<span style="font-size: 16px">'+ event.timeText +'</span>' +
-          '<span class="editBtn" id="edit-' + event.event.id + '"></span>' +
-          '<span class="removeBtn" id="remove-'+ event.event.id + '"></span>'
+        html: '<div class="d-block d-md-flex">' +
+          '<span class="position-relative" style="font-size: 16px;">'+ event.timeText +'</span>' +
+          '<span class="editBtn ms-md-4 position-relative" id="edit-' + event.event.id + '"></span>' +
+          '<span class="removeBtn ms-md-1 position-relative" id="remove-'+ event.event.id + '"></span>' +
+          '</div>'
       };
     },
     eventDidMount: (event) => {
-      let removeBtn = event.el.children[0].children[2];
-      removeBtn.addEventListener('click', this.removeEvent.bind(this, removeBtn))
-      let editBtn = event.el.children[0].children[1];
+      let editBtn = event.el.children[0].children[0].children[1];
       editBtn.addEventListener('click', this.editEvent.bind(this, editBtn));
+      let removeBtn = event.el.children[0].children[0].children[2];
+      removeBtn.addEventListener('click', this.removeEvent.bind(this, removeBtn))
     }
   };
   restaurants: RestaurantShortInfo[] = [

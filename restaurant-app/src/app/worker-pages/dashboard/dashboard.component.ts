@@ -8,9 +8,9 @@ import {
   faCoins,
   faHourglassStart
 } from "@fortawesome/free-solid-svg-icons";
-import {ActiveOrder} from "../../model/active-order";
+import {ActiveOrder} from "../../model/dish/active-order";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {DailyOrdersAmount} from "../../model/daily-orders-amount";
+import {DailyOrdersAmount} from "../../model/dish/daily-orders-amount";
 
 @Component({
   selector: 'app-dashboard',

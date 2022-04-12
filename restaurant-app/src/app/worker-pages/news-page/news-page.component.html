@@ -1,0 +1,101 @@
+<div id="newsContent" class="row m-0 py-3 px-2">
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Filtrowanie</h4>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenNews" placeholder="Identyfikator wiadomości"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getNewsById()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenEmployeeId" placeholder="Identyfikator pracownika"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getNewsByEmployeeId()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="titleKeyword" placeholder="Tytuł wiadomości"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getNewsByTitle()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenDate" ngbDatepicker #d="ngbDatepicker"
+               (ngModelChange)="getNewsByDate()" [minDate]="minDate"
+               placeholder="Data publikacji wiadomości"/>
+        <button class="btn btn-outline-grey calendar" type="button" (click)="d.toggle()"></button>
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
+      </div>
+    </div>
+
+    <div class="bg-white p-2 mt-3" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Opcje</h4>
+      <div class="d-grid">
+        <button class="btn btn-outline-grey" (click)="createNews()">
+          <fa-icon class="me-2" [icon]="faPlus"></fa-icon>
+          <span>Stwórz nową wiadomość</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center">Lista opublikowanych wiadomości</h4>
+      <div>
+        <table class="table table-striped table-hover text-center overflow-auto">
+          <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">ID pracownika</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col" sortable="date" (sort)="onSort($event)">Data publikacji</th>
+            <th scope="col">Opcje</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let news of newsList.news">
+            <th scope="row">{{news.id}}</th>
+            <td>{{news.employeeId}}</td>
+            <td>{{news.title}}</td>
+            <td>
+              {{news.date | date:'mediumDate':'+0000':'pl-PL'}}
+            </td>
+            <td>
+              <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
+                       ngbTooltip="Zobacz pełne informacje"
+                       (click)="editNews(news.id)" [icon]="faEye"></fa-icon>
+              <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
+                       (click)="editNews(news.id)" [icon]="faPenToSquare"></fa-icon>
+              <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Usuń"
+                       (click)="openRemoveModal(news.id, removeNewsForm)" [icon]="faXmark"></fa-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+          <ngb-pagination [collectionSize]="newsList.maxPage * pageSize"
+                          [(page)]="pageNr"
+                          [maxSize]="5"
+                          [rotate]="true"
+                          [boundaryLinks]="true"
+                          (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-news-form id="newsForm" *ngIf="showNewsDetails" (closeNewsDetails)="closeNewsDetails()"
+                 [newsId]="selectedNewsId"></app-news-form>
+</div>
+
+
+<ng-template #removeNewsForm let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Czy usunąć wiadomość o identyfikatorze {{selectedNewsId}}?</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="btn btn-outline-success me-4" (click)="removeNews(removeNewsForm)">Tak</button>
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
+    </div>
+  </div>
+</ng-template>

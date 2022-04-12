@@ -1,7 +1,7 @@
 import {EmployeeShortInfo} from "./employee-short-info";
-import {Address} from "./address";
-import {RestaurantShortInfo} from "./restaurant-short-info";
-import {ScheduleInfo} from "./schedule-info";
+import {Address} from "../address";
+import {RestaurantShortInfo} from "../restaurant/restaurant-short-info";
+import {ScheduleInfo} from "../schedule/schedule-info";
 
 export interface EmployeeInfo {
   shortInfo: EmployeeShortInfo;

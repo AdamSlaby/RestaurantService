@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {News} from "../../../model/news";
+import {NewsInfo} from "../../../model/news/news-info";
 
 @Component({
   selector: 'app-news-info',
@@ -9,7 +9,7 @@ import {News} from "../../../model/news";
 })
 export class NewsInfoComponent implements OnInit, AfterViewInit {
   newsId!: number;
-  news: News = {
+  news: NewsInfo = {
     newsId: 1,
     imageUrl: 'assets/mexican_food.jpg',
     title: 'Tydzień meksykański tylko u nas',
@@ -30,9 +30,13 @@ export class NewsInfoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.route.fragment.subscribe((fragment) => {
-      let element = document.querySelector('#' + fragment);
-      if (element)
-        element.scrollIntoView();
+      if (fragment) {
+        let element = document.getElementById(fragment);
+          setTimeout(() => {
+            if (element)
+            element.scrollIntoView({behavior: "smooth"});
+          }, 1)
+      }
     })
   }
 }

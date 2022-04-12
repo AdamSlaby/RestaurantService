@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {Order} from "../model/order";
-import {DishOrderView} from "../model/dish-order-view";
+import {Order} from "../model/dish/order";
+import {DishOrderView} from "../model/dish/dish-order-view";
 
 @Injectable({
   providedIn: 'root'

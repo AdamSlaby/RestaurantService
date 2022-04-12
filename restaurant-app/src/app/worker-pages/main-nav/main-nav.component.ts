@@ -25,6 +25,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   isNavCollapsed!: boolean;
   innerWidth!: number;
   innerHeight!: number;
+  contentHeight!: number;
 
   constructor(private cd: ChangeDetectorRef, private router: Router) {
     this.router.events.subscribe(val => {
@@ -41,6 +42,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.showMenu();
+    this.setContentHeight();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -48,6 +50,15 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
     this.resizeMenu();
+    this.setContentHeight();
+  }
+
+  private setContentHeight() {
+    let header = document.getElementById('header');
+    if (header) {
+      this.contentHeight = Math.floor(this.innerHeight - header.getBoundingClientRect().height - 1);
+      this.cd.detectChanges();
+    }
   }
 
   showMenu() {

@@ -1,4 +1,4 @@
-import {DishType} from "./type";
+import {DishType} from "./dish-type";
 
 export interface Dish {
   id: number;

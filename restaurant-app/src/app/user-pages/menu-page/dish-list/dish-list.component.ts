@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Dish} from "../../../model/dish";
+import {Dish} from "../../../model/dish/dish";
 
 @Component({
   selector: 'app-dish-list',

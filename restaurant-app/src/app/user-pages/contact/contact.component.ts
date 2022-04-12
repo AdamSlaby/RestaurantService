@@ -3,7 +3,7 @@ import {OpeningHour} from "../../model/opening-hour";
 import {FormBuilder, Validators} from "@angular/forms";
 import {faPhone, faEnvelope, faLocationDot, faCity} from "@fortawesome/free-solid-svg-icons";
 import {MailInfo} from "../../model/mail-info";
-import {RestaurantInfo} from "../../model/restaurant-info";
+import {RestaurantInfo} from "../../model/restaurant/restaurant-info";
 import {RegexPattern} from "../../model/regex-pattern";
 
 @Component({

@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {NgbCalendar, NgbDate} from "@ng-bootstrap/ng-bootstrap";
 import {faUserGroup, faCalendar, faClock} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Time} from "../../../model/time";
+import {TimeUtility} from "../../../utility/time-utility";
 
 @Component({
   selector: 'app-date-reservation',
@@ -75,7 +75,7 @@ export class DateReservationComponent implements OnInit, AfterViewInit {
   hourClick(hour: Date) {
     this.selectedDate.setHours(hour.getHours(), hour.getMinutes());
     sessionStorage.setItem('peopleNr', this.getPeopleNr());
-    sessionStorage.setItem('date', new Date(Time.getUtcDAte(this.selectedDate)).toISOString());
+    sessionStorage.setItem('date', new Date(TimeUtility.getUtcDAte(this.selectedDate)).toISOString());
     this.router.navigate( ['/reservation/customer'], {fragment: 'customerForm'});
   }
 }

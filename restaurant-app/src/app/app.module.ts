@@ -44,10 +44,11 @@ import { BankAccountPipe } from './pipe/bank-account.pipe';
 import {FullCalendarModule} from "@fullcalendar/angular";
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { EmployeeInfoComponent } from './worker-pages/employee-info/employee-info.component';
+import { NewsPageComponent } from './worker-pages/news-page/news-page.component';
+import {NewsFormComponent} from "./worker-pages/news-form/news-form.component";
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
-  // interactionPlugin
 ]);
 
 @NgModule({
@@ -82,6 +83,8 @@ FullCalendarModule.registerPlugins([
     NgbdSortableHeaderDirective,
     BankAccountPipe,
     EmployeeInfoComponent,
+    NewsPageComponent,
+    NewsFormComponent,
   ],
   imports: [
     BrowserModule,

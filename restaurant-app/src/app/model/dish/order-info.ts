@@ -1,5 +1,5 @@
-import {Address} from "./address";
-import {PaymentMethod} from "./payment-method";
+import {Address} from "../address";
+import {PaymentMethod} from "../payment-method";
 
 export interface OrderInfo {
   name: string;

@@ -6,7 +6,7 @@
     </div>
     <div class="col-8 px-4">
       <div>
-        <a routerLink="/news/info/{{news.newsId}}" class="d-block text-dark"
+        <a [routerLink]="['/news/'+ news.newsId]" fragment="newsContent" class="d-block text-dark"
            style="font-size: 24px;font-family: 'Lato', sans-serif;'">
           {{news.title}}
         </a>
@@ -17,7 +17,7 @@
       <div class="pt-4" style="text-align: justify;font-weight: 200">
         {{news.content}}
         <p class="w-100 text-end text-black pt-2" style="font-size: 13px">
-          <a [routerLink]="['/news/'+ news.newsId]" fragment="news" id="read-more">
+          <a [routerLink]="['/news/'+ news.newsId]" fragment="newsContent" id="read-more">
             Czytaj więcej <span style="font-weight: 800">&gt;</span>
           </a>
         </p>

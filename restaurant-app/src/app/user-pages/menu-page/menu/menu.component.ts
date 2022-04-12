@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
-import {Dish} from "../../../model/dish";
-import {DishType} from "../../../model/type";
+import {Dish} from "../../../model/dish/dish";
+import {DishType} from "../../../model/dish/dish-type";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({

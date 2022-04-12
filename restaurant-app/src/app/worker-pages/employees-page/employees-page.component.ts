@@ -1,40 +1,31 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
-import {faEye, faPenToSquare, faXmark, faUserPlus} from "@fortawesome/free-solid-svg-icons";
-import {EmployeeList} from "../../model/employee-list";
+import {ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {faEye, faPenToSquare, faUserPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {EmployeeList} from "../../model/employee/employee-list";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
-import {RestaurantShortInfo} from "../../model/restaurant-short-info";
+import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {Workstation} from "../../model/workstation";
-import {WorkstationListView} from "../../model/workstation-list-view";
+import {Workstation} from "../../model/workstation/workstation";
+import {WorkstationListView} from "../../model/workstation/workstation-list-view";
+import {HtmlUtility} from "../../utility/html-utility";
 
 @Component({
   selector: 'app-employees-page',
   templateUrl: './employees-page.component.html',
   styleUrls: ['./employees-page.component.scss']
 })
-export class EmployeesPageComponent implements OnInit, AfterViewInit {
+export class EmployeesPageComponent implements OnInit {
   @ViewChildren(NgbdSortableHeaderDirective) headers!: QueryList<NgbdSortableHeaderDirective>;
   faEye = faEye;
   faPenToSquare = faPenToSquare;
   faXmark = faXmark;
   faUserPlus = faUserPlus;
-  innerHeight!: number;
-  contentHeight!: number;
   keyword!: string;
   previousPage!: number;
   chosenRestaurant!: string;
   chosenEmployee!: string;
   pageNr!: number;
-  maxSize: number = 10;
+  pageSize: number = 10;
   selectedEmployeeId: any;
   showEmployeeDetails: boolean = false;
   workstations: WorkstationListView[] = [
@@ -141,36 +132,15 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     this.previousPage = 1;
   }
 
-  ngAfterViewInit() {
-    this.innerHeight = document.body.clientHeight;
-    this.setContentHeight();
-  }
-
-  @HostListener('window:resize',['$event'])
-  onResize($event: any) {
-    this.innerHeight = document.body.clientHeight;
-    this.setContentHeight();
-  }
-
   open(content: any) {
     this.modalService.open(content, {}).result.then((result) => {});
-  }
-
-  seeEmployeeDetails(id: number) {
-    this.showEmployeeDetails = true;
-    this.selectedEmployeeId = id;
-    setTimeout(() => {
-      let employeeInfo = document.getElementById('employeeInfo');
-      this.scrollIntoElement(employeeInfo);
-    }, 1);
   }
 
   editEmployee(id: number) {
     this.showEmployeeDetails = true;
     this.selectedEmployeeId = id;
     setTimeout(() => {
-      let employeeInfo = document.getElementById('employeeInfo');
-      this.scrollIntoElement(employeeInfo);
+      HtmlUtility.scrollIntoView('employeeInfo');
     }, 1)
   }
 
@@ -207,33 +177,23 @@ export class EmployeesPageComponent implements OnInit, AfterViewInit {
     //todo
   }
 
-  private setContentHeight() {
-    let header = document.getElementById('header');
-    if (header) {
-      this.contentHeight = Math.floor(this.innerHeight - header.getBoundingClientRect().height - 1);
-      this.cd.detectChanges();
-    }
-  }
-
   getWorkstationById(id: number): string {
     return this.workstations.filter(el => el.id === id)[0].name.toString();
-  }
-
-  scrollIntoElement(element: HTMLElement | null) {
-    if (element)
-      element.scrollIntoView({behavior: "smooth"});
   }
 
   addNewEmployee() {
     this.showEmployeeDetails = true;
     this.selectedEmployeeId = -1;
     setTimeout(() => {
-      let employeeInfo = document.getElementById('employeeInfo');
-      this.scrollIntoElement(employeeInfo);
+      HtmlUtility.scrollIntoView('employeeInfo');
     }, 1)
   }
 
   dismissEmployee(dismissEmployeeForm: any) {
     dismissEmployeeForm.close();
+  }
+
+  resetFilters() {
+    //todo
   }
 }

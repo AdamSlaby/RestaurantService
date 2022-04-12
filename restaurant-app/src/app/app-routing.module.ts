@@ -19,6 +19,7 @@ import {LoginPageComponent} from "./worker-pages/login-page/login-page.component
 import {DashboardComponent} from "./worker-pages/dashboard/dashboard.component";
 import {MainNavComponent} from "./worker-pages/main-nav/main-nav.component";
 import {EmployeesPageComponent} from "./worker-pages/employees-page/employees-page.component";
+import {NewsPageComponent} from "./worker-pages/news-page/news-page.component";
 
 const routes: Routes = [
   {
@@ -100,6 +101,10 @@ const routes: Routes = [
       {
         path: 'employees',
         component: EmployeesPageComponent,
+      },
+      {
+        path: 'news',
+        component: NewsPageComponent,
       }
     ]
   },
