@@ -20,13 +20,13 @@ export class NewsPageComponent implements OnInit {
   selectedNewsId!: number;
   previousPage!: number;
   pageNr!: number;
-  pageSize!: number;
   chosenEmployeeId: any;
   showNewsDetails: boolean = false;
   chosenDate!: NgbDateStruct | any;
   minDate = this.calendar.getToday();
   newsList: NewsListView = {
     maxPage: 10,
+    totalElements: 110,
     news: [
       {
         id: 1,
@@ -46,7 +46,7 @@ export class NewsPageComponent implements OnInit {
       this.newsList.news.push(Object.assign({}, newsShortInfo));
     }
     this.pageNr = 1;
-    this.pageSize = 10;
+    this.previousPage = 1;
   }
 
   open(content: any) {

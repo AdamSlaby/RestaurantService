@@ -46,6 +46,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { EmployeeInfoComponent } from './worker-pages/employee-info/employee-info.component';
 import { NewsPageComponent } from './worker-pages/news-page/news-page.component';
 import {NewsFormComponent} from "./worker-pages/news-form/news-form.component";
+import { MenuPageComponent } from './worker-pages/menu-page/menu-page.component';
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -85,6 +86,7 @@ FullCalendarModule.registerPlugins([
     EmployeeInfoComponent,
     NewsPageComponent,
     NewsFormComponent,
+    MenuPageComponent,
   ],
   imports: [
     BrowserModule,

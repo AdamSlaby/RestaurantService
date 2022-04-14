@@ -1,9 +1,7 @@
-import {DishType} from "./dish-type";
-
 export interface Dish {
   id: number;
   name: string;
-  type: DishType;
+  type: string;
   ingredients: string;
   price: number;
   isBest: boolean;

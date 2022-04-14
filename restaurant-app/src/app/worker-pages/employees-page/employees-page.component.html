@@ -20,6 +20,16 @@
           </option>
         </datalist>
       </div>
+      <div class="mb-3">
+        <select class="form-select" id="workstation" (ngModelChange)="getEmployeesByWorkstation()"
+                [(ngModel)]="chosenWorkstation" aria-label="Workstation select">
+          <option disabled hidden [selected]="chosenWorkstation === null" [ngValue]="null">
+            Wybierz stanowisko pracy
+          </option>
+          <option *ngFor="let workstation of workstations"
+                  [ngValue]="workstation.id">{{workstation.name.toString()}}</option>
+        </select>
+      </div>
       <div class="d-flex justify-content-center align-items-center">
         <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
       </div>
@@ -71,7 +81,7 @@
           </tbody>
         </table>
         <div class="d-flex justify-content-center align-items-center">
-          <ngb-pagination [collectionSize]="employeesList.maxPage * pageSize"
+          <ngb-pagination [collectionSize]="employeesList.totalElements"
                           [(page)]="pageNr"
                           [maxSize]="5"
                           [rotate]="true"

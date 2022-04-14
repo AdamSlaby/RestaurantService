@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Dish} from "../../model/dish/dish";
-import {DishType} from "../../model/dish/dish-type";
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +14,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18.23,
       isBest: false,
@@ -23,7 +22,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
       isBest: false,
@@ -31,7 +30,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
       isBest: false,
@@ -39,7 +38,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
       isBest: false,
@@ -47,7 +46,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
       isBest: false,
@@ -55,7 +54,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
       isBest: false,
@@ -63,7 +62,7 @@ export class MainPageComponent implements OnInit {
     {
       id: 1,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18,
       isBest: false,

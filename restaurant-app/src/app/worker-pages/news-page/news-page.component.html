@@ -71,7 +71,7 @@
           </tbody>
         </table>
         <div class="d-flex justify-content-center align-items-center">
-          <ngb-pagination [collectionSize]="newsList.maxPage * pageSize"
+          <ngb-pagination [collectionSize]="newsList.totalElements"
                           [(page)]="pageNr"
                           [maxSize]="5"
                           [rotate]="true"

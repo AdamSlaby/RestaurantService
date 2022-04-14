@@ -3,55 +3,55 @@
   <app-topic-image id="soup" [urlImage]="soupImg" [minHeight]="600" content="Zupy"></app-topic-image>
   <div id="soupContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.SOUP, 0)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Zupy', 0)" [showBest]="true"></app-dish-list>
     </div>
     <div class="col-xl-4 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.SOUP, 1)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Zupy', 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
   <app-topic-image id="main-dish" [urlImage]="mainDishImg" [minHeight]="500" content="Dania glówne"></app-topic-image>
   <div id="main-dishContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 0)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Dania główne', 0)" [showBest]="true"></app-dish-list>
     </div>
     <div class="col-xl-4 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.MAIN_DISH, 1)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Dania główne', 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
   <app-topic-image id="fish" [urlImage]="fishImg" [minHeight]="500" content="Ryby"></app-topic-image>
   <div id="fishContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.FISH, 0)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Ryby', 0)" [showBest]="true"></app-dish-list>
     </div>
     <div class="col-xl-4 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.FISH, 1)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Ryby', 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
   <app-topic-image id="salad" [urlImage]="saladImg" [minHeight]="500" content="Salatki"></app-topic-image>
   <div id="saladContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.SALAD, 0)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Sałatki', 0)" [showBest]="true"></app-dish-list>
     </div>
     <div class="col-xl-4 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.SALAD, 1)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Sałatki', 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
   <app-topic-image id="dessert" [urlImage]="dessertImg" [minHeight]="500" content="Desery"></app-topic-image>
   <div id="dessertContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.DESSERT, 0)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Desery', 0)" [showBest]="true"></app-dish-list>
     </div>
     <div class="col-xl-4 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.DESSERT, 1)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Desery', 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
   <app-topic-image id="beverage" [urlImage]="beverageImg" [minHeight]="500" content="Napoje"></app-topic-image>
   <div id="beverageContent" class="row">
     <div class="col-xl-4 offset-xl-2 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.BEVERAGE, 0)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Napoje', 0)" [showBest]="true"></app-dish-list>
     </div>
     <div class="col-xl-4 px-2 px-lg-4">
-      <app-dish-list [dishes]="getDishes(type.BEVERAGE, 1)" [showBest]="true"></app-dish-list>
+      <app-dish-list [dishes]="getDishes('Napoje', 1)" [showBest]="true"></app-dish-list>
     </div>
   </div>
   <ng-container *ngIf="innerWidth >= 800">

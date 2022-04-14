@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
 import {Dish} from "../../../model/dish/dish";
-import {DishType} from "../../../model/dish/dish-type";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
@@ -9,7 +8,6 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit, AfterViewInit {
-  type = DishType;
   innerWidth!: number;
   soupImg: string = 'assets/soup-image.jpg';
   mainDishImg: string = 'assets/main_dish_image.jpg';
@@ -21,7 +19,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 6,
       name: 'Barszcz z uszkami',
-      type: DishType.SOUP,
+      type: 'Zupy',
       ingredients: '30g uszek',
       price: 22.32,
       isBest: true,
@@ -29,7 +27,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 6,
       name: 'Pomidorowa',
-      type: DishType.SOUP,
+      type: 'Zupy',
       ingredients: '30g makaronu',
       price: 21.32,
       isBest: true,
@@ -37,7 +35,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 1,
       name: 'Zupa szczawiowa',
-      type: DishType.SOUP,
+      type: 'Zupy',
       ingredients: 'z jajkiem i kiełbasą',
       price: 20.32,
       isBest: false,
@@ -45,7 +43,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 2,
       name: 'Pierogi',
-      type: DishType.MAIN_DISH,
+      type: 'Dania główne',
       ingredients: 'z kapustą i mięsem',
       price: 25.00,
       isBest: false,
@@ -53,7 +51,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 3,
       name: 'Śledź',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       price: 18.23,
       isBest: false,
@@ -61,7 +59,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 4,
       name: 'Sałatka grecka',
-      type: DishType.SALAD,
+      type: 'Sałatki',
       ingredients: 'i kurczakiem i serem pleśniowym',
       price: 28.23,
       isBest: false,
@@ -69,7 +67,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 5,
       name: 'TIRAMISU',
-      type: DishType.DESSERT,
+      type: 'Desery',
       ingredients: 'bita śmietana',
       price: 28.23,
       isBest: false,
@@ -77,7 +75,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     {
       id: 7,
       name: 'Mirinda 1L',
-      type: DishType.BEVERAGE,
+      type: 'Napoje',
       ingredients: '',
       price: 5.23,
       isBest: false,
@@ -99,8 +97,11 @@ export class MenuComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.route.fragment.subscribe(fragment => {
         let element = document.querySelector("#" + fragment);
-        if (element)
-          element.scrollIntoView();
+          setTimeout(() => {
+            if (element) {
+              element.scrollIntoView();
+            }
+          }, 1)
       }
     );
     this.innerWidth = window.innerWidth;
@@ -111,7 +112,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     this.innerWidth = window.innerWidth;
   }
 
-  getDishes(type: DishType, colNr: number) {
+  getDishes(type: string, colNr: number) {
     let dishes = this.menu.filter(el => el.type === type);
     let amountInCol = Math.ceil(dishes.length / 2.0);
     let firstIndex = colNr * amountInCol;

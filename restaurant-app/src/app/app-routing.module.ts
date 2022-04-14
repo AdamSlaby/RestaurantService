@@ -20,6 +20,7 @@ import {DashboardComponent} from "./worker-pages/dashboard/dashboard.component";
 import {MainNavComponent} from "./worker-pages/main-nav/main-nav.component";
 import {EmployeesPageComponent} from "./worker-pages/employees-page/employees-page.component";
 import {NewsPageComponent} from "./worker-pages/news-page/news-page.component";
+import {MenuPageComponent} from "./worker-pages/menu-page/menu-page.component";
 
 const routes: Routes = [
   {
@@ -105,6 +106,10 @@ const routes: Routes = [
       {
         path: 'news',
         component: NewsPageComponent,
+      },
+      {
+        path: 'menu',
+        component: MenuPageComponent,
       }
     ]
   },

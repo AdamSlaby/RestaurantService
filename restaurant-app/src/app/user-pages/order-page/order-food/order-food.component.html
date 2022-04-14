@@ -6,42 +6,42 @@
       </a>
     </li>
     <li *ngIf="!showSearchInput" [ngbNavItem]="0">
-      <a (click)="getDishesByType(type.SOUP)" ngbNavLink>Zupy</a>
+      <a (click)="getDishesByType('Zupy')" ngbNavLink>Zupy</a>
       <ng-template ngbNavContent>
         <app-order-list (addOrder)="addOrder($event)"
                         [dishes]="searchedDishes"></app-order-list>
       </ng-template>
     </li>
     <li *ngIf="!showSearchInput" [ngbNavItem]="1">
-      <a (click)="getDishesByType(type.MAIN_DISH)" ngbNavLink>Dania główne</a>
+      <a (click)="getDishesByType('Dania główne')" ngbNavLink>Dania główne</a>
       <ng-template ngbNavContent>
         <app-order-list (addOrder)="addOrder($event)"
                         [dishes]="searchedDishes"></app-order-list>
       </ng-template>
     </li>
     <li *ngIf="!showSearchInput" [ngbNavItem]="2">
-      <a (click)="getDishesByType(type.FISH)" ngbNavLink>Ryby</a>
+      <a (click)="getDishesByType('Ryby')" ngbNavLink>Ryby</a>
       <ng-template ngbNavContent>
         <app-order-list (addOrder)="addOrder($event)"
                         [dishes]="searchedDishes"></app-order-list>
       </ng-template>
     </li>
     <li *ngIf="!showSearchInput" [ngbNavItem]="3">
-      <a (click)="getDishesByType(type.SALAD)" ngbNavLink>Sałatki</a>
+      <a (click)="getDishesByType('Sałatki')" ngbNavLink>Sałatki</a>
       <ng-template ngbNavContent>
         <app-order-list (addOrder)="addOrder($event)"
                         [dishes]="searchedDishes"></app-order-list>
       </ng-template>
     </li>
     <li *ngIf="!showSearchInput" [ngbNavItem]="4">
-      <a (click)="getDishesByType(type.DESSERT)" ngbNavLink>Desery</a>
+      <a (click)="getDishesByType('Desery')" ngbNavLink>Desery</a>
       <ng-template ngbNavContent>
         <app-order-list (addOrder)="addOrder($event)"
                         [dishes]="searchedDishes"></app-order-list>
       </ng-template>
     </li>
     <li *ngIf="!showSearchInput" [ngbNavItem]="5">
-      <a (click)="getDishesByType(type.BEVERAGE)" ngbNavLink>Napoje</a>
+      <a (click)="getDishesByType('Napoje')" ngbNavLink>Napoje</a>
       <ng-template ngbNavContent>
         <app-order-list (addOrder)="addOrder($event)"
                         [dishes]="searchedDishes"></app-order-list>

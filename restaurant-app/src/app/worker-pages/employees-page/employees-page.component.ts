@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {faEye, faPenToSquare, faUserPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
-import {EmployeeList} from "../../model/employee/employee-list";
+import {EmployeeListView} from "../../model/employee/employee-list-view";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
@@ -25,9 +25,9 @@ export class EmployeesPageComponent implements OnInit {
   chosenRestaurant!: string;
   chosenEmployee!: string;
   pageNr!: number;
-  pageSize: number = 10;
   selectedEmployeeId: any;
   showEmployeeDetails: boolean = false;
+  chosenWorkstation: any = null;
   workstations: WorkstationListView[] = [
     {
       id: 1,
@@ -59,8 +59,9 @@ export class EmployeesPageComponent implements OnInit {
       street: 'Warszawska'
     }
   ]
-  employeesList: EmployeeList = {
+  employeesList: EmployeeListView = {
     maxPage: 10,
+    totalElements: 110,
     employees: [
       {
         id: 1,
@@ -194,6 +195,11 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   resetFilters() {
+    //todo
+    this.chosenWorkstation = null;
+  }
+
+  getEmployeesByWorkstation() {
     //todo
   }
 }

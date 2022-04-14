@@ -1,10 +1,8 @@
-import {DishType} from "./dish-type";
-
 export interface DishOrderView {
   id: number;
   imageUrl: string;
   name: string;
-  type: DishType;
+  type: string;
   ingredients: string;
   amount: number;
   price: number;

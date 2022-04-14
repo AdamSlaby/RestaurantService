@@ -2,7 +2,6 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {faBasketShopping} from "@fortawesome/free-solid-svg-icons";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {DishOrderView} from "../../../model/dish/dish-order-view";
-import {DishType} from "../../../model/dish/dish-type";
 import {BasketService} from "../../../service/basket.service";
 
 @Component({
@@ -21,7 +20,7 @@ export class OrderComponent implements OnInit {
       id: 10,
       name: 'Ogórkowa',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.SOUP,
+      type: 'Zupy',
       ingredients: '30g makaronu',
       amount: 1,
       price: 21.32,
@@ -30,7 +29,7 @@ export class OrderComponent implements OnInit {
       id: 6,
       name: 'Pomidorowa',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.SOUP,
+      type: 'Zupy',
       ingredients: '30g makaronu',
       amount: 1,
       price: 21.32,
@@ -39,7 +38,7 @@ export class OrderComponent implements OnInit {
       id: 2,
       name: 'Pierogi',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.MAIN_DISH,
+      type: 'Dania główne',
       ingredients: 'z kapustą i mięsem',
       amount: 1,
       price: 25.00,
@@ -48,7 +47,7 @@ export class OrderComponent implements OnInit {
       id: 3,
       name: 'Śledź',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.FISH,
+      type: 'Ryby',
       ingredients: 'Śledź 300g, frytki, zestaw surówek',
       amount: 1,
       price: 18.23,
@@ -57,7 +56,7 @@ export class OrderComponent implements OnInit {
       id: 4,
       name: 'Sałatka grecka',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.SALAD,
+      type: 'Sałatki',
       ingredients: 'i kurczakiem i serem pleśniowym',
       amount: 1,
       price: 28.23,
@@ -66,7 +65,7 @@ export class OrderComponent implements OnInit {
       id: 5,
       name: 'TIRAMISU',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.DESSERT,
+      type: 'Desery',
       ingredients: 'bita śmietana',
       amount: 1,
       price: 28.23,
@@ -75,7 +74,7 @@ export class OrderComponent implements OnInit {
       id: 7,
       name: 'Mirinda 1L',
       imageUrl: 'assets/soup.jpg',
-      type: DishType.BEVERAGE,
+      type: 'Napoje',
       ingredients: '',
       amount: 1,
       price: 5.23,

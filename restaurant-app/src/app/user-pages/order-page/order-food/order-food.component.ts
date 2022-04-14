@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {DishOrderView} from "../../../model/dish/dish-order-view";
-import {DishType} from "../../../model/dish/dish-type";
 import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {BasketService} from "../../../service/basket.service";
@@ -12,7 +11,6 @@ import {BasketService} from "../../../service/basket.service";
 })
 export class OrderFoodComponent implements OnInit {
   showSearchInput: boolean = false;
-  type = DishType;
   searchPhrase: string = '';
   faMagnifyingGlass = faMagnifyingGlass;
   faXmark = faXmark;
@@ -33,7 +31,7 @@ export class OrderFoodComponent implements OnInit {
         this.dishes.push(dishCopy);
       }
     }
-    this.getDishesByType(this.type.SOUP);
+    this.getDishesByType('Zupy');
   }
 
   onSearchClick() {
@@ -42,10 +40,10 @@ export class OrderFoodComponent implements OnInit {
 
   onCloseClick() {
     this.showSearchInput = false;
-    this.getDishesByType(this.type.SOUP);
+    this.getDishesByType('Zupy');
   }
 
-  getDishesByType(type: DishType) {
+  getDishesByType(type: string) {
     this.searchedDishes = this.dishes.filter(dish => dish.type === type)
   }
 
