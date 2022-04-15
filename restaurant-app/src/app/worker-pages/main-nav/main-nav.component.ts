@@ -88,7 +88,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
       case '/admin/news': return 'Aktualności';
       case '/admin/menu': return 'Menu';
       case '/admin/statistics': return 'Statystyki';
-      default: throw new Error('Page not found');
+      default: return '';
     }
   }
 }

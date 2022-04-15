@@ -21,6 +21,7 @@ import {MainNavComponent} from "./worker-pages/main-nav/main-nav.component";
 import {EmployeesPageComponent} from "./worker-pages/employees-page/employees-page.component";
 import {NewsPageComponent} from "./worker-pages/news-page/news-page.component";
 import {MenuPageComponent} from "./worker-pages/menu-page/menu-page.component";
+import {OrderPageComponent} from "./worker-pages/order-page/order-page.component";
 
 const routes: Routes = [
   {
@@ -110,7 +111,11 @@ const routes: Routes = [
       {
         path: 'menu',
         component: MenuPageComponent,
-      }
+      },
+      {
+        path: 'orders',
+        component: OrderPageComponent,
+      },
     ]
   },
   {

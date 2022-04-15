@@ -47,6 +47,7 @@ import { EmployeeInfoComponent } from './worker-pages/employee-info/employee-inf
 import { NewsPageComponent } from './worker-pages/news-page/news-page.component';
 import {NewsFormComponent} from "./worker-pages/news-form/news-form.component";
 import { MenuPageComponent } from './worker-pages/menu-page/menu-page.component';
+import { OrderPageComponent } from './worker-pages/order-page/order-page.component';
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -87,6 +88,7 @@ FullCalendarModule.registerPlugins([
     NewsPageComponent,
     NewsFormComponent,
     MenuPageComponent,
+    OrderPageComponent,
   ],
   imports: [
     BrowserModule,

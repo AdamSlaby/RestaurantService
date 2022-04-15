@@ -8,7 +8,7 @@
       </div>
       <div class="mb-3">
         <select class="form-select" (ngModelChange)="getMealByType()"
-                [(ngModel)]="chosenType" aria-label="Meal type select">
+                [(ngModel)]="chosenType" aria-label="MealInfo type select">
           <option disabled hidden [selected]="chosenType === null" [ngValue]="null">
             Wybierz typ
           </option>
@@ -24,11 +24,11 @@
     <div class="bg-white p-2 mt-3" style="border-radius: 10px;">
       <h4 class="text-center mb-4">Opcje</h4>
       <div class="d-grid">
-        <button class="btn btn-outline-grey mb-3" (click)="addMeal()">
+        <button class="btn btn-outline-grey mb-3" (click)="addMeal(mealFormModal)">
           <fa-icon class="me-2" [icon]="faPlus"></fa-icon>
           <span>Dodaj nowy posiłek</span>
         </button>
-        <button class="btn btn-outline-grey" (click)="addMealType(addMealTypeForm)">
+        <button class="btn btn-outline-grey" (click)="addMealType(mealTypeForm)">
           <fa-icon class="me-2" [icon]="faPlus"></fa-icon>
           <span>Dodaj nowy typ dań</span>
         </button>
@@ -61,9 +61,9 @@
             <td>
               <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
                        ngbTooltip="Zobacz pełne informacje"
-                       (click)="editMeal(meal.id)" [icon]="faEye"></fa-icon>
+                       (click)="editMeal(meal.id, mealFormModal)" [icon]="faEye"></fa-icon>
               <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
-                       (click)="editMeal(meal.id)" [icon]="faPenToSquare"></fa-icon>
+                       (click)="editMeal(meal.id, mealFormModal)" [icon]="faPenToSquare"></fa-icon>
               <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Usuń"
                        (click)="openRemoveModal(meal.id, removeMealForm)" [icon]="faXmark"></fa-icon>
             </td>
@@ -177,18 +177,18 @@
 
 <ng-template #removeMealForm let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" >Czy usunąć posiłek o identyfikatorze {{selectedMealId}}?</h4>
+    <h4 class="modal-title">Czy usunąć posiłek o identyfikatorze {{selectedMealId}}?</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
     <div class="d-flex justify-content-center align-items-center">
-      <button type="button" class="btn btn-outline-success me-4" (click)="removeMeal(removeMealForm)">Tak</button>
+      <button type="button" class="btn btn-outline-success me-4" (click)="removeMeal(modal)">Tak</button>
       <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
     </div>
   </div>
 </ng-template>
 
-<ng-template #addMealTypeForm let-modal>
+<ng-template #mealTypeForm let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Typy posiłków</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
@@ -218,5 +218,197 @@
         {{error}}
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #mealFormModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Dodaj/Edytuj posiłek</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body overflow-auto" style="max-height: 80vh">
+    <form [formGroup]="mealForm" #form="ngForm"
+          (ngSubmit)="getInvalidControl() && !mealForm.invalid && onMealFormSubmit(modal)">
+      <div *ngIf="meal?.imageUrl && chosenMealId !== -1" class="form-group mb-3">
+        <img class="img-fluid" [src]="meal.imageUrl" alt="MealInfo image"/>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="type" class="form-label">Typ posiłku</label>
+        <select class="form-select" id="type" formControlName="type"
+                [ngClass]="{ 'is-invalid': form.submitted && f['type'].errors ||
+                    (errors.has('type') && f['type'].pristine)  }"
+                aria-label="MealInfo type select">
+          <option disabled hidden [selected]="mealForm.get('type')?.value === null" [ngValue]="null">
+            Wybierz typ posiłku
+          </option>
+          <option *ngFor="let type of types"
+                  [ngValue]="type.id">{{type.name.toString()}}</option>
+        </select>
+        <div *ngIf="form.submitted && f['type'].errors" class="invalid-feedback">
+          <div *ngIf="f['type'].errors['required']">
+            Typ posiłku jest wymagany
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="name" class="form-label">Nazwa posiłku</label>
+        <input type="text" placeholder="Wpisz nazwę posiłku" formControlName="name" class="form-control"
+               id="name" maxlength="30"
+               [ngClass]="{ 'is-invalid': form.submitted && f['name'].errors ||
+                    (errors.has('name') && f['name'].pristine)  }"/>
+        <div *ngIf="form.submitted && f['name'].errors" class="invalid-feedback">
+          <div *ngIf="f['name'].errors['required']">
+            Nazwa posiłku jest wymagana
+          </div>
+          <div *ngIf="f['name'].errors['maxlength']">
+            Nazwa posiłku jest za długa. Może mieć maksymalnie 30 znaków.
+          </div>
+        </div>
+        <div *ngIf="errors.has('name') && f['name'].valid && f['name'].pristine"
+             class="invalid-feedback d-block">
+          {{errors.get('name')}}
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        <label for="price" class="form-label">Cena posiłku</label>
+        <div class="input-group">
+          <input type="number" placeholder="Wpisz cenę posiłku" formControlName="price"
+                 class="form-control" id="price"
+                 [ngClass]="{ 'is-invalid': form.submitted && f['price'].errors ||
+                    (errors.has('price') && f['price'].pristine)  }"/>
+          <span class="input-group-text" id="basic-addon2">zł</span>
+        </div>
+        <div *ngIf="form.submitted && f['price'].errors" class="invalid-feedback d-block">
+          <div *ngIf="f['price'].errors['required']">
+            Cena posiłku jest wymagana
+          </div>
+          <div *ngIf="f['price'].errors['min']">
+            Cena posiłku musi być liczbą dodatnią
+          </div>
+        </div>
+        <div *ngIf="errors.has('price') && f['price'].valid && f['price'].pristine"
+             class="invalid-feedback d-block">
+          {{errors.get('price')}}
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="image" class="form-label">Zdjęcie posiłku</label>
+        <input class="form-control" type="file" placeholder="Wgraj zdjęcię posiłku"
+               [ngClass]="{ 'is-invalid': form.submitted && f['image'].errors ||
+                    (errors.has('image') && f['image'].pristine)  }"
+               (change)="uploadPhoto($event)" accept=".jpeg,.jpg" id="image">
+        <ng-container *ngIf="mealForm.get('image')?.value !== null">
+          <label class="mt-3 d-block" for="preview">Podgląd</label>
+          <img id="preview" [src]="imageUrl" alt="Preview" class="img-fluid" width="200" height="100"/>
+        </ng-container>
+        <div *ngIf="form.submitted && f['image'].errors" class="invalid-feedback d-block">
+          <div *ngIf="f['image'].errors['required']">
+            Zdjęcie posiłku jest wymagane
+          </div>
+        </div>
+        <div *ngIf="errors.has('image') && f['image'].valid && f['image'].pristine"
+             class="invalid-feedback d-block">
+          {{errors.get('image')}}
+        </div>
+      </div>
+
+      <h5>Składniki:</h5>
+      <ng-container *ngIf="this.chosenMealId !== -1">
+        <div *ngFor="let ingredient of meal.ingredients; index as i" class="form-group mb-3">
+          <div class="input-group">
+            <button class="btn btn-outline-danger" type="button" (click)="removeExistingIngredient(ingredient)">
+              <fa-icon [icon]="faMinus"></fa-icon>
+            </button>
+            <input class="form-control" type="text" [(ngModel)]="ingredient.name" [ngModelOptions]="{standalone: true}"
+                   [ngClass]="{ 'is-invalid': errors.has('ingredient-' + i)}"
+                   placeholder="Wpisz nazwę składnika"
+                   list="ingredients"/>
+            <datalist id="ingredients">
+              <option *ngFor="let ingredientInfo of ingredients">{{ingredientInfo.name}}</option>
+            </datalist>
+          </div>
+
+          <div class="input-group mt-2">
+            <input class="form-control" type="number" [(ngModel)]="ingredient.amount"
+                   [ngClass]="{ 'is-invalid': errors.has('ingredient-' + i)}"
+                   [ngModelOptions]="{standalone: true}"
+                   placeholder="Wpisz ilość składnika"/>
+            <select class="form-select" [(ngModel)]="ingredient.measure" [ngModelOptions]="{standalone: true}"
+                    [ngClass]="{ 'is-invalid': errors.has('ingredient-' + i)}"
+                    aria-label="MealInfo type select">
+              <option disabled hidden [selected]="ingredient.measure === null" [ngValue]="null">
+                Wybierz miarę
+              </option>
+              <option *ngFor="let measure of measures"
+                      [ngValue]="measure.toString()">{{measure.toString()}}</option>
+            </select>
+          </div>
+          <div *ngIf="errors.has('ingredient-' + i)"
+               class="invalid-feedback d-block">
+            {{errors.get('ingredient-' + i)}}
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngFor="let ingredient of newIngredients; index as i" class="form-group mb-3">
+        <div class="input-group">
+          <button class="btn btn-outline-danger" type="button" (click)="removeIngredient(ingredient)">
+            <fa-icon [icon]="faMinus"></fa-icon>
+          </button>
+          <input class="form-control" type="text" [(ngModel)]="ingredient.name" [ngModelOptions]="{standalone: true}"
+                 placeholder="Wpisz nazwę składnika" [size]="ingredients.length" autocomplete="off"
+                 [ngClass]="{ 'is-invalid': errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}"
+                 list="newIngredients"/>
+          <datalist id="newIngredients">
+            <option *ngFor="let ingredientInfo of ingredients">{{ingredientInfo.name}}</option>
+          </datalist>
+        </div>
+
+        <div class="input-group mt-2">
+          <input class="form-control" type="number" [(ngModel)]="ingredient.amount"
+                 [ngModelOptions]="{standalone: true}"
+                 [ngClass]="{ 'is-invalid': errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}"
+                 placeholder="Wpisz ilość składnika"/>
+          <select class="form-select" [(ngModel)]="ingredient.measure" [ngModelOptions]="{standalone: true}"
+                  [ngClass]="{ 'is-invalid': errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}"
+                  aria-label="MealInfo type select">
+            <option disabled hidden [selected]="ingredient.measure === null" [ngValue]="null">
+              Wybierz miarę
+            </option>
+            <option *ngFor="let measure of measures"
+                    [ngValue]="measure.toString()">{{measure.toString()}}</option>
+          </select>
+        </div>
+        <div *ngIf="errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))"
+             class="invalid-feedback d-block">
+          {{errors.get('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}}
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <div class="d-flex justify-content-center align-items-center">
+          <button type="button" (click)="addMealIngredient()" class="btn btn-outline-success">
+            <fa-icon [icon]="faPlus"></fa-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="d-grid">
+          <button class="btn btn-outline-grey">
+            Zapisz
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
+        <div class="d-flex justify-content-center align-items-center">
+          Formularz zawiera błędy
+        </div>
+      </div>
+    </form>
   </div>
 </ng-template>

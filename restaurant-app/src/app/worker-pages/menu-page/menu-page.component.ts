@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {faEye, faPenToSquare, faPlus, faXmark, faMinus} from "@fortawesome/free-solid-svg-icons";
+import {faEye, faMinus, faPenToSquare, faPlus, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {Type} from "../../model/meal/type";
 import {MealListView} from "../../model/meal/meal-list-view";
 import {SortEvent} from "../../model/sort-event";
@@ -7,7 +7,11 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {MenuView} from "../../model/menu-view";
 import {Season} from "../../model/season";
 import {MealShortView} from "../../model/meal/meal-short-view";
-import {FormBuilder} from "@angular/forms";
+import {FormBuilder, Validators} from "@angular/forms";
+import {MealInfo} from "../../model/meal/meal-info";
+import {Ingredient} from "../../model/meal/ingredient";
+import {IngredientInfo} from "../../model/meal/ingredient-info";
+import {Measure} from "../../model/measure";
 
 @Component({
   selector: 'app-menu-page',
@@ -29,6 +33,27 @@ export class MenuPageComponent implements OnInit {
   selectedMealId!: number;
   dishName!: string;
   typeName!: string;
+  errors: Map<string, string> = new Map<string, string>();
+  imageUrl: any;
+  meal!: MealInfo;
+  newIngredients: Ingredient[] = [];
+  measures = Object.values(Measure);
+  chosenMealId!: number;
+  fd: FormData = new FormData();
+  ingredients: IngredientInfo[] = [
+    {
+      id: 1,
+      name: 'Mięso',
+    },
+    {
+      id: 2,
+      name: 'Marchewka',
+    },
+    {
+      id: 3,
+      name: 'Szczypiorek',
+    },
+  ];
   types: Type[] = [
     {
       id: 1,
@@ -81,6 +106,13 @@ export class MenuPageComponent implements OnInit {
       mealMap: new Map<string, MealShortView[]>(),
     },
   ];
+  mealForm = this.fb.group({
+    type: [null, [Validators.required]],
+    name: ['', [Validators.required, Validators.maxLength(30)]],
+    price: ['', [Validators.required, Validators.min(0)]],
+    image: [null],
+    ingredients: [''],
+  });
 
   constructor(private modalService: NgbModal, private fb: FormBuilder) { }
 
@@ -101,6 +133,10 @@ export class MenuPageComponent implements OnInit {
     this.previousPage = 1;
   }
 
+  get f() {
+    return this.mealForm.controls;
+  }
+
   open(content: any) {
     this.modalService.open(content, {}).result.then(() => {}).catch(() => {});
   }
@@ -118,13 +154,17 @@ export class MenuPageComponent implements OnInit {
     this.chosenType = null;
   }
 
-  addMeal() {
+  addMeal(modal: any) {
     //todo
+    this.chosenMealId = -1;
+    this.mealForm.reset();
+    this.newIngredients = [];
+    this.open(modal);
   }
 
-  addMealType(content: any) {
+  addMealType(modal: any) {
     //todo
-    this.open(content);
+    this.open(modal);
   }
 
   onSort($event: SortEvent) {
@@ -138,12 +178,51 @@ export class MenuPageComponent implements OnInit {
     }
   }
 
-  editMeal(id: number) {
+  editMeal(id: number, modal: any) {
     //todo
+    this.chosenMealId = id;
+    this.meal = {
+      id: 1,
+      name: 'Pomidorowa',
+      price: 20.50,
+      typeId: 1,
+      imageUrl: 'assets/soup.jpg',
+      ingredients: [
+        {
+          id: 1,
+          name: 'Mięso',
+          amount: 1,
+          measure: 'kg',
+        },
+        {
+          id: 2,
+          name: 'marchewka',
+          amount: 280,
+          measure: 'g',
+        },
+        {
+          id: 3,
+          name: 'Pietruszka',
+          amount: 90,
+          measure: 'g',
+        },
+      ]
+    };
+    this.mealForm.patchValue({
+      type: this.meal.typeId,
+      name: this.meal.name,
+      price: this.meal.price,
+      ingredients: this.meal.ingredients as Ingredient[],
+    });
+    this.open(modal);
   }
 
-  removeMeal(removeMealForm: any) {
+  removeMeal(modal: any) {
     //todo
+    let meals = this.mealList.meals;
+    let index = meals.findIndex(el => el.id === this.chosenMealId);
+    meals.splice(index, 1);
+    modal.close();
   }
 
   openRemoveModal(id: number, removeMealForm: any) {
@@ -201,5 +280,73 @@ export class MenuPageComponent implements OnInit {
 
   editType(type: Type) {
     //todo
+  }
+
+  getInvalidControl() {
+    let controls = this.f;
+    for (let name in controls) {
+      if (controls[name].invalid)
+        console.log(controls[name]);
+    }
+    return true;
+  }
+
+  onMealFormSubmit(modal: any) {
+    //todo
+    //todo
+    this.errors.clear();
+    let resultArr;
+    this.fd.set('name', this.mealForm.get('name')?.value);
+    this.fd.set('typeId', this.mealForm.get('type')?.value);
+    this.fd.set('price', this.mealForm.get('price')?.value);
+    this.fd.set('image', this.mealForm.get('image')?.value);
+    let value = this.mealForm.get('ingredients')?.value;
+    for (let ingredient of this.newIngredients) {
+      let ingredientInfo = this.ingredients.filter(el => el.name === ingredient.name);
+      if (ingredientInfo.length > 0)
+        ingredient.id = ingredientInfo[0].id;
+    }
+    if (value instanceof Array) {
+      resultArr = value.concat(this.newIngredients);
+    } else
+      resultArr = this.newIngredients;
+    modal.close();
+  }
+
+  uploadPhoto($event: any) {
+    if ($event.target.files[0]) {
+      this.mealForm.patchValue({
+        image: $event.target.files[0],
+      });
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imageUrl = reader.result as string;
+      }
+      reader.readAsDataURL($event.target.files[0]);
+    } else {
+      this.mealForm.patchValue({
+        image: null,
+      });
+    }
+  }
+
+  addMealIngredient() {
+    this.newIngredients.push({
+      id: -1,
+      name: '',
+      amount: -1,
+      measure: '',
+    });
+  }
+
+  removeIngredient(ingredient: Ingredient) {
+    let index = this.newIngredients.findIndex(el => el === ingredient);
+    this.newIngredients.splice(index, 1);
+  }
+
+  removeExistingIngredient(ingredient: Ingredient) {
+    let ingredients = this.meal.ingredients;
+    let index = ingredients.findIndex(el => el === ingredient);
+    ingredients.splice(index, 1);
   }
 }
