@@ -5,7 +5,9 @@ import {RegexPattern} from "../../../model/regex-pattern";
 import {faCreditCard, faMoneyBill1Wave} from "@fortawesome/free-solid-svg-icons";
 import {faPaypal} from "@fortawesome/free-brands-svg-icons";
 import {PaymentMethod} from "../../../model/payment-method";
-import {OrderInfo} from "../../../model/dish/order-info";
+import {OnlineOrder} from "../../../model/order/online-order";
+import {BasketService} from "../../../service/basket.service";
+import {Order} from "../../../model/order/order";
 
 @Component({
   selector: 'app-order-form',
@@ -34,7 +36,8 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
     paymentMethod: [this.payment.PAYPAL, [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute,
+              private basketService: BasketService) { }
 
   ngOnInit(): void {
   }
@@ -42,8 +45,10 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.route.fragment.subscribe(fragment => {
       let orderForm = document.getElementById('orderForm');
-      if (orderForm)
-        orderForm.scrollIntoView();
+      setTimeout(() => {
+        if (orderForm)
+          orderForm.scrollIntoView();
+      }, 1)
     })
   }
 
@@ -54,7 +59,9 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
   onSubmit() {
     this.errors.clear();
     this.loading=true;
-    let orderInfo: OrderInfo = {
+    let orders:Order[] = []
+    this.basketService.basket.forEach(el => orders.push(el));
+    let orderInfo: OnlineOrder = {
       name: this.orderForm.get('firstName')?.value,
       surname: this.orderForm.get('surname')?.value,
       email: this.orderForm.get('email')?.value,
@@ -67,7 +74,8 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
         houseNr: this.orderForm.get('houseNr')?.value,
         flatNr: this.orderForm.get('flatNr')?.value,
         postcode: this.orderForm.get('postcode')?.value,
-      }
+      },
+      orders: orders,
     }
     console.log(orderInfo);
   }

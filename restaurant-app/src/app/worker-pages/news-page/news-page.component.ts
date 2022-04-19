@@ -23,7 +23,6 @@ export class NewsPageComponent implements OnInit {
   chosenEmployeeId: any;
   showNewsDetails: boolean = false;
   chosenDate!: NgbDateStruct | any;
-  minDate = this.calendar.getToday();
   newsList: NewsListView = {
     maxPage: 10,
     totalElements: 110,
@@ -37,7 +36,7 @@ export class NewsPageComponent implements OnInit {
     ]
   }
 
-  constructor(private cd: ChangeDetectorRef, private calendar: NgbCalendar,
+  constructor(private cd: ChangeDetectorRef,
               private modalService: NgbModal) {}
 
   ngOnInit(): void {

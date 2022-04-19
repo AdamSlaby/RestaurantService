@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {Order} from "../model/dish/order";
+import {Order} from "../model/order/order";
 import {DishOrderView} from "../model/dish/dish-order-view";
 
 @Injectable({

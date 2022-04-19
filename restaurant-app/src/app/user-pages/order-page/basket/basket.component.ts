@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Order} from "../../../model/dish/order";
+import {Order} from "../../../model/order/order";
 import {DishOrderView} from "../../../model/dish/dish-order-view";
 import {faMinus, faPlus, faBasketShopping} from "@fortawesome/free-solid-svg-icons";
 import {BasketService} from "../../../service/basket.service";

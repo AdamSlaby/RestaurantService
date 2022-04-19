@@ -16,7 +16,7 @@
       </div>
       <div class="input-group mb-3">
         <input type="text" class="form-control" [(ngModel)]="chosenDate" ngbDatepicker #d="ngbDatepicker"
-               (ngModelChange)="getNewsByDate()" [minDate]="minDate"
+               (ngModelChange)="getNewsByDate()"
                placeholder="Data publikacji wiadomości"/>
         <button class="btn btn-outline-grey calendar" type="button" (click)="d.toggle()"></button>
       </div>

@@ -1,0 +1,323 @@
+<div class="pb-3">
+  <div class="bg-white p-2" style="border-radius: 10px;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+      </div>
+      <div>
+        <h4 class="text-center pt-2">Detale zamówienia</h4>
+      </div>
+      <div>
+        <fa-icon (click)="closeComponent()" style="font-size: 1.5rem;cursor: pointer" [icon]="faXmark"></fa-icon>
+      </div>
+    </div>
+
+    <div class="row m-0">
+      <div class="col-xl-3">
+        <div class="d-flex justify-content-center align-items-center">
+          <fa-icon class="fa-9x" [icon]="faCartShopping"></fa-icon>
+        </div>
+      </div>
+      <div class="col-xl-9">
+        <form [formGroup]="onlineOrderForm" #form="ngForm"
+              (ngSubmit)="getInvalidControl() && !onlineOrderForm.invalid && onOnlineOrderFormSubmit()">
+
+          <h5>Dane klienta</h5>
+          <div class="row m-0">
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="name">Imie</label>
+              <input type="text" placeholder="Podaj imię" formControlName="firstName" class="form-control" id="name"
+                     maxlength="32"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['firstName'].errors ||
+                    (errors.has('name') && fo['firstName'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['firstName'].errors" class="invalid-feedback">
+                <div *ngIf="fo['firstName'].errors['required']">
+                  Imie jest wymagane
+                </div>
+                <div *ngIf="fo['firstName'].errors['pattern']">
+                  Imie jest nieprawidłowe
+                </div>
+              </div>
+              <div *ngIf="errors.has('name') && fo['firstName'].valid && fo['firstName'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('name')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="surname">Nazwisko</label>
+              <input type="text" placeholder="Podaj nazwisko" formControlName="surname" class="form-control"
+                     id="surname" maxlength="32"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['surname'].errors ||
+                    (errors.has('surname') && fo['surname'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['surname'].errors" class="invalid-feedback">
+                <div *ngIf="fo['surname'].errors['required']">
+                  Nazwisko jest wymagane
+                </div>
+                <div *ngIf="fo['surname'].errors['pattern']">
+                  Nazwisko jest nieprawidłowe
+                </div>
+              </div>
+              <div *ngIf="errors.has('surname') && fo['surname'].valid && fo['surname'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('surname')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="email">E-mail</label>
+              <input type="text" placeholder="Podaj email" formControlName="email" class="form-control" id="email"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['email'].errors ||
+                    (errors.has('email') && fo['email'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['email'].errors" class="invalid-feedback">
+                <div *ngIf="fo['email'].errors['required']">
+                  Email jest wymagany
+                </div>
+                <div *ngIf="fo['email'].errors['email']">
+                  Email jest nieprawidłowy
+                </div>
+              </div>
+              <div *ngIf="errors.has('email') && fo['email'].valid && fo['email'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('email')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="phoneNumber">Numer telefonu</label>
+              <input type="text" placeholder="Podaj numer telefonu" formControlName="phoneNumber" class="form-control"
+                     id="phoneNumber"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['phoneNumber'].errors ||
+                    (errors.has('phoneNumber') && fo['phoneNumber'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['phoneNumber'].errors" class="invalid-feedback">
+                <div *ngIf="fo['phoneNumber'].errors['required']">
+                  Numer telefonu jest wymagany
+                </div>
+                <div *ngIf="fo['phoneNumber'].errors['pattern']">
+                  Numer telefonu jest nieprawidłowy
+                </div>
+              </div>
+              <div *ngIf="errors.has('phoneNumber') && fo['phoneNumber'].valid && fo['phoneNumber'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('phoneNumber')}}
+              </div>
+            </div>
+          </div>
+
+          <hr class="mt-0 mb-2 mb-md-4">
+          <h5>Adres dostawy</h5>
+
+          <div class="row m-0">
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="citySelect">Miasto:</label>
+              <select class="form-select" id="citySelect"
+                      [ngClass]="{ 'is-invalid': form.submitted && fo['city'].errors}"
+                      formControlName="city" aria-label="City select">
+                <option [selected]="fo['city'].value === ''" ngValue="">Wybierz miasto</option>
+                <option *ngFor="let city of availableCities" [ngValue]="city">{{city}}</option>
+              </select>
+              <div *ngIf="form.submitted && fo['city'].errors" class="invalid-feedback">
+                <div *ngIf="fo['city'].errors['required']">
+                  Miasto jest wymagane
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="street">Ulica:</label>
+              <input type="text" placeholder="Podaj ulicę" formControlName="street" class="form-control" id="street"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['street'].errors ||
+                    (errors.has('street') && fo['street'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['street'].errors" class="invalid-feedback">
+                <div *ngIf="fo['street'].errors['required']">
+                  Nazwa ulicy jest wymagana
+                </div>
+                <div *ngIf="fo['street'].errors['pattern']">
+                  Nazwa ulicy jest nieprawidłowa
+                </div>
+              </div>
+              <div *ngIf="errors.has('street') && fo['street'].valid && fo['street'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('street')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="houseNr">Numer domu:</label>
+              <input type="text" placeholder="Podaj numer domu" formControlName="houseNr" class="form-control"
+                     id="houseNr"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['houseNr'].errors ||
+                    (errors.has('houseNr') && fo['houseNr'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['houseNr'].errors" class="invalid-feedback">
+                <div *ngIf="fo['houseNr'].errors['required']">
+                  Numer domu jest wymagany
+                </div>
+                <div *ngIf="fo['houseNr'].errors['pattern']">
+                  Numer domu jest nieprawidłowy
+                </div>
+              </div>
+              <div *ngIf="errors.has('houseNr') && fo['houseNr'].valid && fo['houseNr'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('houseNr')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="flatNr">Numer mieszkania:</label>
+              <input type="text" placeholder="Podaj numer mieszkania" formControlName="flatNr" class="form-control"
+                     id="flatNr"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['flatNr'].errors ||
+                    (errors.has('flatNr') && fo['flatNr'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['flatNr'].errors" class="invalid-feedback">
+                <div *ngIf="fo['flatNr'].errors['required']">
+                  Numer mieszkania jest wymagany
+                </div>
+                <div *ngIf="fo['flatNr'].errors['pattern']">
+                  Numer mieszkania jest nieprawidłowy
+                </div>
+              </div>
+              <div *ngIf="errors.has('flatNr') && fo['flatNr'].valid && fo['flatNr'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('flatNr')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="postcode">Kod pocztowy:</label>
+              <input type="text" placeholder="Podaj kod pocztowy" formControlName="postcode" class="form-control"
+                     id="postcode"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['postcode'].errors ||
+                    (errors.has('postcode') && fo['postcode'].pristine)  }"/>
+              <div *ngIf="form.submitted && fo['postcode'].errors" class="invalid-feedback">
+                <div *ngIf="fo['postcode'].errors['required']">
+                  Kod pocztowy jest wymagany
+                </div>
+                <div *ngIf="fo['postcode'].errors['pattern']">
+                  Kod pocztowy jest nieprawidłowy
+                </div>
+              </div>
+              <div *ngIf="errors.has('postcode') && fo['postcode'].valid && fo['postcode'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('postcode')}}
+              </div>
+            </div>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="floor">Piętro (opcjonalne):</label>
+              <input type="number" placeholder="Podaj numer piętra" formControlName="floor" class="form-control"
+                     id="floor"
+                     [ngClass]="{ 'is-invalid': form.submitted && fo['floor'].errors ||
+                    (errors.has('floor') && fo['floor'].pristine)  }"/>
+              <div *ngIf="errors.has('floor') && fo['floor'].valid && fo['floor'].pristine"
+                   class="invalid-feedback d-block">
+                {{errors.get('floor')}}
+              </div>
+            </div>
+          </div>
+
+          <hr class="mt-0 mb-2 mb-md-4">
+          <h5>Płatność</h5>
+
+          <div class="row m-0">
+            <div class="mb-2 mb-md-4 col-md-6">
+              <span style="font-size: 1rem">{{fo['paymentMethod'].value.toString()}}</span>
+            </div>
+          </div>
+
+          <hr class="mt-0 mb-2 mb-md-4">
+          <h5>Detale zamówienia</h5>
+
+          <div class="row m-0">
+            <div class="mb-2 mb-md-4 col-md-6">
+              <label class="d-block" for="orderDate">Data zamówienia:</label>
+              <span id="orderDate">
+                {{_orderInfo.orderDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+              </span>
+            </div>
+
+            <div class="mb-2 mb-md-4 col-md-6">
+              <label class="d-block" for="deliveryDate">Data realizacji zamówienia:</label>
+              <span id="deliveryDate">
+                <ng-container *ngIf="_orderInfo.deliveryDate !== null">
+                  {{_orderInfo.deliveryDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+                </ng-container>
+                <ng-container *ngIf="_orderInfo.deliveryDate === null">
+                  Brak
+                </ng-container>
+              </span>
+            </div>
+
+            <div class="mb-2 mb-md-4 col-md-6">
+              <label class="d-block" for="price">Całkowity koszt zamówienia:</label>
+              <span id="price">
+                {{_orderInfo.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+              </span>
+            </div>
+          </div>
+
+          <hr class="mt-0 mb-2 mb-md-4">
+          <h5>Zamówienie</h5>
+
+          <div class="row m-0">
+            <table class="table table-striped table-hover text-center overflow-auto">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nazwa</th>
+                <th scope="col">Ilość</th>
+                <th scope="col">Cena</th>
+                <th scope="col">Opcje</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let order of _orderInfo.orders">
+                <th scope="row">{{order.dishId}}</th>
+                <td>{{order.name}}</td>
+                <td>
+                  {{order.amount}}
+                </td>
+                <td>{{order.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}</td>
+                <td>
+                  <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Usuń"
+                           (click)="removeOrder(order.dishId)" [icon]="faXmark"></fa-icon>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+            <div class="form-group mb-2 mb-md-4">
+              <div class="input-group">
+                <input type="text" placeholder="Wpisz nazwę posiłku"
+                       class="form-control" list="dishes"/>
+                <datalist id="dishes">
+                  <option *ngFor="let dish of dishes">
+
+                  </option>
+                </datalist>
+                <input type="number" placeholder="Wpisz ilość"
+                       class="form-control"/>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center mb-3">
+              <button class="btn btn-outline-grey" type="button">Dodaj</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="d-grid">
+              <button class="btn btn-outline-grey">
+                Zapisz
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
+            <div class="d-flex justify-content-center align-items-center">
+              Formularz zawiera błędy
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

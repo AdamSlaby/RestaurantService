@@ -8,7 +8,7 @@ import {
   faCoins,
   faHourglassStart
 } from "@fortawesome/free-solid-svg-icons";
-import {ActiveOrder} from "../../model/dish/active-order";
+import {ActiveOrder} from "../../model/order/active-order";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {DailyOrdersAmount} from "../../model/dish/daily-orders-amount";
 

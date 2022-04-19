@@ -9,7 +9,7 @@ import {
   Output
 } from '@angular/core';
 import {DishOrderView} from "../../../model/dish/dish-order-view";
-import {Order} from "../../../model/dish/order";
+import {Order} from "../../../model/order/order";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
