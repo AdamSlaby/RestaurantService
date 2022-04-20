@@ -68,6 +68,7 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
       phoneNr: this.orderForm.get('phoneNumber')?.value,
       floor: this.orderForm.get('floor')?.value,
       paymentMethod: this.orderForm.get('paymentMethod')?.value,
+      restaurantId: sessionStorage.getItem('restaurantId'),
       address: {
         city: this.orderForm.get('city')?.value,
         street: this.orderForm.get('street')?.value,

@@ -30,9 +30,14 @@
     <div class="bg-white p-2 mt-3" style="border-radius: 10px;">
       <h4 class="text-center mb-4">Opcje</h4>
       <div class="d-grid">
-        <button class="btn btn-outline-grey" (click)="addOrder()">
+        <button class="btn btn-outline-grey mb-3" (click)="addOnlineOrder()">
           <fa-icon class="me-2" [icon]="faPlus"></fa-icon>
-          <span>Dodaj nowe zamówienie</span>
+          <span>Dodaj nowe zamówienie online</span>
+        </button>
+
+        <button class="btn btn-outline-grey mb-3" (click)="addRestaurantOrder()">
+          <fa-icon class="me-2" [icon]="faPlus"></fa-icon>
+          <span>Dodaj nowe zamówienie na miejscu</span>
         </button>
       </div>
     </div>

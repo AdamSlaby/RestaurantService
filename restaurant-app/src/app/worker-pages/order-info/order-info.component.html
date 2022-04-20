@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="col-xl-9">
-        <form [formGroup]="onlineOrderForm" #form="ngForm"
+        <form [formGroup]="onlineOrderForm" #form="ngForm" *ngIf="showOnlineForm"
               (ngSubmit)="getInvalidControl() && !onlineOrderForm.invalid && onOnlineOrderFormSubmit()">
 
           <h5>Dane klienta</h5>
@@ -112,7 +112,7 @@
               <select class="form-select" id="citySelect"
                       [ngClass]="{ 'is-invalid': form.submitted && fo['city'].errors}"
                       formControlName="city" aria-label="City select">
-                <option [selected]="fo['city'].value === ''" ngValue="">Wybierz miasto</option>
+                <option disabled hidden [selected]="fo['city'].value === null" ngValue="">Wybierz miasto</option>
                 <option *ngFor="let city of availableCities" [ngValue]="city">{{city}}</option>
               </select>
               <div *ngIf="form.submitted && fo['city'].errors" class="invalid-feedback">
@@ -219,24 +219,31 @@
 
           <div class="row m-0">
             <div class="mb-2 mb-md-4 col-md-6">
-              <span style="font-size: 1rem">{{fo['paymentMethod'].value.toString()}}</span>
+              <label class="d-block" for="orderDate">Metoda płatności:</label>
+              <span style="font-size: 1rem">{{fo['paymentMethod'].value}}</span>
+            </div>
+
+            <div *ngIf="!newOrder" class="mb-2 mb-md-4 col-md-6">
+              <label class="d-block" for="orderDate">Stan realizacji płatnośći:</label>
+              <span style="font-size: 1rem">{{_orderInfo.isPaid ? 'Zapłacone' : 'Niezapłacone'}}</span>
             </div>
           </div>
 
-          <hr class="mt-0 mb-2 mb-md-4">
-          <h5>Detale zamówienia</h5>
+          <ng-container *ngIf="!newOrder">
+            <hr class="mt-0 mb-2 mb-md-4">
+            <h5>Detale zamówienia</h5>
 
-          <div class="row m-0">
-            <div class="mb-2 mb-md-4 col-md-6">
-              <label class="d-block" for="orderDate">Data zamówienia:</label>
-              <span id="orderDate">
+            <div class="row m-0">
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="orderDate">Data zamówienia:</label>
+                <span id="orderDate">
                 {{_orderInfo.orderDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
               </span>
-            </div>
+              </div>
 
-            <div class="mb-2 mb-md-4 col-md-6">
-              <label class="d-block" for="deliveryDate">Data realizacji zamówienia:</label>
-              <span id="deliveryDate">
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="deliveryDate">Data realizacji zamówienia:</label>
+                <span id="deliveryDate">
                 <ng-container *ngIf="_orderInfo.deliveryDate !== null">
                   {{_orderInfo.deliveryDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
                 </ng-container>
@@ -244,13 +251,155 @@
                   Brak
                 </ng-container>
               </span>
+              </div>
+
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="price">Całkowity koszt zamówienia:</label>
+                <span id="price">
+                  {{_orderInfo.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+                </span>
+              </div>
+
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="restaurant">Lokal zamówienia:</label>
+                <span id="restaurant">
+                  {{_orderInfo.restaurantInfo.city}}, ul. {{_orderInfo.restaurantInfo.street}}
+                </span>
+              </div>
+            </div>
+          </ng-container>
+
+          <hr class="mt-0 mb-2 mb-md-4">
+          <h5>Zamówienie</h5>
+
+          <div class="row m-0">
+            <table class="table table-striped table-hover text-center overflow-auto">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nazwa</th>
+                <th scope="col">Ilość</th>
+                <th scope="col">Cena</th>
+                <th *ngIf="_orderInfo === null || !_orderInfo?.isPaid" scope="col">Opcje</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let order of fo['orders'].value; index as i">
+                <th scope="row">{{order.dishId}}</th>
+                <td>{{order.name}}</td>
+                <td>
+                  {{order.amount}}
+                </td>
+                <td>{{order.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}</td>
+                <td *ngIf="_orderInfo === null || !_orderInfo?.isPaid">
+                  <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Usuń"
+                           (click)="removeDish(i, fo)" [icon]="faXmark"></fa-icon>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div *ngIf="form.submitted && fo['orders'].errors" class="invalid-feedback d-block">
+              <div *ngIf="fo['orders'].errors['required']">
+                Lista zamówionych potaw nie może być pusta
+              </div>
+            </div>
+            <div *ngIf="errors.has('orders') && fo['orders'].valid && fo['orders'].pristine"
+                 class="invalid-feedback d-block">
+              {{errors.get('orders')}}
             </div>
 
-            <div class="mb-2 mb-md-4 col-md-6">
-              <label class="d-block" for="price">Całkowity koszt zamówienia:</label>
-              <span id="price">
-                {{_orderInfo.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+            <div *ngIf="_orderInfo === null || !_orderInfo?.isPaid" class="form-group mb-2 mb-md-4">
+              <div class="input-group">
+                <input type="text" placeholder="Wpisz nazwę posiłku" [(ngModel)]="selectedDishId"
+                       [ngModelOptions]="{standalone: true}"
+                       class="form-control" list="dishes"/>
+                <datalist id="dishes">
+                  <option [value]="dish.id" *ngFor="let dish of dishes">
+                    {{dish.name}}
+                  </option>
+                </datalist>
+                <input type="number" placeholder="Wpisz ilość" [(ngModel)]="selectedDishAmount"
+                       [ngModelOptions]="{standalone: true}"
+                       class="form-control"/>
+                <button (click)="addDish(fo)" class="btn btn-outline-grey" type="button">Dodaj</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="d-grid">
+              <button *ngIf="!disabled" class="btn btn-outline-grey">
+                Zapisz
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
+            <div class="d-flex justify-content-center align-items-center">
+              Formularz zawiera błędy
+            </div>
+          </div>
+        </form>
+
+        <form [formGroup]="restaurantOrderForm" #form2="ngForm" *ngIf="!showOnlineForm"
+              (ngSubmit)="!restaurantOrderForm.invalid && onRestaurantOrderFormSubmit()">
+
+
+          <hr class="mt-0 mb-2 mb-md-4">
+          <h5>Detale zamówienia</h5>
+
+          <div class="row m-0">
+            <ng-container *ngIf="!newOrder">
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="restaurantOrderDate">Data zamówienia:</label>
+                <span id="restaurantOrderDate">
+                  {{_orderInfo.orderDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+                </span>
+              </div>
+
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="restaurantDeliveryDate">Data realizacji zamówienia:</label>
+                <span id="restaurantDeliveryDate">
+                <ng-container *ngIf="_orderInfo.deliveryDate !== null">
+                  {{_orderInfo.deliveryDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+                </ng-container>
+                <ng-container *ngIf="_orderInfo.deliveryDate === null">
+                  Brak
+                </ng-container>
               </span>
+              </div>
+
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="restaurantPrice">Całkowity koszt zamówienia:</label>
+                <span id="restaurantPrice">
+                  {{_orderInfo.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+                </span>
+              </div>
+
+              <div class="mb-2 mb-md-4 col-md-6">
+                <label class="d-block" for="_restaurant">Lokal zamówienia:</label>
+                <span id="_restaurant">
+                  {{_orderInfo.restaurantInfo.city}}, ul. {{_orderInfo.restaurantInfo.street}}
+                </span>
+              </div>
+            </ng-container>
+
+            <div class="form-group mb-2 mb-md-4 col-md-6">
+              <label for="tableSelect">Numer stolika:</label>
+              <select class="form-select" id="tableSelect"
+                      [ngClass]="{ 'is-invalid': form2.submitted && fr['tableId'].errors}"
+                      formControlName="tableId" aria-label="Table select">
+                <option disabled hidden [selected]="!fr['tableId'].value" ngValue="">Wybierz numer stolika</option>
+                <option *ngFor="let tableId of tables" [ngValue]="tableId">Stolik nr {{tableId}}</option>
+              </select>
+              <div *ngIf="form2.submitted && fr['tableId'].errors" class="invalid-feedback">
+                <div *ngIf="fr['tableId'].errors['required']">
+                  Numer stolika jest wymagane
+                </div>
+                <div *ngIf="fr['tableId'].errors['min']">
+                  Numer stolika jest wymagane
+                </div>
+              </div>
             </div>
           </div>
 
@@ -265,52 +414,61 @@
                 <th scope="col">Nazwa</th>
                 <th scope="col">Ilość</th>
                 <th scope="col">Cena</th>
-                <th scope="col">Opcje</th>
+                <th *ngIf="_orderInfo === null || !_orderInfo?.isPaid" scope="col">Opcje</th>
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let order of _orderInfo.orders">
+              <tr *ngFor="let order of fr['orders'].value; index as i">
                 <th scope="row">{{order.dishId}}</th>
                 <td>{{order.name}}</td>
                 <td>
                   {{order.amount}}
                 </td>
                 <td>{{order.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}</td>
-                <td>
+                <td *ngIf="_orderInfo === null || !_orderInfo?.isPaid">
                   <fa-icon style="cursor: pointer" class="text-danger" placement="top" ngbTooltip="Usuń"
-                           (click)="removeOrder(order.dishId)" [icon]="faXmark"></fa-icon>
+                           (click)="removeDish(i, fr)" [icon]="faXmark"></fa-icon>
                 </td>
               </tr>
               </tbody>
             </table>
-
-            <div class="form-group mb-2 mb-md-4">
-              <div class="input-group">
-                <input type="text" placeholder="Wpisz nazwę posiłku"
-                       class="form-control" list="dishes"/>
-                <datalist id="dishes">
-                  <option *ngFor="let dish of dishes">
-
-                  </option>
-                </datalist>
-                <input type="number" placeholder="Wpisz ilość"
-                       class="form-control"/>
+            <div *ngIf="form2.submitted && fr['orders'].errors" class="invalid-feedback d-block">
+              <div *ngIf="fr['orders'].errors['required']">
+                Lista zamówionych potaw nie może być pusta
               </div>
             </div>
-            <div class="d-flex justify-content-center align-items-center mb-3">
-              <button class="btn btn-outline-grey" type="button">Dodaj</button>
+            <div *ngIf="errors.has('orders') && fr['orders'].valid && fr['orders'].pristine"
+                 class="invalid-feedback d-block">
+              {{errors.get('orders')}}
+            </div>
+
+            <div *ngIf="_orderInfo === null || _orderInfo.deliveryDate === null" class="form-group mb-2 mb-md-4">
+              <div class="input-group">
+                <input type="text" placeholder="Wpisz nazwę posiłku" [(ngModel)]="selectedDishId"
+                       [ngModelOptions]="{standalone: true}"
+                       class="form-control" list="_dishes"/>
+                <datalist id="_dishes">
+                  <option [value]="dish.id" *ngFor="let dish of dishes">
+                    {{dish.name}}
+                  </option>
+                </datalist>
+                <input type="number" placeholder="Wpisz ilość" [(ngModel)]="selectedDishAmount"
+                       [ngModelOptions]="{standalone: true}"
+                       class="form-control"/>
+                <button (click)="addDish(fr)" class="btn btn-outline-grey" type="button">Dodaj</button>
+              </div>
             </div>
           </div>
 
           <div class="form-group">
             <div class="d-grid">
-              <button class="btn btn-outline-grey">
+              <button *ngIf="!disabled" class="btn btn-outline-grey">
                 Zapisz
               </button>
             </div>
           </div>
 
-          <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
+          <div *ngIf="(form2.submitted && form2.invalid) || errors.size > 0" class="invalid-feedback d-block">
             <div class="d-flex justify-content-center align-items-center">
               Formularz zawiera błędy
             </div>

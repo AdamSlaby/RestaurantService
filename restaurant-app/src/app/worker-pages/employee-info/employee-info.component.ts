@@ -5,7 +5,7 @@ import plLocale from "@fullcalendar/core/locales/pl";
 import {Schedule} from "../../model/schedule/schedule";
 import {EmployeeInfo} from "../../model/employee/employee-info";
 import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, NgForm, Validators} from "@angular/forms";
 import {minDateValidator} from "../../validators/min-date-validator";
 import {RegexPattern} from "../../model/regex-pattern";
 import {personIdValidator} from "../../validators/pesel-validator";
@@ -21,11 +21,84 @@ import {Employee} from "../../model/employee/employee";
 export class EmployeeInfoComponent implements OnInit {
   @ViewChild('eventForm', {static: false}) private eventForm: any;
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+  @ViewChild('form') form!: NgForm;
   @Input() workstations!: WorkstationListView[];
-  @Input() employeeId!: any;
+  @Input() set employeeId(value: any) {
+    this._employeeId = value;
+    if (value !== -1) {
+      this.employeeInfo = {
+        shortInfo: {
+          id: 1,
+          name: 'Marek',
+          surname: 'Bykowski',
+          workstationId: 1,
+        },
+        address: {
+          city: 'Kielce',
+          street: 'Warszawska',
+          postcode: '25-734',
+          houseNr: '100',
+          flatNr: '20',
+        },
+        pesel: '75041326745',
+        phoneNr: '+48 602 602 602',
+        accountNr: '85 9159 1036 1388 9882 8976 0258',
+        salary: 3000.50,
+        active: true,
+        employmentDate: new Date(),
+        dismissalDate: null,
+        restaurantInfo: {
+          restaurantId: 1,
+          city: 'Kielce',
+          street: 'Warszawska'
+        },
+        scheduleInfo: [
+          {
+            id: 1,
+            startShift: new Date('8 April 2022 08:00:00 UTC'),
+            endShift: new Date('8 April 2022 16:00:00 UTC'),
+          }
+        ]
+      }
+      this.employeeForm.patchValue({
+        personId: this.employeeInfo?.pesel,
+        firstName: this.employeeInfo?.shortInfo?.name,
+        surname: this.employeeInfo?.shortInfo?.surname,
+        phoneNr: this.employeeInfo?.phoneNr,
+        accountNr: this.employeeInfo?.accountNr,
+        city: this.employeeInfo?.address?.city,
+        street: this.employeeInfo?.address?.street,
+        houseNr: this.employeeInfo?.address?.houseNr,
+        flatNr: this.employeeInfo?.address?.flatNr,
+        postcode: this.employeeInfo?.address?.postcode,
+        employmentDate: this.employeeInfo?.employmentDate ? {
+          year: this.employeeInfo?.employmentDate?.getFullYear(),
+          month: this.employeeInfo?.employmentDate?.getMonth() + 1,
+          day: this.employeeInfo?.employmentDate?.getDate()
+        } as NgbDateStruct : null,
+        dismissalDate: this.employeeInfo?.dismissalDate ? {
+          year: this.employeeInfo?.dismissalDate?.getFullYear(),
+          month: this.employeeInfo?.dismissalDate?.getMonth() + 1,
+          day: this.employeeInfo?.dismissalDate?.getDate(),
+        } as NgbDateStruct : null,
+        active: this.employeeInfo?.active ? this.employeeInfo?.active : true,
+        workstation: this.employeeInfo?.shortInfo?.workstationId,
+        salary: this.employeeInfo?.salary,
+        restaurant: this.employeeInfo?.restaurantInfo?.restaurantId,
+      });
+      for (let schedule of this.employeeInfo.scheduleInfo) {
+        this.addScheduleToCalendar(schedule, schedule.id);
+      }
+    } else {
+      setTimeout(() => {
+        this.form.resetForm();
+      }, 100);
+    }
+  }
   @Output() closeEmployeeDetails = new EventEmitter<void>();
   faUserCircle = faUserCircle;
   faXmark = faXmark;
+  _employeeId!: any;
   editScheduleId: any;
   errors: Map<string, string> = new Map<string, string>();
   loading = false;
@@ -124,71 +197,6 @@ export class EmployeeInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.employeeId !== -1) {
-      this.employeeInfo = {
-        shortInfo: {
-          id: 1,
-          name: 'Marek',
-          surname: 'Bykowski',
-          workstationId: 1,
-        },
-        address: {
-          city: 'Kielce',
-          street: 'Warszawska',
-          postcode: '25-734',
-          houseNr: '100',
-          flatNr: '20',
-        },
-        pesel: '75041326745',
-        phoneNr: '+48 602 602 602',
-        accountNr: '85 9159 1036 1388 9882 8976 0258',
-        salary: 3000.50,
-        active: true,
-        employmentDate: new Date(),
-        dismissalDate: null,
-        restaurantInfo: {
-          restaurantId: 1,
-          city: 'Kielce',
-          street: 'Warszawska'
-        },
-        scheduleInfo: [
-          {
-            id: 1,
-            startShift: new Date('8 April 2022 08:00:00 UTC'),
-            endShift: new Date('8 April 2022 16:00:00 UTC'),
-          }
-        ]
-      }
-      this.employeeForm.patchValue({
-        personId: this.employeeInfo?.pesel,
-        firstName: this.employeeInfo?.shortInfo?.name,
-        surname: this.employeeInfo?.shortInfo?.surname,
-        phoneNr: this.employeeInfo?.phoneNr,
-        accountNr: this.employeeInfo?.accountNr,
-        city: this.employeeInfo?.address?.city,
-        street: this.employeeInfo?.address?.street,
-        houseNr: this.employeeInfo?.address?.houseNr,
-        flatNr: this.employeeInfo?.address?.flatNr,
-        postcode: this.employeeInfo?.address?.postcode,
-        employmentDate: this.employeeInfo?.employmentDate ? {
-          year: this.employeeInfo?.employmentDate?.getFullYear(),
-          month: this.employeeInfo?.employmentDate?.getMonth() + 1,
-          day: this.employeeInfo?.employmentDate?.getDate()
-        } as NgbDateStruct : null,
-        dismissalDate: this.employeeInfo?.dismissalDate ? {
-          year: this.employeeInfo?.dismissalDate?.getFullYear(),
-          month: this.employeeInfo?.dismissalDate?.getMonth() + 1,
-          day: this.employeeInfo?.dismissalDate?.getDate(),
-        } as NgbDateStruct : null,
-        active: this.employeeInfo?.active ? this.employeeInfo?.active : true,
-        workstation: this.employeeInfo?.shortInfo?.workstationId,
-        salary: this.employeeInfo?.salary,
-        restaurant: this.employeeInfo?.restaurantInfo?.restaurantId,
-      });
-      for (let schedule of this.employeeInfo.scheduleInfo) {
-        this.addScheduleToCalendar(schedule, schedule.id);
-      }
-    }
   }
 
   get fs() {

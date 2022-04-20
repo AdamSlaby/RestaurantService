@@ -37,7 +37,7 @@ export class OrderPageComponent implements OnInit {
     ]
   }
 
-  constructor(private calendar: NgbCalendar) {
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -46,6 +46,7 @@ export class OrderPageComponent implements OnInit {
     for (let i = 1; i <= 9; i++) {
       this.orderList.orders.push(JSON.parse(JSON.stringify(orderShortInfo)));
       this.orderList.orders[i].isCompleted = true;
+      this.orderList.orders[i].type = 'Restaurant';
     }
     this.pageNr = 1;
     this.previousPage = 1;
@@ -63,10 +64,18 @@ export class OrderPageComponent implements OnInit {
     //todo
   }
 
-  addOrder() {
+  addOnlineOrder() {
     //todo
     this.showOrderDetails = true;
-    this.selectedOrder = null;
+    this.selectedOrder = 'Online';
+    setTimeout(() => {
+      HtmlUtility.scrollIntoView('orderForm')
+    }, 1);
+  }
+
+  addRestaurantOrder() {
+    this.showOrderDetails = true;
+    this.selectedOrder = 'Restaurant';
     setTimeout(() => {
       HtmlUtility.scrollIntoView('orderForm')
     }, 1);

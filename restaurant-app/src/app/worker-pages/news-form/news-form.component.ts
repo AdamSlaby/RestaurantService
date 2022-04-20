@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {faXmark, faNewspaper} from "@fortawesome/free-solid-svg-icons";
 import {NgbCalendar} from "@ng-bootstrap/ng-bootstrap";
 import {News} from "../../model/news/news";
-import {FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, NgForm, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-news-form',
@@ -10,26 +10,10 @@ import {FormBuilder, Validators} from "@angular/forms";
   styleUrls: ['./news-form.component.scss']
 })
 export class NewsFormComponent implements OnInit {
-  @Input() newsId: any;
-  @Output() closeNewsDetails = new EventEmitter<void>();
-  faXmark = faXmark;
-  faNewspaper = faNewspaper;
-  errors: Map<string, string> = new Map<string, string>();
-  loading = false;
-  minDate = this.calendar.getToday();
-  newsInfo!: News;
-  imageUrl: any;
-  news: FormData = new FormData();
-  newsForm = this.fb.group({
-    image: ['', [Validators.required]],
-    title: ['', [Validators.required, Validators.maxLength(200)]],
-    content: ['', [Validators.required, Validators.maxLength(2500)]],
-  });
-
-  constructor(private calendar: NgbCalendar, private fb: FormBuilder) { }
-
-  ngOnInit(): void {
-    if (this.newsId !== -1) {
+  @ViewChild('form') form!: NgForm;
+  @Input() set newsId(value: any) {
+    this._newsId = value;
+    if (value !== -1) {
       this.newsInfo = {
         employeeName: 'Marek Bykowski',
         info: {
@@ -47,7 +31,31 @@ export class NewsFormComponent implements OnInit {
         title: this.newsInfo.info.title,
         content: this.newsInfo.info.content,
       });
+    } else {
+      setTimeout(() => {
+        this.form.resetForm();
+      }, 500);
     }
+  }
+  @Output() closeNewsDetails = new EventEmitter<void>();
+  faXmark = faXmark;
+  faNewspaper = faNewspaper;
+  _newsId!: any;
+  errors: Map<string, string> = new Map<string, string>();
+  loading = false;
+  minDate = this.calendar.getToday();
+  newsInfo!: News;
+  imageUrl: any;
+  news: FormData = new FormData();
+  newsForm = this.fb.group({
+    image: ['', [Validators.required]],
+    title: ['', [Validators.required, Validators.maxLength(200)]],
+    content: ['', [Validators.required, Validators.maxLength(2500)]],
+  });
+
+  constructor(private calendar: NgbCalendar, private fb: FormBuilder) { }
+
+  ngOnInit(): void {
   }
 
   get f() {
