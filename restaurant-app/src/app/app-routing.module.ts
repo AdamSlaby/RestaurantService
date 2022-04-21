@@ -22,6 +22,8 @@ import {EmployeesPageComponent} from "./worker-pages/employees-page/employees-pa
 import {NewsPageComponent} from "./worker-pages/news-page/news-page.component";
 import {MenuPageComponent} from "./worker-pages/menu-page/menu-page.component";
 import {OrderPageComponent} from "./worker-pages/order-page/order-page.component";
+import {SupplyPageComponent} from "./worker-pages/supply-page/supply-page.component";
+import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.component";
 
 const routes: Routes = [
   {
@@ -115,6 +117,14 @@ const routes: Routes = [
       {
         path: 'orders',
         component: OrderPageComponent,
+      },
+      {
+        path: 'restaurant',
+        component: RestaurantComponent,
+      },
+      {
+        path: 'supply',
+        component: SupplyPageComponent,
       },
     ]
   },

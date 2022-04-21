@@ -3,7 +3,7 @@ import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info"
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-restaurant-page',
+  selector: 'app-restaurant',
   templateUrl: './restaurant-page.component.html',
   styleUrls: ['./restaurant-page.component.scss']
 })

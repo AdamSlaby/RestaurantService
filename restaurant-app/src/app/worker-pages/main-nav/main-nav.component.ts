@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, Input, OnInit} from '@angular/core';
 import {faUser, faHouseChimney, faBars, faXmark,faBoxesStacked, faNewspaper, faCartShopping, faUtensils, faChartLine,
-  faArrowRightFromBracket, faPeopleGroup} from "@fortawesome/free-solid-svg-icons";
+  faArrowRightFromBracket, faPeopleGroup, faInfo} from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
 
 @Component({
@@ -20,6 +20,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   faCartShopping = faCartShopping;
   faUtensils = faUtensils;
   faChartLine = faChartLine;
+  faInfo = faInfo;
   contentHeader!: string;
   isCollapsed!: boolean;
   isNavCollapsed!: boolean;
@@ -88,6 +89,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
       case '/admin/news': return 'Aktualności';
       case '/admin/menu': return 'Menu';
       case '/admin/statistics': return 'Statystyki';
+      case '/admin/restaurant': return 'Restauracja';
       default: return '';
     }
   }

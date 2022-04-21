@@ -22,6 +22,13 @@
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
+               style="font-size: 18px" routerLink="/admin/restaurant" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faInfo"></fa-icon>
+              <span class="text-uppercase" *ngIf="!isCollapsed">Restauracja</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/orders" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faCartShopping"></fa-icon>
               <span class="text-uppercase" *ngIf="!isCollapsed">Zamówienia</span>

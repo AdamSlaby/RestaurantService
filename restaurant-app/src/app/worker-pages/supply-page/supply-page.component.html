@@ -1,0 +1,48 @@
+<div id="supplyContent" class="row m-0 py-3 px-2">
+  <div class="col-xl-4 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Filtrowanie</h4>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenIngredient" placeholder="Nazwa składnika"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getIngredientByName()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenDate" ngbDatepicker #d="ngbDatepicker"
+               (ngModelChange)="getSuppliesByDate()"
+               placeholder="Data publikacji wiadomości"/>
+        <button class="btn btn-outline-grey calendar" type="button" (click)="d.toggle()"></button>
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-8 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+<!--      <h4 class="text-center">Stan składników na {{chosenDate.day}}.{{chosenDate.month}}.{{chosenDate.year}}</h4>-->
+<!--      <div>-->
+<!--        <table class="table table-striped table-hover text-center overflow-auto">-->
+<!--          <thead>-->
+<!--          <tr>-->
+<!--            <th scope="col">Stan na</th>-->
+<!--            <th scope="col">Nazwa</th>-->
+<!--            <th scope="col">Ilość</th>-->
+<!--            <th scope="col">Jednostka miary</th>-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--          <tr *ngFor="let news of newsList.news">-->
+<!--            <th scope="row">{{news.id}}</th>-->
+<!--            <td>{{news.employeeId}}</td>-->
+<!--            <td>{{news.title}}</td>-->
+<!--            <td>-->
+<!--              {{news.date | date:'mediumDate':'+0000':'pl-PL'}}-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--          </tbody>-->
+<!--        </table>-->
+<!--      </div>-->
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@ import {FormBuilder, Validators} from "@angular/forms";
 import {MealInfo} from "../../model/meal/meal-info";
 import {Ingredient} from "../../model/meal/ingredient";
 import {IngredientInfo} from "../../model/meal/ingredient-info";
-import {Measure} from "../../model/measure";
+import {Unit} from "../../model/unit";
 
 @Component({
   selector: 'app-menu-page',
@@ -37,7 +37,7 @@ export class MenuPageComponent implements OnInit {
   imageUrl: any;
   meal!: MealInfo;
   newIngredients: Ingredient[] = [];
-  measures = Object.values(Measure);
+  measures = Object.values(Unit);
   chosenMealId!: number;
   fd: FormData = new FormData();
   ingredients: IngredientInfo[] = [
