@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {faInfo} from "@fortawesome/free-solid-svg-icons";
-import {FormBuilder, Validators} from "@angular/forms";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {faInfo, faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {FormBuilder, NgForm, NgModel, Validators} from "@angular/forms";
 import {RegexPattern} from "../../model/regex-pattern";
 import {Restaurant} from "../../model/restaurant/restaurant";
-import {NgbTimeAdapter} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbModalModule, NgbTimeAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbTimeDateAdapter} from "../../adapter/timepicker-adapter";
+import {Table} from "../../model/table";
 
 @Component({
   selector: 'app-restaurant',
@@ -13,8 +14,12 @@ import {NgbTimeDateAdapter} from "../../adapter/timepicker-adapter";
   providers: [{provide: NgbTimeAdapter, useClass: NgbTimeDateAdapter}]
 })
 export class RestaurantComponent implements OnInit {
+  @ViewChild('form') form!: NgForm;
   faInfo = faInfo;
+  faMinus = faMinus;
+  faPlus = faPlus;
   restaurantInfo!: Restaurant;
+  seatsAmount!: any;
   errors: Map<string, string> =  new Map<string, string>();
   restaurantForm = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
@@ -27,10 +32,22 @@ export class RestaurantComponent implements OnInit {
     flatNr: [null, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
     postcode: [null, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
   });
+  allTables: Table[] = [
+    {
+      id: 6,
+      seatsNr: 5,
+    }
+  ]
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    for (let i = 7; i < 20; i++) {
+      this.allTables.push( {
+        id: i,
+        seatsNr: 5,
+      } as Table);
+    }
     this.restaurantInfo = {
       restaurantId: 1,
       email: 'restaurant24@gmail.com',
@@ -88,7 +105,28 @@ export class RestaurantComponent implements OnInit {
           to_hour: new Date('10 Apr 2022 18:00:00 UTC'),
         },
       ],
-      tables: [],
+      tables: [
+        {
+          id: 1,
+          seatsNr: 4,
+        },
+        {
+          id: 2,
+          seatsNr: 5,
+        },
+        {
+          id: 3,
+          seatsNr: 6,
+        },
+        {
+          id: 4,
+          seatsNr: 4,
+        },
+        {
+          id: 5,
+          seatsNr: 3,
+        },
+      ],
     } as Restaurant;
     this.restaurantForm.patchValue({
       email: this.restaurantInfo.email,
@@ -127,7 +165,29 @@ export class RestaurantComponent implements OnInit {
       address: {
         city: this.restaurantForm.get('city')?.value,
         street: this.restaurantForm.get('street')?.value,
-      }
+        houseNr: this.restaurantForm.get('houseNr')?.value,
+        flatNr: this.restaurantForm.get('flatNr')?.value,
+        postcode: this.restaurantForm.get('postcode')?.value,
+      },
+      openingHours: this.restaurantInfo.openingHours,
+      tables: this.restaurantInfo.tables,
     };
+    console.log(restaurant);
+  }
+
+  removeTable(index: number) {
+    this.restaurantInfo.tables.splice(index, 1);
+  }
+
+  addTable() {
+    this.restaurantInfo.tables.push({
+      id: this.restaurantInfo.tables[this.restaurantInfo.tables.length - 1].id + 1,
+      seatsNr: this.seatsAmount,
+    });
+    this.seatsAmount = null;
+  }
+
+  addNewRestaurant() {
+    this.form.resetForm();
   }
 }

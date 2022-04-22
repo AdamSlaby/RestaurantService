@@ -1,4 +1,4 @@
 export interface Table {
-  tableId: number;
+  id: number;
   seatsNr: number;
 }
