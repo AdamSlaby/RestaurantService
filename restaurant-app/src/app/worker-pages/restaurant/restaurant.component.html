@@ -13,6 +13,376 @@
           <form [formGroup]="restaurantForm" #form="ngForm"
                 (ngSubmit)="getInvalidControl() && !restaurantForm.invalid && onRestaurantFormSubmit()">
 
+            <div class="row m-0">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="fw-bolder" for="phoneNr">Numer telefonu:</label>
+                  <input type="text" placeholder="Wpisz numer telefonu restauracji" formControlName="phoneNr"
+                         class="form-control" id="phoneNr"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['phoneNr'].errors ||
+                    (errors.has('phoneNr') && f['phoneNr'].pristine)  }"/>
+                  <div *ngIf="form.submitted && f['phoneNr'].errors" class="invalid-feedback">
+                    <div *ngIf="f['phoneNr'].errors['required']">
+                      Numer telefonu jest wymagany
+                    </div>
+                    <div *ngIf="f['phoneNr'].errors['pattern']">
+                      Numer telefonu jest nieprawidłowy
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('phoneNr') && f['phoneNr'].valid && f['phoneNr'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('phoneNr')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group mb-4">
+                  <label class="fw-bolder" for="email">E-mail:</label>
+                  <input type="text" placeholder="Wpisz email restauracji" formControlName="email"
+                         class="form-control" id="email"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['email'].errors ||
+                    (errors.has('email') && f['email'].pristine)  }" />
+                  <div *ngIf="form.submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']">
+                      Email jest wymagany
+                    </div>
+                    <div *ngIf="f['email'].errors['email']">
+                      Email jest nieprawidłowy
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('email') && f['email'].valid && f['email'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('email')}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0 mb-2 mb-md-4">
+            <h5 class="fw-light">Detale sprzedaży online</h5>
+
+            <div class="row m-0">
+              <div class="col-md-6">
+                <div class="form-group mb-4">
+                  <label class="fw-bolder" for="deliveryFee">Opłata za dowóz:</label>
+                  <div class="input-group">
+                    <input type="number" placeholder="Wpisz wymaganą opłatę za dowóz" formControlName="deliveryFee"
+                           class="form-control" id="deliveryFee"
+                           [ngClass]="{ 'is-invalid': form.submitted && f['deliveryFee'].errors ||
+                    (errors.has('deliveryFee') && f['deliveryFee'].pristine)  }" />
+                    <span class="input-group-text">zł</span>
+                  </div>
+                  <div *ngIf="form.submitted && f['deliveryFee'].errors" class="invalid-feedback">
+                    <div *ngIf="f['deliveryFee'].errors['required']">
+                      Opłata za dowóz jest wymagana
+                    </div>
+                    <div *ngIf="f['deliveryFee'].errors['min']">
+                      Opłata za dowóz nie może być liczbą ujemną
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('deliveryFee') && f['deliveryFee'].valid && f['deliveryFee'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('deliveryFee')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group mb-4">
+                  <label class="fw-bolder" for="minimalDeliveryPrice">Minimalna kwota zakupu online:</label>
+                  <div class="input-group">
+                    <input type="number" placeholder="Wpisz minimalną kwotę zakupu online"
+                           formControlName="minimalDeliveryPrice"
+                           class="form-control" id="minimalDeliveryPrice"
+                           [ngClass]="{ 'is-invalid': form.submitted && f['minimalDeliveryPrice'].errors ||
+                    (errors.has('minimalDeliveryPrice') && f['minimalDeliveryPrice'].pristine)  }" />
+                    <span class="input-group-text">zł</span>
+                  </div>
+                  <div *ngIf="form.submitted && f['minimalDeliveryPrice'].errors" class="invalid-feedback">
+                    <div *ngIf="f['minimalDeliveryPrice'].errors['required']">
+                      Minimalna kwota zakupu online jest wymagana
+                    </div>
+                    <div *ngIf="f['minimalDeliveryPrice'].errors['min']">
+                      Minimalna kwota zakupu online nie może być liczbą ujemną
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('minimalDeliveryPrice') && f['minimalDeliveryPrice'].valid && f['minimalDeliveryPrice'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('minimalDeliveryPrice')}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0 mb-2 mb-md-4">
+            <h5 class="fw-light">Adres</h5>
+
+            <div class="row m-0">
+              <div class="col-md-6 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="city">Miasto:</label>
+                  <input type="text" placeholder="Wpisz miasto" formControlName="city"
+                         class="form-control" id="city"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['city'].errors ||
+                    (errors.has('city') && f['city'].pristine)  }"/>
+                  <div *ngIf="form.submitted && f['city'].errors" class="invalid-feedback">
+                    <div *ngIf="f['city'].errors['required']">
+                      Miasto jest wymagane
+                    </div>
+                    <div *ngIf="f['city'].errors['pattern']">
+                      Miasto jest nieprawidłowe
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('city') && f['city'].valid && f['city'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('city')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="street">Ulica:</label>
+                  <input type="text" placeholder="Podaj ulicę" formControlName="street" class="form-control" id="street"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['street'].errors ||
+                    (errors.has('street') && f['street'].pristine)  }"/>
+                  <div *ngIf="form.submitted && f['street'].errors" class="invalid-feedback">
+                    <div *ngIf="f['street'].errors['required']">
+                      Nazwa ulicy jest wymagana
+                    </div>
+                    <div *ngIf="f['street'].errors['pattern']">
+                      Nazwa ulicy jest nieprawidłowa
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('street') && f['street'].valid && f['street'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('street')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="houseNr">Numer domu:</label>
+                  <input type="text" placeholder="Podaj numer domu" formControlName="houseNr" class="form-control"
+                         id="houseNr"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['houseNr'].errors ||
+                    (errors.has('houseNr') && f['houseNr'].pristine)  }"/>
+                  <div *ngIf="form.submitted && f['houseNr'].errors" class="invalid-feedback">
+                    <div *ngIf="f['houseNr'].errors['required']">
+                      Numer domu jest wymagany
+                    </div>
+                    <div *ngIf="f['houseNr'].errors['pattern']">
+                      Numer domu jest nieprawidłowy
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('houseNr') && f['houseNr'].valid && f['houseNr'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('houseNr')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="flatNr">Numer mieszkania:</label>
+                  <input type="text" placeholder="Podaj numer mieszkania" formControlName="flatNr" class="form-control"
+                         id="flatNr"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['flatNr'].errors ||
+                    (errors.has('flatNr') && f['flatNr'].pristine)  }"/>
+                  <div *ngIf="form.submitted && f['flatNr'].errors" class="invalid-feedback">
+                    <div *ngIf="f['flatNr'].errors['required']">
+                      Numer mieszkania jest wymagany
+                    </div>
+                    <div *ngIf="f['flatNr'].errors['pattern']">
+                      Numer mieszkania jest nieprawidłowy
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('flatNr') && f['flatNr'].valid && f['flatNr'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('flatNr')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="postcode">Kod pocztowy:</label>
+                  <input type="text" placeholder="Podaj kod pocztowy" formControlName="postcode" class="form-control"
+                         id="postcode"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['postcode'].errors ||
+                    (errors.has('postcode') && f['postcode'].pristine)  }"/>
+                  <div *ngIf="form.submitted && f['postcode'].errors" class="invalid-feedback">
+                    <div *ngIf="f['postcode'].errors['required']">
+                      Kod pocztowy jest wymagany
+                    </div>
+                    <div *ngIf="f['postcode'].errors['pattern']">
+                      Kod pocztowy jest nieprawidłowy
+                    </div>
+                  </div>
+                  <div *ngIf="errors.has('postcode') && f['postcode'].valid && f['postcode'].pristine"
+                       class="invalid-feedback d-block">
+                    {{errors.get('postcode')}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0 mb-2 mb-md-4">
+            <h5 class="fw-light">Godziny otwarcia</h5>
+
+            <div class="row m-0">
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="monday">Poniedziałek:</label>
+                <div class="d-flex justify-content-start align-items-start" id="monday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[0].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[0].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="tuesday">Wtorek:</label>
+                <div class="d-flex justify-content-start align-items-start" id="tuesday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[1].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[1].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="wednesday">Środa:</label>
+                <div class="d-flex justify-content-start align-items-start" id="wednesday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[2].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[2].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="thursday">Czwartek:</label>
+                <div class="d-flex justify-content-start align-items-start" id="thursday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[3].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[3].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="friday">Piątek:</label>
+                <div class="d-flex justify-content-start align-items-start" id="friday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[4].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[4].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="saturday">Sobota:</label>
+                <div class="d-flex justify-content-start align-items-start" id="saturday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[5].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[5].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2 mb-md-4">
+                <label class="fw-bolder" for="sunday">Niedziela:</label>
+                <div class="d-flex justify-content-start align-items-start" id="sunday">
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[6].from_hour"></ngb-timepicker>
+                  </div>
+                  <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                      -
+                    </div>
+                  </div>
+                  <div class="position-relative">
+                    <ngb-timepicker [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="restaurantInfo.openingHours[6].to_hour"></ngb-timepicker>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mt-0 mb-2 mb-md-4">
+            <h5 class="fw-light">Stoliki w restauracji</h5>
+
+            <div class="form-group">
+              <div class="d-flex justify-content-center align-items-center">
+                <button class="btn btn-outline-grey">
+                  Zapisz
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
+              <div class="d-flex justify-content-center align-items-center">
+                Formularz zawiera błędy
+              </div>
+            </div>
           </form>
         </div>
       </div>
