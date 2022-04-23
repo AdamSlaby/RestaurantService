@@ -50,6 +50,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       name: "14:00",
       value: 11,
     },
+    {
+      name: "15:00",
+      value: 7,
+    },
+    {
+      name: "16:00",
+      value: 8,
+    },
+    {
+      name: "17:00",
+      value: 9,
+    },
+    {
+      name: "18:00",
+      value: 10,
+    },
+    {
+      name: "19:00",
+      value: 20,
+    },
+    {
+      name: "20:00",
+      value: 22,
+    },
   ]
   chartData: any[] = [
     {

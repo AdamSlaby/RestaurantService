@@ -17,56 +17,56 @@
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/dashboard" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faHouseChimney"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Panel główny</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Panel główny</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/restaurant" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faInfo"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Restauracja</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Restauracja</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/orders" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faCartShopping"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Zamówienia</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Zamówienia</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/employees" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faPeopleGroup"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Pracownicy</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Pracownicy</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/supply" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faBoxesStacked"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Zaopatrzenie</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Zaopatrzenie</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/news" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faNewspaper"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Aktualności</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Aktualności</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/menu" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faUtensils"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Menu</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Menu</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/statistics" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faChartLine"></fa-icon>
-              <span class="text-uppercase" *ngIf="!isCollapsed">Statystyki</span>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Statystyki</span>
             </a>
           </li>
         </ul>

@@ -51,6 +51,7 @@ import { OrderPageComponent } from './worker-pages/order-page/order-page.compone
 import { OrderInfoComponent } from './worker-pages/order-info/order-info.component';
 import { SupplyPageComponent } from './worker-pages/supply-page/supply-page.component';
 import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.component";
+import { StatisticsPageComponent } from './worker-pages/statistics-page/statistics-page.component';
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -95,6 +96,7 @@ FullCalendarModule.registerPlugins([
     OrderInfoComponent,
     SupplyPageComponent,
     RestaurantComponent,
+    StatisticsPageComponent,
   ],
   imports: [
     BrowserModule,

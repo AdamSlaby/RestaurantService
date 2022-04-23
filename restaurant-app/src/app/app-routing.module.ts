@@ -24,6 +24,7 @@ import {MenuPageComponent} from "./worker-pages/menu-page/menu-page.component";
 import {OrderPageComponent} from "./worker-pages/order-page/order-page.component";
 import {SupplyPageComponent} from "./worker-pages/supply-page/supply-page.component";
 import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.component";
+import {StatisticsPageComponent} from "./worker-pages/statistics-page/statistics-page.component";
 
 const routes: Routes = [
   {
@@ -125,6 +126,10 @@ const routes: Routes = [
       {
         path: 'supply',
         component: SupplyPageComponent,
+      },
+      {
+        path: 'statistics',
+        component: StatisticsPageComponent,
       },
     ]
   },

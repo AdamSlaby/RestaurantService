@@ -1,6 +1,18 @@
-import {AfterViewInit, ChangeDetectorRef, Component, HostListener, Input, OnInit} from '@angular/core';
-import {faUser, faHouseChimney, faBars, faXmark,faBoxesStacked, faNewspaper, faCartShopping, faUtensils, faChartLine,
-  faArrowRightFromBracket, faPeopleGroup, faInfo} from "@fortawesome/free-solid-svg-icons";
+import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
+import {
+  faArrowRightFromBracket,
+  faBars,
+  faBoxesStacked,
+  faCartShopping,
+  faChartLine,
+  faHouseChimney,
+  faInfo,
+  faNewspaper,
+  faPeopleGroup,
+  faUser,
+  faUtensils,
+  faXmark
+} from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
 
 @Component({
@@ -27,11 +39,12 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   innerWidth!: number;
   innerHeight!: number;
   contentHeight!: number;
+  navItemWidth!: number;
 
   constructor(private cd: ChangeDetectorRef, private router: Router) {
     this.router.events.subscribe(val => {
       let url = this.router.url;
-      this.contentHeader = this.getHeader(url);
+      this.contentHeader = MainNavComponent.getHeader(url);
     });
   }
 
@@ -44,6 +57,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.showMenu();
     this.setContentHeight();
+    this.setMaxNavWidth();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -80,7 +94,26 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     this.isCollapsed = this.isNavCollapsed;
   }
 
-  private getHeader(url: string): string {
+  private setMaxNavWidth() {
+    setTimeout(() => {
+      let ul = document.querySelector('ul');
+      let maxWidth = 0;
+      if (ul) {
+        let children = ul.children;
+        for (let i = 0; i < children.length; i++) {
+          let span = children[i].children[0].children[1];
+          if (span) {
+            if (maxWidth < span.getBoundingClientRect().width)
+              maxWidth = span.getBoundingClientRect().width;
+          }
+        }
+      }
+      this.navItemWidth = Math.ceil(maxWidth);
+      this.cd.detectChanges();
+    }, 500);
+  }
+
+  private static getHeader(url: string): string {
     switch (url) {
       case '/admin/dashboard': return 'Panel główny';
       case '/admin/orders': return 'Zamówienia';

@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {faInfo, faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
-import {FormBuilder, NgForm, NgModel, Validators} from "@angular/forms";
+import {faInfo, faMinus, faPenToSquare, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {FormBuilder, NgForm, Validators} from "@angular/forms";
 import {RegexPattern} from "../../model/regex-pattern";
 import {Restaurant} from "../../model/restaurant/restaurant";
-import {NgbModal, NgbModalModule, NgbTimeAdapter} from "@ng-bootstrap/ng-bootstrap";
+import {NgbTimeAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbTimeDateAdapter} from "../../adapter/timepicker-adapter";
 import {Table} from "../../model/table";
 
@@ -18,8 +18,11 @@ export class RestaurantComponent implements OnInit {
   faInfo = faInfo;
   faMinus = faMinus;
   faPlus = faPlus;
+  faPenToSquare = faPenToSquare;
   restaurantInfo!: Restaurant;
   seatsAmount!: any;
+  newRestaurant: boolean = false;
+  tables!: Table[];
   errors: Map<string, string> =  new Map<string, string>();
   restaurantForm = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
@@ -32,22 +35,10 @@ export class RestaurantComponent implements OnInit {
     flatNr: [null, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
     postcode: [null, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
   });
-  allTables: Table[] = [
-    {
-      id: 6,
-      seatsNr: 5,
-    }
-  ]
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    for (let i = 7; i < 20; i++) {
-      this.allTables.push( {
-        id: i,
-        seatsNr: 5,
-      } as Table);
-    }
     this.restaurantInfo = {
       restaurantId: 1,
       email: 'restaurant24@gmail.com',
@@ -128,17 +119,7 @@ export class RestaurantComponent implements OnInit {
         },
       ],
     } as Restaurant;
-    this.restaurantForm.patchValue({
-      email: this.restaurantInfo.email,
-      phoneNr: this.restaurantInfo.phoneNr,
-      deliveryFee: this.restaurantInfo.deliveryFee,
-      minimalDeliveryPrice: this.restaurantInfo.minimalDeliveryPrice,
-      city: this.restaurantInfo.address.city,
-      street: this.restaurantInfo.address.street,
-      houseNr: this.restaurantInfo.address.houseNr,
-      flatNr: this.restaurantInfo.address.flatNr,
-      postcode: this.restaurantInfo.address.postcode,
-    });
+    this.updateRestaurantFormValues();
   }
 
   get f() {
@@ -152,6 +133,21 @@ export class RestaurantComponent implements OnInit {
         console.log(controls[name]);
     }
     return true;
+  }
+
+  updateRestaurantFormValues() {
+    this.restaurantForm.patchValue({
+      email: this.restaurantInfo.email,
+      phoneNr: this.restaurantInfo.phoneNr,
+      deliveryFee: this.restaurantInfo.deliveryFee,
+      minimalDeliveryPrice: this.restaurantInfo.minimalDeliveryPrice,
+      city: this.restaurantInfo.address.city,
+      street: this.restaurantInfo.address.street,
+      houseNr: this.restaurantInfo.address.houseNr,
+      flatNr: this.restaurantInfo.address.flatNr,
+      postcode: this.restaurantInfo.address.postcode,
+    });
+    this.tables = this.restaurantInfo.tables;
   }
 
   onRestaurantFormSubmit() {
@@ -170,17 +166,22 @@ export class RestaurantComponent implements OnInit {
         postcode: this.restaurantForm.get('postcode')?.value,
       },
       openingHours: this.restaurantInfo.openingHours,
-      tables: this.restaurantInfo.tables,
+      tables: this.tables,
     };
     console.log(restaurant);
+    if (this.newRestaurant) {
+
+    } else {
+
+    }
   }
 
   removeTable(index: number) {
-    this.restaurantInfo.tables.splice(index, 1);
+    this.tables.splice(index, 1);
   }
 
   addTable() {
-    this.restaurantInfo.tables.push({
+    this.tables.push({
       id: this.restaurantInfo.tables[this.restaurantInfo.tables.length - 1].id + 1,
       seatsNr: this.seatsAmount,
     });
@@ -188,6 +189,13 @@ export class RestaurantComponent implements OnInit {
   }
 
   addNewRestaurant() {
+    this.newRestaurant = true;
+    this.tables = [];
     this.form.resetForm();
+  }
+
+  editRestaurantData() {
+    this.newRestaurant = false;
+    this.updateRestaurantFormValues();
   }
 }
