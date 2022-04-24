@@ -1,9 +1,10 @@
 <div class="row m-0">
   <div class="col-md-3">
-    <div class="d-grid mb-3">
+    <div *ngIf="periodOption" class="d-grid mb-3">
       <div class="form-group">
         <label for="periodSelect">Okres:</label>
-        <select id="periodSelect" class="form-select" (ngModelChange)="removePeriod()" [(ngModel)]="chartOptions.periodType">
+        <select id="periodSelect" class="form-select" (ngModelChange)="periodChanged()"
+                [(ngModel)]="chartOptionsValues.periodType">
           <option [ngValue]="periodType.DAY">{{periodType.DAY.toString()}}</option>
           <option [ngValue]="periodType.MONTH">{{periodType.MONTH.toString()}}</option>
           <option [ngValue]="periodType.YEAR">{{periodType.YEAR.toString()}}</option>
@@ -11,11 +12,11 @@
       </div>
     </div>
 
-    <div *ngIf="chartOptions.periodType === periodType.DAY"
+    <div *ngIf="chartOptionsValues.periodType === periodType.DAY"
          class="d-grid mb-3">
       <div class="form-group">
         <div class="input-group">
-          <input placeholder="Wybierz datę" [(ngModel)]="chartOptions.period" ngbDatepicker
+          <input placeholder="Wybierz datę" [(ngModel)]="chartOptionsValues.period" ngbDatepicker
                  #d="ngbDatepicker" type="text"
                  class="form-control">
           <button class="btn btn-outline-grey calendar" type="button" (click)="d.toggle()"></button>
@@ -23,30 +24,30 @@
       </div>
     </div>
 
-    <div *ngIf="chartOptions.periodType === periodType.MONTH"
+    <div *ngIf="chartOptionsValues.periodType === periodType.MONTH"
          class="d-grid mb-3">
       <div class="form-group">
-        <select class="form-select" [(ngModel)]="chartOptions.period">
+        <select class="form-select" [(ngModel)]="chartOptionsValues.period">
           <option hidden disabled selected [ngValue]="null">Wybierz miesiąc</option>
           <option *ngFor="let monthNr of monthArr" [ngValue]="monthNr">{{monthNr | month}}</option>
         </select>
       </div>
     </div>
 
-    <div *ngIf="chartOptions.periodType === periodType.YEAR"
+    <div *ngIf="chartOptionsValues.periodType === periodType.YEAR"
          class="d-grid mb-3">
       <div class="form-group">
-        <select class="form-select" [(ngModel)]="chartOptions.period">
+        <select class="form-select" [(ngModel)]="chartOptionsValues.period">
           <option hidden disabled [ngValue]="null">Wybierz rok</option>
           <option *ngFor="let year of yearArr" [ngValue]="year">{{year}}</option>
         </select>
       </div>
     </div>
 
-    <div class="d-grid mb-3">
+    <div *ngIf="restaurantIdOption" class="d-grid mb-3">
       <div class="form-group">
         <label for="restaurantId">Identyfikator restauracji</label>
-        <input id="restaurantId" [(ngModel)]="chartOptions.placeId" class="form-control" list="restaurants">
+        <input id="restaurantId" [(ngModel)]="chartOptionsValues.placeId" class="form-control" list="restaurants">
         <datalist id="restaurants">
           <option *ngFor="let restaurant of restaurants" [value]="restaurant.restaurantId">
             {{restaurant.city}}, ul {{restaurant.street}}
@@ -55,25 +56,25 @@
       </div>
     </div>
 
-    <div class="d-grid mb-3">
+    <div *ngIf="chartTypeOption && chartOptionsValues.periodType" class="d-grid mb-3">
       <div class="form-group">
         <label for="chartType">Typ wykresu</label>
-        <select id="chartType" class="form-select" [(ngModel)]="chartOptions.chartType">
+        <select id="chartType" class="form-select" [(ngModel)]="chartOptionsValues.chartType">
           <option *ngFor="let type of chartTypes" [ngValue]="type">{{type.toString()}}</option>
         </select>
       </div>
     </div>
 
-    <div class="d-grid mb-3">
+    <div *ngIf="orderTypeOption" class="d-grid mb-3">
       <div class="form-group">
         <label for="orderType">Typ zamówienia</label>
-        <select id="orderType" class="form-select" [(ngModel)]="chartOptions.orderType">
+        <select id="orderType" class="form-select" [(ngModel)]="chartOptionsValues.orderType">
           <option *ngFor="let type of orderTypes" [ngValue]="type">{{type.toString()}}</option>
         </select>
       </div>
     </div>
 
-    <div class="d-grid mb-1">
+    <div class="d-grid mb-3">
       <button class="btn btn-outline-grey" (click)="generateChart()" type="button">
         Generuj wykres
       </button>
@@ -81,8 +82,8 @@
   </div>
 
   <div id="chart" class="col-md-9">
-    <h4 class="text-center">{{chartData.name}}</h4>
-    <ng-container *ngIf="selectedChartType === chartType.VERTICAL_BAR_CHART">
+    <h4 class="text-center">{{this.chartData?.name}}</h4>
+    <ng-container *ngIf="selectedChartType === chartType.VERTICAL_BAR_CHART && chartData">
       <ngx-charts-bar-vertical
         [view]="view"
         [results]="mapDataToBarOrPieChartData(chartData)"
@@ -96,8 +97,23 @@
       </ngx-charts-bar-vertical>
     </ng-container>
 
-    <ng-container *ngIf="selectedChartType === chartType.AREA_CHART">
+    <ng-container *ngIf="selectedChartType === chartType.GROUPED_VERTICAL_BAR_CHART && chartData">
+      <ngx-charts-bar-vertical-2d
+        [view]="view"
+        [results]="chartData"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="chartData.Xlabel"
+        [yAxisLabel]="chartData.Ylabel">
+      </ngx-charts-bar-vertical-2d>
+    </ng-container>
+
+    <ng-container *ngIf="selectedChartType === chartType.AREA_CHART && chartData">
       <ngx-charts-line-chart
+        [scheme]="'forest'"
         [view]="view"
         [legend]="true"
         [showXAxisLabel]="true"
@@ -106,11 +122,12 @@
         [yAxis]="true"
         [xAxisLabel]="chartData.Xlabel"
         [yAxisLabel]="chartData.Ylabel"
-        [results]="mapDataToAreaChartData(chartData)">
+        [timeline]="true"
+        [results]="[chartData]">
       </ngx-charts-line-chart>
     </ng-container>
 
-    <ng-container *ngIf="selectedChartType === chartType.PIE_CHART">
+    <ng-container *ngIf="selectedChartType === chartType.PIE_CHART && chartData">
       <ngx-charts-pie-chart
         [view]="view"
         [results]="mapDataToBarOrPieChartData(chartData)"

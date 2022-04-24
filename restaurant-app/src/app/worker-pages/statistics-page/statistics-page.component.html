@@ -1,7 +1,20 @@
 <div id="statisticsContent" class="row m-0 py-3 px-2">
   <div class="col-12 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;min-height: 400px">
-      <app-statistic [chartName]="chartName.COMPARE_ORDERS_AMOUNT"></app-statistic>
+      <div class="form-group d-inline-block">
+        <label for="chartName">Wybierz wykres</label>
+        <select id="chartName" class="form-select" [(ngModel)]="chartId">
+          <option *ngFor="let chart of charts; index as i" [ngValue]="i">{{chart}}</option>
+        </select>
+      </div>
+      <hr>
+      <app-statistic  [periodOption]="chartOptions[chartId].periodOption"
+                      [restaurantIdOption]="chartOptions[chartId].restaurantIdOption"
+                      [chartTypeOption]="chartOptions[chartId].chartTypeOption"
+                      [orderTypeOption]="chartOptions[chartId].orderTypeOption"
+                      [defaultChartType]="chartOptions[chartId].defaultChartType"
+                      [chartName]="charts[chartId]">
+      </app-statistic>
     </div>
   </div>
 </div>

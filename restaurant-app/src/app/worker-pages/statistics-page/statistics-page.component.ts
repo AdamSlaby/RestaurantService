@@ -1,15 +1,7 @@
-import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
-import {ChartGenerateData} from "../../model/chart-generate-data";
-import {ChartType} from "../../model/chart-type";
-import {OrderType} from "../../model/order-type";
-import {PeriodType} from "../../model/period-type";
-import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateToStringAdapter} from "../../adapter/datepicker-adapter";
-import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
-import {Chart} from "../../model/chart";
-import {ChartData} from "../../model/chart-data";
-import {LegendPosition} from "@swimlane/ngx-charts";
-import {ChartName} from "../../model/chart-name";
+import {Component, OnInit} from '@angular/core';
+import {ChartType} from "../../model/chart/chart-type";
+import {ChartName} from "../../model/chart/chart-name";
+import {ChartOptions} from "../../model/chart/chart-options";
 
 @Component({
   selector: 'app-statistics-page',
@@ -17,11 +9,71 @@ import {ChartName} from "../../model/chart-name";
   styleUrls: ['./statistics-page.component.scss'],
 })
 export class StatisticsPageComponent implements OnInit {
-  chartName = ChartName;
+  chartOptions!: ChartOptions[];
+  chartId: number = 0;
+  charts = Object.values(ChartName);
 
   constructor() {
   }
 
   ngOnInit(): void {
+    this.chartOptions = [
+      {
+        defaultChartType: ChartType.PIE_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: false,
+        chartTypeOption: true,
+      },
+      {
+        defaultChartType: ChartType.PIE_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: false,
+        chartTypeOption: true,
+      },
+      {
+        defaultChartType: ChartType.VERTICAL_BAR_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: true,
+        chartTypeOption: true,
+      },
+      {
+        defaultChartType: ChartType.AREA_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: true,
+        chartTypeOption: false,
+      },
+      {
+        defaultChartType: ChartType.VERTICAL_BAR_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: true,
+        chartTypeOption: true,
+      },
+      {
+        defaultChartType: ChartType.VERTICAL_BAR_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: false,
+        chartTypeOption: true,
+      },
+      {
+        defaultChartType: ChartType.VERTICAL_BAR_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: true,
+        chartTypeOption: false,
+      },
+      {
+        defaultChartType: ChartType.VERTICAL_BAR_CHART,
+        periodOption: true,
+        restaurantIdOption: true,
+        orderTypeOption: true,
+        chartTypeOption: true,
+      },
+    ]
   }
 }
