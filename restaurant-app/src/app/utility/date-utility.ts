@@ -1,6 +1,6 @@
-import {NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateStruct, NgbTimeStruct} from "@ng-bootstrap/ng-bootstrap";
 
-export class TimeUtility {
+export class DateUtility {
   public static getUtcDAte(date: Date): number {
     return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
   }
@@ -9,5 +9,9 @@ export class TimeUtility {
     let now = new Date();
     return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(),
       time.hour, time.minute, time.second));
+  }
+
+  public static mapNgbDateStructToDate(date: NgbDateStruct): string {
+    return new Date(Date.UTC(date.year, date.month, date.day)).toUTCString();
   }
 }

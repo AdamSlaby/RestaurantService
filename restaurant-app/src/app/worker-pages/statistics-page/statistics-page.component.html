@@ -1,24 +1,7 @@
 <div id="statisticsContent" class="row m-0 py-3 px-2">
   <div class="col-12 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;min-height: 400px">
-      <div class="d-flex justify-content-center align-items-center">
-        <!--okres = dzień/miesiąc/rok -->
-<!--        wybór typu okresu-->
-<!--        input for day or select for month or select for year (range from now to 10 years back)-->
-      </div>
-
-      <div class="d-flex justify-content-center align-items-center">
-        <!--miejsce = (różne restauracje lub wszystkie restauracje) -->
-      </div>
-
-      <div class="d-flex justify-content-center align-items-center">
-        <!--typ wykresu = (np wykres kołowy, kolumnowy) typ Chart Type -->
-      </div>
-
-      <div class="d-flex justify-content-center align-items-center">
-        <!--typ zamówienia = (online, restaurant) typ Order Type -->
-<!--        to consider if these options should be in another component with options to make specific option visible-->
-      </div>
+      <app-statistic [chartName]="chartName.COMPARE_ORDERS_AMOUNT"></app-statistic>
     </div>
   </div>
 </div>

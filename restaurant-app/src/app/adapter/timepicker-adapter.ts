@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {NgbTimeAdapter, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import {TimeUtility} from "../utility/time-utility";
+import {DateUtility} from "../utility/date-utility";
 
 @Injectable()
 export class NgbTimeDateAdapter extends NgbTimeAdapter<Date> {
@@ -18,6 +18,6 @@ export class NgbTimeDateAdapter extends NgbTimeAdapter<Date> {
   }
 
   toModel(time: NgbTimeStruct | null): Date | null {
-    return time != null ? TimeUtility.mapNgbTimeStructToDate(time) : null;
+    return time != null ? DateUtility.mapNgbTimeStructToDate(time) : null;
   }
 }

@@ -2,38 +2,26 @@ import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit} from '@angu
 import {ChartGenerateData} from "../../model/chart-generate-data";
 import {ChartType} from "../../model/chart-type";
 import {OrderType} from "../../model/order-type";
+import {PeriodType} from "../../model/period-type";
+import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateToStringAdapter} from "../../adapter/datepicker-adapter";
+import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
+import {Chart} from "../../model/chart";
+import {ChartData} from "../../model/chart-data";
+import {LegendPosition} from "@swimlane/ngx-charts";
+import {ChartName} from "../../model/chart-name";
 
 @Component({
   selector: 'app-statistics-page',
   templateUrl: './statistics-page.component.html',
-  styleUrls: ['./statistics-page.component.scss']
+  styleUrls: ['./statistics-page.component.scss'],
 })
-export class StatisticsPageComponent implements OnInit, AfterViewInit {
-  chartOptions!: ChartGenerateData[];
-  view!: [number, number];
+export class StatisticsPageComponent implements OnInit {
+  chartName = ChartName;
 
-  constructor(private zone: NgZone, private cd: ChangeDetectorRef) { }
+  constructor() {
+  }
 
   ngOnInit(): void {
-    for (let i = 1; i <= 8; i++) {
-      this.chartOptions.push({
-        period: new Date().toLocaleDateString(),
-        placeId: localStorage.getItem('restaurantId'),
-        chartType: ChartType.VERTICAL_BAR_CHART,
-        orderType: OrderType.ALL,
-      });
-    }
-  }
-
-  ngAfterViewInit() {
-
-  }
-
-  getElementWidth(id: string) {
-    let element = document.getElementById(id);
-    if (element) {
-      return element.getBoundingClientRect().width;
-    } else
-      return 0;
   }
 }
