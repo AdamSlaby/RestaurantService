@@ -54,6 +54,8 @@ import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.componen
 import { StatisticsPageComponent } from './worker-pages/statistics-page/statistics-page.component';
 import { MonthPipe } from './pipe/month.pipe';
 import { StatisticComponent } from './worker-pages/statistic/statistic.component';
+import { InvoicesComponent } from './worker-pages/invoice-page/invoices/invoices.component';
+import { InvoiceFormComponent } from './worker-pages/invoice-page/invoice-form/invoice-form.component';
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -101,6 +103,8 @@ FullCalendarModule.registerPlugins([
     StatisticsPageComponent,
     MonthPipe,
     StatisticComponent,
+    InvoicesComponent,
+    InvoiceFormComponent,
   ],
   imports: [
     BrowserModule,

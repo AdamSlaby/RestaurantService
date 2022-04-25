@@ -43,6 +43,13 @@
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
+               style="font-size: 18px" routerLink="/admin/invoices" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faFileInvoice"></fa-icon>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Faktury</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/supply" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faBoxesStacked"></fa-icon>
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Zaopatrzenie</span>

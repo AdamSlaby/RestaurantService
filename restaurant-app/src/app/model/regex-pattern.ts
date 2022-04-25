@@ -9,4 +9,5 @@ export class RegexPattern {
   public static ID: string = '^[0-9]{11}$';
   public static ACCOUNT_NR: string = '^\\d{2}[ ]\\d{4}[ ]\\d{4}[ ]\\d{4}[ ]\\d{4}[ ]\\d{4}[ ]\\d{4}|\\d{26}$';
   public static CITY: string = '^[a-zA-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż]{3,57}$';
+  public static NIP: string = '^[0-9]{10}$';
 }

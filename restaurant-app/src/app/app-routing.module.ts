@@ -25,6 +25,7 @@ import {OrderPageComponent} from "./worker-pages/order-page/order-page.component
 import {SupplyPageComponent} from "./worker-pages/supply-page/supply-page.component";
 import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.component";
 import {StatisticsPageComponent} from "./worker-pages/statistics-page/statistics-page.component";
+import {InvoicesComponent} from "./worker-pages/invoice-page/invoices/invoices.component";
 
 const routes: Routes = [
   {
@@ -118,6 +119,10 @@ const routes: Routes = [
       {
         path: 'orders',
         component: OrderPageComponent,
+      },
+      {
+        path: 'invoices',
+        component: InvoicesComponent,
       },
       {
         path: 'restaurant',

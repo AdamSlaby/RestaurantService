@@ -1,0 +1,554 @@
+<div class="pb-3">
+  <div class="bg-white p-2" style="border-radius: 10px;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+      </div>
+      <div>
+        <h4 class="text-center pt-2">Detale faktury</h4>
+      </div>
+      <div>
+        <fa-icon (click)="closeComponent()" style="font-size: 1.5rem;cursor: pointer" [icon]="faXmark"></fa-icon>
+      </div>
+    </div>
+    <div class="row m-0">
+      <div class="col-xl-3">
+        <div class="d-flex justify-content-center align-items-center">
+          <fa-icon class="fa-9x" [icon]="faFileInvoice"></fa-icon>
+        </div>
+      </div>
+      <div class="col-xl-9 mt-4">
+        <h5 class="fw-light">Informacje wstępne</h5>
+        <form [formGroup]="invoiceForm" #form="ngForm"
+              (ngSubmit)="getInvalidControl() && !invoiceForm.invalid && onInvoiceFormSubmit()">
+          <div class="row m-0">
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="nr">Numer faktury</label>
+                <input type="text" placeholder="Wpisz numer faktury" formControlName="nr"
+                       class="form-control" id="nr" maxlength="20"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['nr'].errors ||
+                    (errors.has('nr') && f['nr'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['nr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['nr'].errors['required']">
+                    Numer faktury jest wymagany
+                  </div>
+                  <div *ngIf="f['nr'].errors['maxlength']">
+                    Numer faktury nie może przekraczać 20 znaków
+                  </div>
+                </div>
+                <div *ngIf="errors.has('nr') && f['nr'].valid && f['nr'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('nr')}}
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="invoiceInfo" class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="place">Lokal</label>
+                <span id="place" class="form-control">
+                  {{invoiceInfo.restaurantInfo.city}}, ul {{invoiceInfo.restaurantInfo.street}}
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="date">Data wystawienia faktury</label>
+                <div class="input-group">
+                  <input type="text" placeholder="Wpisz datę wystawienia faktury" formControlName="date"
+                         class="form-control" id="date" ngbDatepicker #d="ngbDatepicker"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['date'].errors ||
+                    (errors.has('date') && f['date'].pristine)  }"/>
+                  <button type="button" class="btn btn-outline-grey calendar" (click)="d.toggle()"></button>
+                </div>
+                <div *ngIf="form.submitted && f['date'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['date'].errors['required']">
+                    Data wystawienia faktury jest wymagana
+                  </div>
+                </div>
+                <div *ngIf="errors.has('date') && f['date'].valid && f['date'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('date')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="completionDate">Data realizacji faktury</label>
+                <div class="input-group">
+                  <input type="text" placeholder="Wpisz datę realizacji faktury" formControlName="completionDate"
+                         class="form-control" id="completionDate" ngbDatepicker #dr="ngbDatepicker"
+                         [ngClass]="{ 'is-invalid': form.submitted && f['completionDate'].errors ||
+                    (errors.has('completionDate') && f['completionDate'].pristine)  }"/>
+                  <button type="button" class="btn btn-outline-grey calendar" (click)="dr.toggle()"></button>
+                </div>
+                <div *ngIf="form.submitted && f['completionDate'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['completionDate'].errors['required']">
+                    Data realizacji faktury jest wymagana
+                  </div>
+                </div>
+                <div *ngIf="errors.has('completionDate') && f['completionDate'].valid && f['completionDate'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('completionDate')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="price">Cena brutto faktury</label>
+                <input type="number" placeholder="Wpisz cenę brutto faktury" formControlName="price"
+                       class="form-control" id="price" maxlength="20"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['price'].errors ||
+                    (errors.has('price') && f['price'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['price'].errors" class="invalid-feedback">
+                  <div *ngIf="f['price'].errors['required']">
+                    Cena brutto faktury jest wymagany
+                  </div>
+                  <div *ngIf="f['price'].errors['min']">
+                    Cena brutto faktury nie może być liczbą ujemną
+                  </div>
+                </div>
+                <div *ngIf="errors.has('price') && f['price'].valid && f['price'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('price')}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+          <h5 class="fw-light">Sprzedawca</h5>
+
+          <div class="row m-0">
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerName">Nazwa sprzedawcy</label>
+                <input type="text" placeholder="Wpisz nazwę sprzedawcy" formControlName="sellerName"
+                       class="form-control" id="sellerName" maxlength="65"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerName'].errors ||
+                    (errors.has('sellerName') && f['sellerName'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['sellerName'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerName'].errors['required']">
+                    Nazwa sprzedawcy jest wymagana
+                  </div>
+                  <div *ngIf="f['sellerName'].errors['maxlength']">
+                    Nazwa sprzedawcy nie może przekraczać 65 znaków
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerName') && f['sellerName'].valid && f['sellerName'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerName')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerNip">Numer NIP sprzedawcy</label>
+                <input type="text" placeholder="Wpisz numer NIP sprzedawcy" formControlName="sellerNip"
+                       class="form-control" id="sellerNip"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerNip'].errors ||
+                    (errors.has('sellerNip') && f['sellerNip'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['sellerNip'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerNip'].errors['required']">
+                    Numer NIP sprzedawcy jest wymagana
+                  </div>
+                  <div *ngIf="f['sellerNip'].errors['pattern']">
+                    Numer NIP sprzedawcy jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerNip') && f['sellerNip'].valid && f['sellerNip'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerNip')}}
+                </div>
+              </div>
+            </div>
+
+            <h6 class="fw-light">Adres</h6>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerCity">Miasto</label>
+                <input type="text" placeholder="Wpisz miasto" formControlName="sellerCity"
+                       class="form-control" id="sellerCity"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerCity'].errors ||
+                    (errors.has('sellerCity') && f['sellerCity'].pristine)}"/>
+                <div *ngIf="form.submitted && f['sellerCity'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerCity'].errors['required']">
+                    Miasto jest wymagane
+                  </div>
+                  <div *ngIf="f['sellerCity'].errors['pattern']">
+                    Miasto jest nieprawidłowe
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerCity') && f['sellerCity'].valid && f['sellerCity'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerCity')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerStreet">Ulica:</label>
+                <input type="text" placeholder="Podaj ulicę" formControlName="sellerStreet"
+                       class="form-control" id="sellerStreet"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerStreet'].errors ||
+                    (errors.has('sellerStreet') && f['sellerStreet'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['sellerStreet'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerStreet'].errors['required']">
+                    Nazwa ulicy jest wymagana
+                  </div>
+                  <div *ngIf="f['sellerStreet'].errors['pattern']">
+                    Nazwa ulicy jest nieprawidłowa
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerStreet') && f['sellerStreet'].valid && f['sellerStreet'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerStreet')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerHouseNr">Numer domu:</label>
+                <input type="text" placeholder="Podaj numer domu" formControlName="sellerHouseNr" class="form-control"
+                       id="sellerHouseNr"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerHouseNr'].errors ||
+                    (errors.has('sellerHouseNr') && f['sellerHouseNr'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['sellerHouseNr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerHouseNr'].errors['required']">
+                    Numer domu jest wymagany
+                  </div>
+                  <div *ngIf="f['sellerHouseNr'].errors['pattern']">
+                    Numer domu jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerHouseNr') && f['sellerHouseNr'].valid && f['sellerHouseNr'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerHouseNr')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerFlatNr">Numer mieszkania:</label>
+                <input type="text" placeholder="Podaj numer mieszkania" formControlName="sellerFlatNr" class="form-control"
+                       id="sellerFlatNr"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerFlatNr'].errors ||
+                    (errors.has('sellerFlatNr') && f['sellerFlatNr'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['sellerFlatNr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerFlatNr'].errors['required']">
+                    Numer mieszkania jest wymagany
+                  </div>
+                  <div *ngIf="f['sellerFlatNr'].errors['pattern']">
+                    Numer mieszkania jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerFlatNr') && f['sellerFlatNr'].valid && f['sellerFlatNr'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerFlatNr')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="sellerPostcode">Kod pocztowy:</label>
+                <input type="text" placeholder="Podaj kod pocztowy" formControlName="sellerPostcode" class="form-control"
+                       id="sellerPostcode"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['sellerPostcode'].errors ||
+                    (errors.has('sellerPostcode') && f['sellerPostcode'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['sellerPostcode'].errors" class="invalid-feedback">
+                  <div *ngIf="f['sellerPostcode'].errors['required']">
+                    Kod pocztowy jest wymagany
+                  </div>
+                  <div *ngIf="f['sellerPostcode'].errors['pattern']">
+                    Kod pocztowy jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('sellerPostcode') && f['sellerPostcode'].valid && f['sellerPostcode'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('sellerPostcode')}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+          <h5 class="fw-light">Kupiec</h5>
+
+          <div class="row m-0">
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerName">Nazwa kupca</label>
+                <input type="text" placeholder="Wpisz nazwę kupca" formControlName="buyerName"
+                       class="form-control" id="buyerName" maxlength="65"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerName'].errors ||
+                    (errors.has('buyerName') && f['buyerName'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['buyerName'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerName'].errors['required']">
+                    Nazwa kupca jest wymagana
+                  </div>
+                  <div *ngIf="f['buyerName'].errors['maxlength']">
+                    Nazwa kupca nie może przekraczać 65 znaków
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerName') && f['buyerName'].valid && f['buyerName'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerName')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerNip">Numer NIP kupca</label>
+                <input type="text" placeholder="Wpisz numer NIP kupca" formControlName="buyerNip"
+                       class="form-control" id="buyerNip"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerNip'].errors ||
+                    (errors.has('buyerNip') && f['buyerNip'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['buyerNip'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerNip'].errors['required']">
+                    Numer NIP kupca jest wymagany
+                  </div>
+                  <div *ngIf="f['buyerNip'].errors['pattern']">
+                    Numer NIP kupca jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerNip') && f['buyerNip'].valid && f['buyerNip'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerNip')}}
+                </div>
+              </div>
+            </div>
+
+            <h6 class="fw-light">Adres</h6>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerCity">Miasto</label>
+                <input type="text" placeholder="Wpisz miasto" formControlName="buyerCity"
+                       class="form-control" id="buyerCity"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerCity'].errors ||
+                    (errors.has('buyerCity') && f['buyerCity'].pristine)}"/>
+                <div *ngIf="form.submitted && f['buyerCity'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerCity'].errors['required']">
+                    Miasto jest wymagane
+                  </div>
+                  <div *ngIf="f['buyerCity'].errors['pattern']">
+                    Miasto jest nieprawidłowe
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerCity') && f['buyerCity'].valid && f['buyerCity'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerCity')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerStreet">Ulica:</label>
+                <input type="text" placeholder="Podaj ulicę" formControlName="buyerStreet"
+                       class="form-control" id="buyerStreet"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerStreet'].errors ||
+                    (errors.has('buyerStreet') && f['buyerStreet'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['buyerStreet'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerStreet'].errors['required']">
+                    Nazwa ulicy jest wymagana
+                  </div>
+                  <div *ngIf="f['buyerStreet'].errors['pattern']">
+                    Nazwa ulicy jest nieprawidłowa
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerStreet') && f['buyerStreet'].valid && f['buyerStreet'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerStreet')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerHouseNr">Numer domu:</label>
+                <input type="text" placeholder="Podaj numer domu" formControlName="buyerHouseNr" class="form-control"
+                       id="buyerHouseNr"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerHouseNr'].errors ||
+                    (errors.has('buyerHouseNr') && f['buyerHouseNr'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['buyerHouseNr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerHouseNr'].errors['required']">
+                    Numer domu jest wymagany
+                  </div>
+                  <div *ngIf="f['buyerHouseNr'].errors['pattern']">
+                    Numer domu jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerHouseNr') && f['buyerHouseNr'].valid && f['buyerHouseNr'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerHouseNr')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerFlatNr">Numer mieszkania:</label>
+                <input type="text" placeholder="Podaj numer mieszkania" formControlName="buyerFlatNr" class="form-control"
+                       id="buyerFlatNr"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerFlatNr'].errors ||
+                    (errors.has('buyerFlatNr') && f['buyerFlatNr'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['buyerFlatNr'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerFlatNr'].errors['required']">
+                    Numer mieszkania jest wymagany
+                  </div>
+                  <div *ngIf="f['buyerFlatNr'].errors['pattern']">
+                    Numer mieszkania jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerFlatNr') && f['buyerFlatNr'].valid && f['buyerFlatNr'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerFlatNr')}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-2 mb-md-4">
+              <div class="form-group">
+                <label class="fw-bolder" for="buyerPostcode">Kod pocztowy:</label>
+                <input type="text" placeholder="Podaj kod pocztowy" formControlName="buyerPostcode" class="form-control"
+                       id="buyerPostcode"
+                       [ngClass]="{ 'is-invalid': form.submitted && f['buyerPostcode'].errors ||
+                    (errors.has('buyerPostcode') && f['buyerPostcode'].pristine)  }"/>
+                <div *ngIf="form.submitted && f['buyerPostcode'].errors" class="invalid-feedback">
+                  <div *ngIf="f['buyerPostcode'].errors['required']">
+                    Kod pocztowy jest wymagany
+                  </div>
+                  <div *ngIf="f['buyerPostcode'].errors['pattern']">
+                    Kod pocztowy jest nieprawidłowy
+                  </div>
+                </div>
+                <div *ngIf="errors.has('buyerPostcode') && f['buyerPostcode'].valid && f['buyerPostcode'].pristine"
+                     class="invalid-feedback d-block">
+                  {{errors.get('buyerPostcode')}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+          <h5 class="fw-light">Zakupione towary</h5>
+
+          <div class="row m-0">
+            <ng-container *ngFor="let good of f['goods'].value; index as i">
+              <div class="col-md-4 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="ingredient">Nazwa towaru</label>
+                  <input type="text" placeholder="Nazwa składnika" [(ngModel)]="good.ingredient"
+                         [ngModelOptions]="{standalone: true}"
+                         class="form-control" id="ingredient"
+                         [ngClass]="{ 'is-invalid': errors.has('goodIngredient-' + i)}"/>
+                  <div *ngIf="errors.has('goodIngredient-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodIngredient-' + i)}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="quantity">Ilość towaru</label>
+                  <div id="quantity" class="input-group">
+                    <input type="number" placeholder="Wpisz ilość towaru" [(ngModel)]="good.quantity"
+                           [ngModelOptions]="{standalone: true}"
+                           class="form-control"
+                           [ngClass]="{ 'is-invalid': errors.has('goodQuantity-' + i)}"/>
+                    <select [(ngModel)]="good.unit"
+                            [ngModelOptions]="{standalone: true}"
+                            class="form-select"
+                            [ngClass]="{ 'is-invalid': errors.has('goodUnit-' + i)}">
+                      <option disabled hidden [ngValue]="null">Wybierz jednostkę</option>
+                      <option *ngFor="let unit of units" [ngValue]="unit">{{unit}}</option>
+                    </select>
+                  </div>
+                  <div *ngIf="errors.has('goodQuantity-' + i) || errors.has('goodUnit-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodQuantity-' + i)}}
+                    {{errors.get('goodUnit-' + i)}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="unitNetPrice">Cena jednostkowa towaru netto</label>
+                  <div class="input-group">
+                    <input type="number" placeholder="Wpisz cene jednostkową towaru netto" [(ngModel)]="good.unitNetPrice"
+                           [ngModelOptions]="{standalone: true}"
+                           class="form-control" id="unitNetPrice"
+                           [ngClass]="{ 'is-invalid': errors.has('goodUnitNetPrice-' + i)}"/>
+                    <span class="input-group-text">zł</span>
+                  </div>
+                  <div *ngIf="errors.has('goodUnitNetPrice-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodUnitNetPrice-' + i)}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 mb-2 mb-md-4">
+                <div class="form-group">
+                  <label class="fw-bolder" for="discount">Rabat</label>
+                  <div class="input-group">
+                    <input type="number" placeholder="Wpisz rabat" [(ngModel)]="good.discount"
+                           [ngModelOptions]="{standalone: true}"
+                           class="form-control" id="discount"
+                           [ngClass]="{ 'is-invalid': errors.has('goodDiscount-' + i)}"/>
+                    <span class="input-group-text">zł</span>
+                  </div>
+                  <div *ngIf="errors.has('goodDiscount-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodDiscount-' + i)}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 mb-2 mb-md-4">
+
+              </div>
+
+              <div class="col-md-4 mb-2 mb-md-4">
+
+              </div>
+
+              <div class="col-md-4 mb-2 mb-md-4">
+
+              </div>
+
+              <hr>
+            </ng-container>
+          </div>
+
+          <div class="form-group">
+            <div class="d-flex justify-content-center align-items-center">
+              <button class="btn btn-outline-grey">
+                Zapisz
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
+            <div class="d-flex justify-content-center align-items-center">
+              Formularz zawiera błędy
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

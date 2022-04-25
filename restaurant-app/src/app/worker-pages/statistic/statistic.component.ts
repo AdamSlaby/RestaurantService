@@ -7,7 +7,7 @@ import {ChartType} from "../../model/chart/chart-type";
 import {OrderType} from "../../model/order-type";
 import {LegendPosition} from "@swimlane/ngx-charts";
 import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateToStringAdapter} from "../../adapter/datepicker-adapter";
+import {NgbDateToStringAdapter} from "../../adapter/datepicker-string-adapter";
 import {ChartName} from "../../model/chart/chart-name";
 
 @Component({

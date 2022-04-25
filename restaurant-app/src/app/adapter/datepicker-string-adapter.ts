@@ -18,6 +18,6 @@ export class NgbDateToStringAdapter extends NgbDateAdapter<String> {
   }
 
   toModel(date: NgbDateStruct | null): string | null {
-    return date != null ? DateUtility.mapNgbDateStructToDate(date) : null;
+    return date != null ? DateUtility.mapNgbDateStructToDateString(date) : null;
   }
 }

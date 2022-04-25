@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {
   faArrowRightFromBracket,
   faBars,
@@ -11,7 +11,8 @@ import {
   faPeopleGroup,
   faUser,
   faUtensils,
-  faXmark
+  faXmark,
+  faFileInvoice,
 } from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
 
@@ -33,6 +34,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   faUtensils = faUtensils;
   faChartLine = faChartLine;
   faInfo = faInfo;
+  faFileInvoice = faFileInvoice;
   contentHeader!: string;
   isCollapsed!: boolean;
   isNavCollapsed!: boolean;
@@ -123,6 +125,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
       case '/admin/menu': return 'Menu';
       case '/admin/statistics': return 'Statystyki';
       case '/admin/restaurant': return 'Restauracja';
+      case '/admin/invoices': return 'Faktury';
       default: return '';
     }
   }

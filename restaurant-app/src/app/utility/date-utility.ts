@@ -11,7 +11,7 @@ export class DateUtility {
       time.hour, time.minute, time.second));
   }
 
-  public static mapNgbDateStructToDate(date: NgbDateStruct): string {
+  public static mapNgbDateStructToDateString(date: NgbDateStruct): string {
     return new Date(Date.UTC(date.year, date.month, date.day)).toUTCString();
   }
 }

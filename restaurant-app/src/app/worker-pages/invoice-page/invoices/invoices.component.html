@@ -1,0 +1,81 @@
+<div id="invoicesContent" class="row m-0 py-3 px-2">
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Filtrowanie</h4>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [(ngModel)]="chosenInvoice" placeholder="Numer faktury"/>
+        <button class="btn btn-outline-grey" type="button" (click)="getInvoiceByNr()">Szukaj</button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" placeholder="Data wystawienia faktury" ngbDatepicker #d="ngbDatepicker"
+               [(ngModel)]="invoiceDate"
+               class="form-control">
+        <button type="button" class="btn btn-outline-grey calendar" (click)="d.toggle()"></button>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Nazwa sprzedawcy" [(ngModel)]="sellerName">
+        <button type="button" class="btn btn-outline-grey" (click)="getInvoiceBySellerName()">Szukaj</button>
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
+      </div>
+    </div>
+
+    <div class="bg-white p-2 mt-3" style="border-radius: 10px;">
+      <h4 class="text-center mb-4">Opcje</h4>
+      <div class="d-grid">
+        <button class="btn btn-outline-grey" (click)="addNewInvoice()">
+          <fa-icon class="me-2" [icon]="faPlus"></fa-icon>
+          <span>Dodaj nową fakturę</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center">Lista faktur</h4>
+      <div>
+        <table class="table table-striped table-hover text-center overflow-auto">
+          <thead>
+          <tr>
+            <th scope="col">Nr</th>
+            <th scope="col" sortable="invoiceDate" (sort)="onSort($event)">Data wystawienia</th>
+            <th scope="col">Nazwa sprzedawcy</th>
+            <th scope="col">Cena</th>
+            <th scope="col">Opcje</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let invoice of invoiceList.invoices">
+            <th scope="row">{{invoice.nr}}</th>
+            <td>{{invoice.date | date:'longDate':'+0000':'pl-PL'}}</td>
+            <td>{{invoice.sellerName}}</td>
+            <td>
+              {{invoice.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+            </td>
+            <td>
+              <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
+                       ngbTooltip="Zobacz detale"
+                       (click)="editInvoice(invoice.nr)" [icon]="faEye"></fa-icon>
+              <fa-icon style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
+                       (click)="editInvoice(invoice.nr)" [icon]="faPenToSquare"></fa-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center">
+          <ngb-pagination [collectionSize]="invoiceList.totalElements"
+                          [(page)]="pageNr"
+                          [maxSize]="5"
+                          [rotate]="true"
+                          [boundaryLinks]="true"
+                          (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-invoice-form id="invoiceInfo" *ngIf="showInvoiceDetails" (closeInvoiceDetails)="closeInvoiceDetails()"
+                    [invoiceNr]="selectedInvoiceNr"></app-invoice-form>
+</div>
