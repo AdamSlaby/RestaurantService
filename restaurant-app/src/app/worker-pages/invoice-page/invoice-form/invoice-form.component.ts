@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {faFileInvoice, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faFileInvoice, faXmark, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, NgForm, Validators} from "@angular/forms";
 import {RegexPattern} from "../../../model/regex-pattern";
 import {Invoice} from "../../../model/invoice/invoice";
@@ -7,6 +7,7 @@ import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateToDateAdapter} from "../../../adapter/datepicker-date-adapter";
 import {Unit} from "../../../model/unit";
 import {TaxType} from "../../../model/invoice/tax-type";
+import {Good} from "../../../model/invoice/good";
 
 @Component({
   selector: 'app-invoice-form',
@@ -21,9 +22,9 @@ export class InvoiceFormComponent implements OnInit {
   @Input() set invoiceNr(value: string) {
     this._invoiceNr = value;
     if (value === '') {
-      this.invoiceForm.patchValue({goods: []});
       setTimeout(() => {
         this.form.resetForm();
+        this.invoiceForm.patchValue({goods: []});
       }, 100);
     } else {
       this.invoiceInfo = {
@@ -67,7 +68,19 @@ export class InvoiceFormComponent implements OnInit {
             netPrice: 50.00,
             taxType: TaxType.C,
             taxPrice: 2.5,
-          }
+          },
+          {
+            id: 2,
+            ingredientId: 2,
+            ingredient: 'Ogórek',
+            quantity: 5,
+            unit: Unit.KG,
+            discount: 1.00,
+            unitNetPrice: 6.00,
+            netPrice: 30.00,
+            taxType: TaxType.C,
+            taxPrice: 1.5,
+          },
         ],
       }
       this.invoiceForm.patchValue({
@@ -96,9 +109,11 @@ export class InvoiceFormComponent implements OnInit {
 
   faXmark = faXmark;
   faFileInvoice = faFileInvoice;
+  faPlus = faPlus;
   _invoiceNr!: string;
   invoiceInfo!: Invoice;
   units = Object.values(Unit);
+  taxTypes = Object.values(TaxType);
   errors: Map<string, string> = new Map<string, string>();
   invoiceForm = this.fb.group({
     nr: [null, [Validators.required, Validators.maxLength(20)]],
@@ -139,6 +154,39 @@ export class InvoiceFormComponent implements OnInit {
 
   onInvoiceFormSubmit() {
     //todo
+    let invoice: Invoice = {
+      nr: this.invoiceForm.get('nr')?.value,
+      restaurantId: localStorage.getItem('restaurantId'),
+      restaurantInfo: null,
+      date: this.invoiceForm.get('date')?.value,
+      buyerName: this.invoiceForm.get('buyerName')?.value,
+      sellerName: this.invoiceForm.get('sellerName')?.value,
+      buyerAddress: {
+        city: this.invoiceForm.get('buyerCity')?.value,
+        street: this.invoiceForm.get('buyerStreet')?.value,
+        houseNr: this.invoiceForm.get('buyerHouseNr')?.value,
+        flatNr: this.invoiceForm.get('buyerFlatNr')?.value,
+        postcode: this.invoiceForm.get('buyerPostcode')?.value,
+      },
+      sellerAddress: {
+        city: this.invoiceForm.get('sellerCity')?.value,
+        street: this.invoiceForm.get('sellerStreet')?.value,
+        houseNr: this.invoiceForm.get('sellerHouseNr')?.value,
+        flatNr: this.invoiceForm.get('sellerFlatNr')?.value,
+        postcode: this.invoiceForm.get('sellerPostcode')?.value,
+      },
+      buyerNip: this.invoiceForm.get('buyerNip')?.value,
+      sellerNip: this.invoiceForm.get('sellerNip')?.value,
+      completionDate: this.invoiceForm.get('completionDate')?.value,
+      price: this.invoiceForm.get('price')?.value,
+      goods: this.invoiceForm.get('goods')?.value
+    };
+    console.log(invoice);
+    if (this._invoiceNr !== '') {
+
+    } else {
+
+    }
   }
 
   getInvalidControl() {
@@ -148,5 +196,54 @@ export class InvoiceFormComponent implements OnInit {
         console.log(controls[name]);
     }
     return true;
+  }
+
+  removeGoodFromInvoice(index: number) {
+    let goods = this.invoiceForm.get('goods')?.value;
+    goods.splice(index, 1);
+    this.invoiceForm.get('goods')?.setValue(goods);
+  }
+
+  addGoodToInvoice() {
+    let goods = this.invoiceForm.get('goods')?.value;
+      goods.push({
+      id: -1,
+      ingredientId: -1,
+      ingredient: '',
+      quantity: 0,
+      unit: null,
+      unitNetPrice: 0,
+      taxType: null,
+      taxPrice: 0,
+      netPrice: 0,
+      discount: 0,
+    } as Good);
+    this.invoiceForm.get('goods')?.setValue(goods);
+  }
+
+  calculateTaxPrice(index: number) {
+    let goods = this.invoiceForm.get('goods')?.value;
+    if (goods) {
+      let good = goods[index] as Good;
+      if (good && good.netPrice > 0) {
+        switch (good.taxType) {
+          case TaxType.A:
+            good.taxPrice = good.netPrice * 0.23;
+            break;
+          case TaxType.B:
+            good.taxPrice = good.netPrice * 0.08;
+            break;
+          case TaxType.C:
+            good.taxPrice = good.netPrice * 0.05;
+            break;
+          case TaxType.D:
+            good.taxPrice = 0;
+            break;
+          case TaxType.E:
+            good.taxPrice = 0;
+            break;
+        }
+      }
+    }
   }
 }

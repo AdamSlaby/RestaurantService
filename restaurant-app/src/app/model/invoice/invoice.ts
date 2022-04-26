@@ -4,8 +4,8 @@ import {RestaurantShortInfo} from "../restaurant/restaurant-short-info";
 
 export interface Invoice {
   nr: string;
-  restaurantId: number;
-  restaurantInfo: RestaurantShortInfo;
+  restaurantId: any;
+  restaurantInfo: RestaurantShortInfo | null;
   date: Date;
   sellerName: string;
   buyerName: string;

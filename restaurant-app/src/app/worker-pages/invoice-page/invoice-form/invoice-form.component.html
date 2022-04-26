@@ -43,7 +43,7 @@
               </div>
             </div>
 
-            <div *ngIf="invoiceInfo" class="col-md-4 mb-2 mb-md-4">
+            <div *ngIf="invoiceInfo && invoiceInfo.restaurantInfo && _invoiceNr !== ''" class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="place">Lokal</label>
                 <span id="place" class="form-control">
@@ -238,7 +238,8 @@
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="sellerFlatNr">Numer mieszkania:</label>
-                <input type="text" placeholder="Podaj numer mieszkania" formControlName="sellerFlatNr" class="form-control"
+                <input type="text" placeholder="Podaj numer mieszkania" formControlName="sellerFlatNr"
+                       class="form-control"
                        id="sellerFlatNr"
                        [ngClass]="{ 'is-invalid': form.submitted && f['sellerFlatNr'].errors ||
                     (errors.has('sellerFlatNr') && f['sellerFlatNr'].pristine)  }"/>
@@ -260,7 +261,8 @@
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="sellerPostcode">Kod pocztowy:</label>
-                <input type="text" placeholder="Podaj kod pocztowy" formControlName="sellerPostcode" class="form-control"
+                <input type="text" placeholder="Podaj kod pocztowy" formControlName="sellerPostcode"
+                       class="form-control"
                        id="sellerPostcode"
                        [ngClass]="{ 'is-invalid': form.submitted && f['sellerPostcode'].errors ||
                     (errors.has('sellerPostcode') && f['sellerPostcode'].pristine)  }"/>
@@ -399,7 +401,8 @@
             <div class="col-md-4 mb-2 mb-md-4">
               <div class="form-group">
                 <label class="fw-bolder" for="buyerFlatNr">Numer mieszkania:</label>
-                <input type="text" placeholder="Podaj numer mieszkania" formControlName="buyerFlatNr" class="form-control"
+                <input type="text" placeholder="Podaj numer mieszkania" formControlName="buyerFlatNr"
+                       class="form-control"
                        id="buyerFlatNr"
                        [ngClass]="{ 'is-invalid': form.submitted && f['buyerFlatNr'].errors ||
                     (errors.has('buyerFlatNr') && f['buyerFlatNr'].pristine)  }"/>
@@ -449,10 +452,15 @@
               <div class="col-md-4 mb-2 mb-md-4">
                 <div class="form-group">
                   <label class="fw-bolder" for="ingredient">Nazwa towaru</label>
-                  <input type="text" placeholder="Nazwa składnika" [(ngModel)]="good.ingredient"
-                         [ngModelOptions]="{standalone: true}"
-                         class="form-control" id="ingredient"
-                         [ngClass]="{ 'is-invalid': errors.has('goodIngredient-' + i)}"/>
+                  <div class="input-group">
+                    <button type="button" class="btn btn-outline-danger" (click)="removeGoodFromInvoice(i)" ngbTooltip="Usuń towar">
+                      <fa-icon [icon]="faXmark"></fa-icon>
+                    </button>
+                    <input type="text" placeholder="Nazwa składnika" [(ngModel)]="good.ingredient"
+                           [ngModelOptions]="{standalone: true}"
+                           class="form-control" id="ingredient"
+                           [ngClass]="{ 'is-invalid': errors.has('goodIngredient-' + i)}"/>
+                  </div>
                   <div *ngIf="errors.has('goodIngredient-' + i)"
                        class="invalid-feedback d-block">
                     {{errors.get('goodIngredient-' + i)}}
@@ -488,7 +496,8 @@
                 <div class="form-group">
                   <label class="fw-bolder" for="unitNetPrice">Cena jednostkowa towaru netto</label>
                   <div class="input-group">
-                    <input type="number" placeholder="Wpisz cene jednostkową towaru netto" [(ngModel)]="good.unitNetPrice"
+                    <input type="number" placeholder="Wpisz cene jednostkową towaru netto"
+                           [(ngModel)]="good.unitNetPrice"
                            [ngModelOptions]="{standalone: true}"
                            class="form-control" id="unitNetPrice"
                            [ngClass]="{ 'is-invalid': errors.has('goodUnitNetPrice-' + i)}"/>
@@ -519,20 +528,72 @@
               </div>
 
               <div class="col-md-4 mb-2 mb-md-4">
-
+                <div class="form-group">
+                  <label class="fw-bolder" for="netPrice">Cena netto</label>
+                  <div class="input-group">
+                    <input type="number" placeholder="Wpisz cennę netto za towar" [(ngModel)]="good.netPrice"
+                           [ngModelOptions]="{standalone: true}"
+                           class="form-control" id="netPrice"
+                           [ngClass]="{ 'is-invalid': errors.has('goodNetPrice-' + i)}"/>
+                    <span class="input-group-text">zł</span>
+                  </div>
+                  <div *ngIf="errors.has('goodNetPrice-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodNetPrice-' + i)}}
+                  </div>
+                </div>
               </div>
 
               <div class="col-md-4 mb-2 mb-md-4">
-
+                <div class="form-group">
+                  <label class="fw-bolder" for="taxType">Typ opodatkowania</label>
+                  <select [(ngModel)]="good.taxType" (ngModelChange)="calculateTaxPrice(i)"
+                         [ngModelOptions]="{standalone: true}"
+                         class="form-select" id="taxType"
+                         [ngClass]="{ 'is-invalid': errors.has('goodTaxType-' + i)}">
+                    <option disabled hidden [ngValue]="null">Wybierz typ opodatkowania towaru</option>
+                    <option *ngFor="let type of taxTypes" [ngValue]="type">{{type}}</option>
+                  </select>
+                  <div *ngIf="errors.has('goodTaxType-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodTaxType-' + i)}}
+                  </div>
+                </div>
               </div>
 
               <div class="col-md-4 mb-2 mb-md-4">
-
+                <div class="form-group">
+                  <label class="fw-bolder" for="taxPrice">Kwota podatku Vat</label>
+                  <div class="input-group">
+                    <input type="number" placeholder="Wpisz kwotę podatku vat" [(ngModel)]="good.taxPrice"
+                           [ngModelOptions]="{standalone: true}"
+                           class="form-control" id="taxPrice"
+                           [ngClass]="{ 'is-invalid': errors.has('goodTaxPrice-' + i)}"/>
+                    <span class="input-group-text">zł</span>
+                  </div>
+                  <div *ngIf="errors.has('goodTaxPrice-' + i)"
+                       class="invalid-feedback d-block">
+                    {{errors.get('goodTaxPrice-' + i)}}
+                  </div>
+                </div>
               </div>
 
               <hr>
             </ng-container>
+            <div *ngIf="form.submitted && f['goods'].errors" class="invalid-feedback d-block">
+              <div *ngIf="f['goods'].errors['required']">
+                Lista towarów na fakturze nie może być pusta
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center mb-2 mb-md-4">
+              <button type="button" class="btn btn-outline-success" (click)="addGoodToInvoice()">
+                <fa-icon [icon]="faPlus"></fa-icon>
+                Dodaj nowy towar
+              </button>
+            </div>
           </div>
+
 
           <div class="form-group">
             <div class="d-flex justify-content-center align-items-center">

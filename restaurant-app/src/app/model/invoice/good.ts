@@ -6,10 +6,10 @@ export interface Good {
   ingredientId: number;
   ingredient: string;
   quantity: number;
-  unit: Unit;
+  unit: Unit | any;
   unitNetPrice: number;
   discount: number;
   netPrice: number;
-  taxType: TaxType;
+  taxType: TaxType | any;
   taxPrice: number;
 }
