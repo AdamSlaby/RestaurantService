@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {OpeningHour} from "../../model/opening-hour";
+import {OpeningHour} from "../../../model/opening-hour";
 import {faPhone, faEnvelope, faLocationDot, faCity} from "@fortawesome/free-solid-svg-icons";
-import {RestaurantInfo} from "../../model/restaurant/restaurant-info";
+import {RestaurantInfo} from "../../../model/restaurant/restaurant-info";
 
 @Component({
   selector: 'app-footer',

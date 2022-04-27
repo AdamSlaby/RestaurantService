@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {PageNotFoundComponent} from "./common/page-not-found/page-not-found.component";
+import {PageNotFoundComponent} from "./user-pages/common/page-not-found/page-not-found.component";
 import {MainPageComponent} from "./user-pages/main-page/main-page.component";
 import {NewsComponent} from "./user-pages/news-page/news/news.component";
 import {NewsInfoComponent} from "./user-pages/news-page/news-info/news-info.component";
@@ -26,6 +26,7 @@ import {SupplyPageComponent} from "./worker-pages/supply-page/supply-page.compon
 import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.component";
 import {StatisticsPageComponent} from "./worker-pages/statistics-page/statistics-page.component";
 import {InvoicesComponent} from "./worker-pages/invoice-page/invoices/invoices.component";
+import {RestaurantGuard} from "./guard/restaurant.guard";
 
 const routes: Routes = [
   {
@@ -36,18 +37,22 @@ const routes: Routes = [
   {
     path: "main-site",
     component: MainPageComponent,
+    canActivate: [RestaurantGuard],
   },
   {
     path: "menu",
     component: MenuComponent,
+    canActivate: [RestaurantGuard],
   },
   {
     path: "contact",
     component: ContactComponent,
+    canActivate: [RestaurantGuard],
   },
   {
     path: "order",
     component: OrderComponent,
+    canActivate: [RestaurantGuard],
     children: [
       {
         path: '',
@@ -62,6 +67,7 @@ const routes: Routes = [
   {
     path: "reservation",
     component: ReservationComponent,
+    canActivate: [RestaurantGuard],
     children: [
       {
         path: '',
@@ -77,6 +83,7 @@ const routes: Routes = [
   {
     path: "news",
     component: NewsComponent,
+    canActivate: [RestaurantGuard],
     children: [
       {
         path: ":id",

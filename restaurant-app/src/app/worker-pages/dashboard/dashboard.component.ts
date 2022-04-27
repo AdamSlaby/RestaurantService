@@ -10,7 +10,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {ActiveOrder} from "../../model/order/active-order";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {DailyOrdersAmount} from "../../model/dish/daily-orders-amount";
+import {OrderType} from "../../model/order-type";
+import {Chart} from "../../model/chart/chart";
+import {ChartData} from "../../model/chart/chart-data";
 
 @Component({
   selector: 'app-dashboard',
@@ -29,7 +31,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   lastUpdateTime!: Date;
   chosenDish!: ActiveOrder;
   view!: [number, number];
-  ordersAmount: DailyOrdersAmount[] = [
+  ordersAmount: ChartData[] = [
     {
       name: "10:00",
       value: 5,
@@ -75,8 +77,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       value: 22,
     },
   ]
-  chartData: any[] = [
+  chartData: Chart[] = [
     {
+      Xlabel: 'Godziny',
+      Ylabel: 'Liczba zamówień',
       name: "Liczba zamówień w ciągu dnia",
       series: []
     }
@@ -94,6 +98,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           amount: 1,
         },
       ],
+      orderType: OrderType.ONLINE,
       orderDate: new Date(),
     },
     {
@@ -108,6 +113,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           amount: 1,
         },
       ],
+      orderType: OrderType.RESTAURANT,
       orderDate: new Date(),
     },
     {
@@ -118,6 +124,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           amount: 1,
         }
       ],
+      orderType: OrderType.RESTAURANT,
       orderDate: new Date(),
     },
   ]

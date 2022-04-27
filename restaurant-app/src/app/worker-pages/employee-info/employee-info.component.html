@@ -392,7 +392,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="dismiss(modal)"></button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="scheduleForm" #form="ngForm" (ngSubmit)="!scheduleForm.invalid && onSubmit(modal)">
+    <form [formGroup]="scheduleForm" #form="ngForm" (ngSubmit)="!scheduleForm.invalid && onScheduleFormSubmit(modal)">
       <div class="form-group mb-3">
         <label for="startShift">Data rozpoczęcia</label>
         <div class="input-group">

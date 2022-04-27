@@ -135,6 +135,7 @@
             <th scope="col">ID</th>
             <th scope="col">Danie</th>
             <th scope="col">Ilość</th>
+            <th scope="col">Typ zamówienia</th>
             <th scope="col">Godzina zamówienia</th>
             <th scope="col">Opcje</th>
           </tr>
@@ -146,6 +147,9 @@
               <th *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishInfo.length" scope="rowgroup">{{dish.id}}</th>
               <td>{{info.name}}</td>
               <td>{{info.amount}}</td>
+              <td *ngIf="i === 0" [rowSpan]="dish.dishInfo.length" style="vertical-align: middle">
+                {{dish.orderType}}
+              </td>
               <td *ngIf="i === 0" [rowSpan]="dish.dishInfo.length" style="vertical-align: middle">
                 {{dish.orderDate | date:'HH:mm':'+0000':'pl-PL'}}
               </td>
@@ -171,8 +175,8 @@
         [showYAxisLabel]="true"
         [xAxis]="true"
         [yAxis]="true"
-        [xAxisLabel]="'Godziny'"
-        [yAxisLabel]="'Liczba zamówień'"
+        [xAxisLabel]="chartData[0].Xlabel"
+        [yAxisLabel]="chartData[0].Ylabel"
         [timeline]="true"
         [results]="chartData">
       </ngx-charts-line-chart>

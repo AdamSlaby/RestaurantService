@@ -15,6 +15,7 @@ import {
   faFileInvoice,
 } from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
+import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 
 @Component({
   selector: 'app-main-nav',
@@ -42,6 +43,24 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   innerHeight!: number;
   contentHeight!: number;
   navItemWidth!: number;
+  restaurantId!: any;
+  restaurants: RestaurantShortInfo[] = [
+    {
+      restaurantId: 1,
+      city: 'Kielce',
+      street: 'al. XI wieków Kielc'
+    },
+    {
+      restaurantId: 2,
+      city: 'Warszawa',
+      street: 'Jagiellońska'
+    },
+    {
+      restaurantId: 3,
+      city: 'Kraków',
+      street: 'Warszawska'
+    }
+  ]
 
   constructor(private cd: ChangeDetectorRef, private router: Router) {
     this.router.events.subscribe(val => {
@@ -54,6 +73,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     this.isNavCollapsed = true;
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
+    this.restaurantId = localStorage.getItem('restaurantId');
   }
 
   ngAfterViewInit() {
@@ -128,5 +148,13 @@ export class MainNavComponent implements OnInit, AfterViewInit {
       case '/admin/invoices': return 'Faktury';
       default: return '';
     }
+  }
+
+  changeRestaurantId() {
+    localStorage.setItem('restaurantId', this.restaurantId + '');
+  }
+
+  isAdmin() {
+    return localStorage.getItem('role') === 'ADMIN';
   }
 }

@@ -100,14 +100,25 @@
          (isNavCollapsed && (innerWidth > 1200 && innerWidth > 760))"
          [class.col-10]="(!isNavCollapsed && (innerWidth > 1200)) || (innerWidth <= 760)"
          [style.transition]="innerWidth > 1200 ? '0.5s' : '0s'">
-      <div id="header" class="row py-3 m-0">
-        <div class="d-inline-block">
+      <div id="header" class="py-3 m-0">
+        <div class="float-start px-2">
           <fa-icon *ngIf="isNavCollapsed" class="ps-3 me-2" (click)="showMenu()"
                    style="font-size: 26px; cursor: pointer" [icon]="faBars"></fa-icon>
           <fa-icon *ngIf="!isNavCollapsed" class="ps-3 me-2" (click)="showMenu()"
                    style="font-size: 26px; cursor: pointer" [icon]="faXmark"></fa-icon>
           <span class="ps-3 mb-0 fw-bold" style="font-size: 26px">{{contentHeader}}</span>
         </div>
+
+        <div *ngIf="isAdmin()" class="float-end" style="padding-right: 36px">
+          <select class="form-select" [(ngModel)]="restaurantId" (ngModelChange)="changeRestaurantId()">
+            <option *ngFor="let restaurant of restaurants" [ngValue]="restaurant.restaurantId">
+              {{restaurant.city}}, ul. {{restaurant.street}}
+            </option>
+            <option [ngValue]="null">Wszystkie</option>
+          </select>
+        </div>
+
+        <div style="clear: both"></div>
       </div>
       <hr class="my-0">
       <div class="overflow-auto" [style.height.px]="contentHeight">

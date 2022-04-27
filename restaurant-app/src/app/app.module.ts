@@ -3,11 +3,11 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HeaderComponent} from './common/header/header.component';
-import {FooterComponent} from './common/footer/footer.component';
+import {HeaderComponent} from './user-pages/common/header/header.component';
+import {FooterComponent} from './user-pages/common/footer/footer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CommonModule} from "@angular/common";
-import {PageNotFoundComponent} from './common/page-not-found/page-not-found.component';
+import {PageNotFoundComponent} from './user-pages/common/page-not-found/page-not-found.component';
 import {MainPageComponent} from './user-pages/main-page/main-page.component';
 import {NewsComponent} from './user-pages/news-page/news/news.component';
 import {NewsInfoComponent} from './user-pages/news-page/news-info/news-info.component';
@@ -15,7 +15,7 @@ import {NewsFeedComponent} from './user-pages/news-page/news-feed/news-feed.comp
 import {MenuComponent} from './user-pages/menu-page/menu/menu.component';
 import {DishListComponent} from './user-pages/menu-page/dish-list/dish-list.component';
 import {ContactComponent} from './user-pages/contact/contact.component';
-import {TopicImageComponent} from './common/topic-image/topic-image.component';
+import {TopicImageComponent} from './user-pages/common/topic-image/topic-image.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ReservationComponent} from './user-pages/reservation-page/reservation/reservation.component';

@@ -92,6 +92,7 @@ export class EmployeeInfoComponent implements OnInit {
     } else {
       setTimeout(() => {
         this.form.resetForm();
+        this.employeeForm.patchValue({active: true});
       }, 100);
     }
   }
@@ -166,30 +167,22 @@ export class EmployeeInfoComponent implements OnInit {
   });
 
   employeeForm = this.fb.group({
-    personId: [this.employeeInfo?.pesel, [Validators.required, Validators.pattern(RegexPattern.ID), personIdValidator()]],
-    firstName: [this.employeeInfo?.shortInfo?.name, [Validators.required, Validators.pattern(RegexPattern.NAME)]],
-    surname: [this.employeeInfo?.shortInfo?.surname, [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
-    phoneNr: [this.employeeInfo?.phoneNr, [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
-    accountNr: [this.employeeInfo?.accountNr, [Validators.required, Validators.pattern(RegexPattern.ACCOUNT_NR)]],
-    city: [this.employeeInfo?.address?.city, [Validators.required, Validators.pattern(RegexPattern.CITY)]],
-    street: [this.employeeInfo?.address?.street, [Validators.required, Validators.pattern(RegexPattern.STREET)]],
-    houseNr: [this.employeeInfo?.address?.houseNr, [Validators.required, Validators.pattern(RegexPattern.HOUSE_NR)]],
-    flatNr: [this.employeeInfo?.address?.flatNr, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
-    postcode: [this.employeeInfo?.address?.postcode, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
-    employmentDate: [this.employeeInfo?.employmentDate ? {
-      year: this.employeeInfo?.employmentDate?.getFullYear(),
-      month: this.employeeInfo?.employmentDate?.getMonth() + 1,
-      day: this.employeeInfo?.employmentDate?.getDate()
-    } as NgbDateStruct : null, [Validators.required, minDateValidator(this.calendar)]],
-    dismissalDate: [this.employeeInfo?.dismissalDate ? {
-      year: this.employeeInfo?.dismissalDate?.getFullYear(),
-      month: this.employeeInfo?.dismissalDate?.getMonth() + 1,
-      day: this.employeeInfo?.dismissalDate?.getDate(),
-    } as NgbDateStruct : null],
-    active: [this.employeeInfo?.active ? this.employeeInfo?.active : true],
-    workstation: [this.employeeInfo?.shortInfo?.workstationId, [Validators.required]],
-    salary: [this.employeeInfo?.salary, [Validators.required, Validators.min(1)]],
-    restaurant: [this.employeeInfo?.restaurantInfo?.restaurantId, [Validators.required]],
+    personId: [null, [Validators.required, Validators.pattern(RegexPattern.ID), personIdValidator()]],
+    firstName: [null, [Validators.required, Validators.pattern(RegexPattern.NAME)]],
+    surname: [null, [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
+    phoneNr: [null, [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
+    accountNr: [null, [Validators.required, Validators.pattern(RegexPattern.ACCOUNT_NR)]],
+    city: [null, [Validators.required, Validators.pattern(RegexPattern.CITY)]],
+    street: [null, [Validators.required, Validators.pattern(RegexPattern.STREET)]],
+    houseNr: [null, [Validators.required, Validators.pattern(RegexPattern.HOUSE_NR)]],
+    flatNr: [null, [Validators.required, Validators.pattern(RegexPattern.FLAT_NR)]],
+    postcode: [null, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
+    employmentDate: [null, [Validators.required, minDateValidator(this.calendar)]],
+    dismissalDate: [null],
+    active: [null],
+    workstation: [null, [Validators.required]],
+    salary: [null, [Validators.required, Validators.min(1)]],
+    restaurant: [null, [Validators.required]],
   })
 
   constructor(private modalService: NgbModal, private fb: FormBuilder,
@@ -212,7 +205,7 @@ export class EmployeeInfoComponent implements OnInit {
     }).catch(() => {});
   }
 
-  onSubmit(modal: any) {
+  onScheduleFormSubmit(modal: any) {
     //todo
     let schedule: Schedule = {
       startShift: this.convertNgbDateTimeToDate(this.scheduleForm.get('startShiftDate')?.value,

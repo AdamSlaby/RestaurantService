@@ -1,8 +1,7 @@
 import {Unit} from "../unit";
 
-export interface SupplyInfo {
+export interface Supply {
   restaurantId: any;
-  ingredientId: number;
   ingredientName: string;
   quantity: number;
   unit: Unit;
