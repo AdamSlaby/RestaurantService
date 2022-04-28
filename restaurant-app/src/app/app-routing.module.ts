@@ -27,6 +27,7 @@ import {RestaurantComponent} from "./worker-pages/restaurant/restaurant.componen
 import {StatisticsPageComponent} from "./worker-pages/statistics-page/statistics-page.component";
 import {InvoicesComponent} from "./worker-pages/invoice-page/invoices/invoices.component";
 import {RestaurantGuard} from "./guard/restaurant.guard";
+import {ReservationsComponent} from "./worker-pages/reservations/reservations.component";
 
 const routes: Routes = [
   {
@@ -142,6 +143,10 @@ const routes: Routes = [
       {
         path: 'statistics',
         component: StatisticsPageComponent,
+      },
+      {
+        path: 'reservations',
+        component: ReservationsComponent,
       },
     ]
   },

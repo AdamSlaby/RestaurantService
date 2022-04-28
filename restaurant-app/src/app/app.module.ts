@@ -56,6 +56,7 @@ import { MonthPipe } from './pipe/month.pipe';
 import { StatisticComponent } from './worker-pages/statistic/statistic.component';
 import { InvoicesComponent } from './worker-pages/invoice-page/invoices/invoices.component';
 import { InvoiceFormComponent } from './worker-pages/invoice-page/invoice-form/invoice-form.component';
+import { ReservationsComponent } from './worker-pages/reservations/reservations.component';
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -105,6 +106,7 @@ FullCalendarModule.registerPlugins([
     StatisticComponent,
     InvoicesComponent,
     InvoiceFormComponent,
+    ReservationsComponent,
   ],
   imports: [
     BrowserModule,

@@ -13,6 +13,7 @@ import {
   faUtensils,
   faXmark,
   faFileInvoice,
+  faCalendarDays
 } from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
@@ -36,6 +37,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   faChartLine = faChartLine;
   faInfo = faInfo;
   faFileInvoice = faFileInvoice;
+  faCalendarDays = faCalendarDays;
   contentHeader!: string;
   isCollapsed!: boolean;
   isNavCollapsed!: boolean;
@@ -146,6 +148,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
       case '/admin/statistics': return 'Statystyki';
       case '/admin/restaurant': return 'Restauracja';
       case '/admin/invoices': return 'Faktury';
+      case '/admin/reservations': return 'Rezerwacje';
       default: return '';
     }
   }

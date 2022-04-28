@@ -3,6 +3,8 @@ import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, Validators} from "@angular/forms";
 import {faUserGroup, faCalendar, faClock} from "@fortawesome/free-solid-svg-icons";
 import {RegexPattern} from "../../../model/regex-pattern";
+import {Reservation} from "../../../model/reservation/reservation";
+import {DateUtility} from "../../../utility/date-utility";
 
 @Component({
   selector: 'app-customer-reservation',
@@ -40,14 +42,26 @@ export class CustomerReservationComponent implements OnInit, AfterViewInit {
   }
 
   getPeopleNr() {
-    return sessionStorage.getItem('peopleNr');
+    let peopleNr = sessionStorage.getItem('peopleNr');
+    return peopleNr ? peopleNr : '0';
   }
 
-  getDate() {
-    return sessionStorage.getItem('date');
+  getDate(): string {
+    let date = sessionStorage.getItem('date');
+    return date ? date : new Date().toUTCString();
   }
 
   onSubmit() {
     //todo
+    let reservation: Reservation = {
+      restaurantId: localStorage.getItem('restaurantId'),
+      name: this.customerForm.get('firstName')?.value,
+      surname: this.customerForm.get('surname')?.value,
+      email: this.customerForm.get('email')?.value,
+      phoneNr: this.customerForm.get('phoneNumber')?.value,
+      fromHour: new Date(this.getDate()),
+      peopleNr: Number.parseInt(this.getPeopleNr()),
+    }
+    console.log(reservation);
   }
 }

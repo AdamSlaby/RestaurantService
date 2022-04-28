@@ -36,6 +36,13 @@
           </li>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
+               style="font-size: 18px" routerLink="/admin/reservations" routerLinkActive="active">
+              <fa-icon class="me-1" [icon]="faCalendarDays"></fa-icon>
+              <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Rezerwacje</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/employees" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faPeopleGroup"></fa-icon>
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Pracownicy</span>

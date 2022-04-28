@@ -1,0 +1,142 @@
+<div id="reservationContent" class="row m-0 py-3 px-2">
+  <div class="col-12 pb-3">
+    <div class="bg-white p-2" style="border-radius: 10px;">
+      <h4 class="text-center">Lista rezerwacji z: {{selectedDate | date:'longDate':'+0000':'pl-PL'}}</h4>
+
+      <h5 class="fw-light">Filtry:</h5>
+      <div class="mb-3 d-inline-block">
+        <div class="input-group">
+          <input type="text" class="form-control" ngbDatepicker #d="ngbDatepicker"
+                 [(ngModel)]="selectedDate"
+                 (ngModelChange)="getReservationsFromDate()"
+                 placeholder="yyyy-mm-dd"/>
+          <button type="button" class="btn btn-outline-grey calendar" (click)="d.toggle()"></button>
+        </div>
+      </div>
+      <br>
+      <div class="mb-3 d-inline-block">
+        <div class="input-group">
+          <input type="number" class="form-control"
+                 [(ngModel)]="selectedTableId"
+                 (ngModelChange)="filterByTableId()"
+                 placeholder="Wpisz numer stolika"/>
+          <span class="input-group-text">
+            <fa-icon [icon]="faSearch"></fa-icon>
+          </span>
+        </div>
+      </div>
+      <br>
+      <div class="mb-3 d-inline-block">
+        <div class="input-group">
+          <input type="number" class="form-control"
+                 [(ngModel)]="selectedReservationId"
+                 (ngModelChange)="filterByReservationId()"
+                 placeholder="Wpisz identyfikator rezerwacji"/>
+          <span class="input-group-text">
+            <fa-icon [icon]="faSearch"></fa-icon>
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <table class="table table-striped table-hover text-center overflow-auto">
+          <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Numer stolika</th>
+            <th scope="col">Od godziny</th>
+            <th scope="col">Do godziny</th>
+            <th scope="col">Opcje</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let reservation of reservationsCopy; index as i">
+            <th scope="row">{{reservation.id}}</th>
+            <td>{{reservation.tableId}}</td>
+            <td>
+              {{reservation.fromHour | date:'HH:mm':'+0000':'pl-PL'}}
+            </td>
+            <td>
+              {{reservation.toHour | date:'HH:mm':'+0000':'pl-PL'}}
+            </td>
+            <td>
+              <fa-icon style="cursor: pointer" class="text-info me-2" ngbTooltip="Zobacz detale"
+                       (click)="viewReservation(reservation.id, reservationViewModal)"
+                       [icon]="faEye"></fa-icon>
+              <fa-icon *ngIf="reservation.fromHour <= now" style="cursor: pointer;" class="text-danger" ngbTooltip="Usuń"
+                       (click)="openRemoveReservationModal(reservation.id, i, removeReservationModal)"
+                       [icon]="faXmark"></fa-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #reservationViewModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Detale rezerwacji</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="reservationId">Identyfikator zamówienia</label>
+      <span id="reservationId" class="form-control">{{reservation.id}}</span>
+    </div>
+
+    <div class="form-group">
+      <label for="tableId">Numer stolika</label>
+      <span id="tableId" class="form-control">{{reservation.tableId}}</span>
+    </div>
+
+    <div class="form-group">
+      <label for="fromHour">Rezerwacja od godziny:</label>
+      <span id="fromHour" class="form-control">
+        {{reservation.fromHour | date:'HH:mm':'+0000':'pl-PL'}}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="toHour">Rezerwacja do godziny:</label>
+      <span id="toHour" class="form-control">
+        {{reservation.toHour | date:'HH:mm':'+0000':'pl-PL'}}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Imię i nazwisko klienta:</label>
+      <span id="name" class="form-control">
+        {{reservation.name}} {{reservation.surname}}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNr">Numer telefonu:</label>
+      <span id="phoneNr" class="form-control">
+        {{reservation.phoneNr | phone:'PL'}}
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Adres email:</label>
+      <span id="email" class="form-control">
+        {{reservation.email}}
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #removeReservationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Czy chcesz usunąć rezerwację o identyfikatorze {{selectedReservationId}}?</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="btn btn-outline-success me-4" (click)="removeReservation(modal)">Tak</button>
+      <button type="button" class="btn btn-outline-danger" (click)="modal.close()">Anuluj</button>
+    </div>
+  </div>
+</ng-template>

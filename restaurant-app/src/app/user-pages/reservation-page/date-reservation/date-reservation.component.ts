@@ -14,7 +14,7 @@ export class DateReservationComponent implements OnInit, AfterViewInit {
   faCalendar = faCalendar;
   faClock = faClock;
   selectedDate!: Date;
-  today = this.calendar.getToday();
+  today = this.calendar.getNext(this.calendar.getToday());
   selectedDay!: NgbDate;
   selectedGuestsNumber!: any;
   selectedGroupGuests!: any;
