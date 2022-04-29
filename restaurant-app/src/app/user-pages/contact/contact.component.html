@@ -27,8 +27,8 @@
       <span class="d-block text-black fw-bold">Godziny otwarcia:</span>
       <ng-container *ngFor="let hour of openingHours">
         <span class="d-block text-black text-capitalize fw-light py-1">
-          <span class="fw-normal">{{hour.weekDayNr | day}}</span>: {{hour.from_hour | date:'HH:mm':'+0000':'pl-PL'}} -
-          {{hour.to_hour | date:'HH:mm':'+0000':'pl-PL'}}
+          <span class="fw-normal">{{hour.weekDayNr | day}}</span>: {{hour.fromHour | date:'HH:mm':'+0000':'pl-PL'}} -
+          {{hour.toHour | date:'HH:mm':'+0000':'pl-PL'}}
         </span>
       </ng-container>
     </div>

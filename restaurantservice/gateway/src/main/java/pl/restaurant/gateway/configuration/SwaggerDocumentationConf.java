@@ -17,7 +17,7 @@ public class SwaggerDocumentationConf implements SwaggerResourcesProvider {
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        resources.add(swaggerResource("account-service", "/api/account/v2/api-docs", "3.0"));
+        resources.add(swaggerResource("restaurant-service", "/api/restaurant/v2/api-docs", "3.0"));
         return resources;
     }
 

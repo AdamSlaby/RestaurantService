@@ -251,7 +251,7 @@
                 <div class="d-flex justify-content-start align-items-start" id="monday">
                   <div class="position-relative">
                     <ngb-timepicker [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="restaurantInfo.openingHours[i].from_hour"></ngb-timepicker>
+                                    [(ngModel)]="restaurantInfo.openingHours[i].fromHour"></ngb-timepicker>
                   </div>
                   <div class="mx-2 text-center" style="font-size: 2rem; height: 114px">
                     <div class="d-flex justify-content-center align-items-center h-100">
@@ -260,7 +260,7 @@
                   </div>
                   <div class="position-relative">
                     <ngb-timepicker [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="restaurantInfo.openingHours[i].to_hour"></ngb-timepicker>
+                                    [(ngModel)]="restaurantInfo.openingHours[i].toHour"></ngb-timepicker>
                   </div>
                 </div>
                 <div *ngIf="errors.has('openingHour-' + i)"

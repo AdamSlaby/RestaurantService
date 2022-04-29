@@ -13,8 +13,8 @@
       <ng-container *ngFor="let hour of openingHours">
         <div class="d-inline-block text-black text-capitalize">{{hour.weekDayNr | day}}</div>
         <div class="d-inline-block text-white float-end me-5">
-          {{hour.from_hour | date:'HH:mm':'+0000':'pl-PL'}} -
-          {{hour.to_hour| date:'HH:mm':'+0000':'pl-PL'}}
+          {{hour.fromHour | date:'HH:mm':'+0000':'pl-PL'}} -
+          {{hour.toHour| date:'HH:mm':'+0000':'pl-PL'}}
         </div>
         <div class="d-block mb-2"></div>
       </ng-container>
