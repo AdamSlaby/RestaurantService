@@ -1,7 +1,10 @@
 package pl.restaurant.restaurantservice.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.restaurant.restaurantservice.data.entity.FoodTable;
+import pl.restaurant.restaurantservice.data.entity.FoodTableEntity;
 
-public interface TableRepo extends JpaRepository<FoodTable, Long> {
+import java.util.List;
+
+public interface TableRepo extends JpaRepository<FoodTableEntity, Long> {
+    List<FoodTableEntity> getAllBySeatsNr(int seatsNr);
 }

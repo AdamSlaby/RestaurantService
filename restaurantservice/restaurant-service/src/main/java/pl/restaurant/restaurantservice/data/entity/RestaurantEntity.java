@@ -43,5 +43,5 @@ public class RestaurantEntity implements Serializable {
     @JoinTable(name = "Restaurant_Tables",
             joinColumns = {@JoinColumn(name = "restaurant_id")},
             inverseJoinColumns = {@JoinColumn(name = "table_id")})
-    private Set<FoodTable> tables = new HashSet<>();
+    private Set<FoodTableEntity> tables = new HashSet<>();
 }

@@ -12,7 +12,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FoodTable {
+@Table(name = "Food_Table")
+public class FoodTableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tableId;

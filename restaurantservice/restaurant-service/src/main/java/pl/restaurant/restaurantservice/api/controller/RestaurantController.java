@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.restaurant.restaurantservice.api.request.Restaurant;
 import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
 import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
+import pl.restaurant.restaurantservice.api.response.Table;
 import pl.restaurant.restaurantservice.business.service.RestaurantService;
 
 import javax.validation.Valid;
@@ -16,7 +17,6 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @Log4j2
-@Validated
 @AllArgsConstructor
 public class RestaurantController {
     private RestaurantService restaurantService;
@@ -25,6 +25,12 @@ public class RestaurantController {
     public RestaurantInfo getRestaurantInfo(@PathVariable Long id) {
         log.log(Level.INFO, "Getting restaurant of id = " + id);
         return restaurantService.getRestaurantInfo(id);
+    }
+
+    @GetMapping("/table")
+    public Table getTable(@RequestParam("seats") Integer seats, @RequestParam("restaurantId") Long restaurantId) {
+        log.log(Level.INFO, "Getting restaurant of id = " + restaurantId + " table with seats = " + seats);
+        return restaurantService.getRestaurantTable(seats, restaurantId);
     }
 
     @GetMapping("/details/{id}")
@@ -41,13 +47,19 @@ public class RestaurantController {
 
     @PostMapping()
     public void addRestaurant(@RequestBody @Valid Restaurant restaurant) {
-        log.log(Level.INFO, "Add new restaurant with given fields = " + restaurant);
         restaurantService.addRestaurant(restaurant);
+        log.log(Level.INFO, "Add new restaurant with given fields = " + restaurant);
     }
 
     @PutMapping("/{id}")
-    public Restaurant updateRestaurant(@RequestBody @Valid Restaurant restaurant, @PathVariable Long id) {
+    public void updateRestaurant(@RequestBody @Valid Restaurant restaurant, @PathVariable Long id) {
         log.log(Level.INFO, "Updating restaurant information with given fields = " + restaurant);
-        return restaurantService.updateRestaurant(id, restaurant);
+        restaurantService.updateRestaurant(id, restaurant);
+    }
+
+    @DeleteMapping("/table")
+    public void removeTable(@RequestParam("tableId") Long tableId, @RequestParam("restaurantId") Long restaurantId) {
+        log.log(Level.INFO, "Removing from restaurant of id = " + restaurantId + " table of id = " + tableId);
+        restaurantService.removeTableFromRestaurant(tableId, restaurantId);
     }
 }

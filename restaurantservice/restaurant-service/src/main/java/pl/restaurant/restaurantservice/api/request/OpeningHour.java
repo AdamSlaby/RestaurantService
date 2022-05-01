@@ -1,6 +1,7 @@
 package pl.restaurant.restaurantservice.api.request;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -18,8 +19,10 @@ public class OpeningHour {
     private Integer weekDayNr;
 
     @NotNull(message = "Godzina otwrcia jest wymagana")
-    private LocalTime fromHour;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime fromHour;
 
     @NotNull(message = "Godzina zamknięcia jest wymagana")
-    private LocalTime toHour;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime toHour;
 }

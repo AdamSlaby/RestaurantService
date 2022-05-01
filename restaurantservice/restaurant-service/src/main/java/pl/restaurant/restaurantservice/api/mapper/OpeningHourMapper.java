@@ -5,6 +5,7 @@ import pl.restaurant.restaurantservice.api.request.OpeningHour;
 import pl.restaurant.restaurantservice.data.entity.OpeningHourEntity;
 import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,8 +17,8 @@ public class OpeningHourMapper {
                 .map(el -> new OpeningHour().builder()
                     .hourId(el.getHourId())
                     .weekDayNr(el.getWeekDayNr())
-                    .fromHour(el.getFromHour())
-                    .toHour(el.getToHour())
+                    .fromHour(el.getFromHour().atDate(LocalDate.now()))
+                    .toHour(el.getToHour().atDate(LocalDate.now()))
                     .build()).collect(Collectors.toList());
     }
 
@@ -26,8 +27,8 @@ public class OpeningHourMapper {
                 .map(el -> new OpeningHourEntity().builder()
                         .restaurant(restaurant)
                         .weekDayNr(el.getWeekDayNr())
-                        .fromHour(el.getFromHour())
-                        .toHour(el.getToHour())
+                        .fromHour(el.getFromHour().toLocalTime())
+                        .toHour(el.getToHour().toLocalTime())
                         .build())
                 .collect(Collectors.toList());
     }

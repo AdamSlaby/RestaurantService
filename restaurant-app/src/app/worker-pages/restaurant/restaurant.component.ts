@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {faInfo, faMinus, faPenToSquare, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, NgForm, Validators} from "@angular/forms";
 import {RegexPattern} from "../../model/regex-pattern";
@@ -36,7 +36,7 @@ export class RestaurantComponent implements OnInit {
     postcode: [null, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.restaurantInfo = {
@@ -197,5 +197,13 @@ export class RestaurantComponent implements OnInit {
   editRestaurantData() {
     this.newRestaurant = false;
     this.updateRestaurantFormValues();
+  }
+
+  isErrorsContainsOpeningHour(index: number): boolean {
+    for (let key in this.errors.keys()) {
+      if (key.includes('openingHour[' + index + ']'))
+        return true;
+    }
+    return false;
   }
 }

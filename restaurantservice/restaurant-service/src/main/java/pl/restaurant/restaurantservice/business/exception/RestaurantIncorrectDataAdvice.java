@@ -3,6 +3,7 @@ package pl.restaurant.restaurantservice.business.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,9 +20,18 @@ public class RestaurantIncorrectDataAdvice {
     @ResponseBody
     @ExceptionHandler(RestaurantNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> restaurantNotFoundHAndler(RestaurantNotFoundException ex) {
+    public Map<String, String> restaurantNotFoundHandler(RestaurantNotFoundException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("restaurantId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(TableNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> tableNotFoundHandler(TableNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("tableId", ex.getMessage());
         return errors;
     }
 
