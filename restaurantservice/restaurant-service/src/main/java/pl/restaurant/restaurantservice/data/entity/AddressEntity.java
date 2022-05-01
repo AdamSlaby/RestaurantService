@@ -11,7 +11,8 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address implements Serializable {
+@Table(name = "Address")
+public class AddressEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;
@@ -32,5 +33,5 @@ public class Address implements Serializable {
     private String postcode;
 
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Restaurant restaurant;
+    private RestaurantEntity restaurant;
 }

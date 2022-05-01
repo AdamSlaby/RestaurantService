@@ -12,7 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Table {
+public class FoodTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tableId;
@@ -21,5 +21,5 @@ public class Table {
     private int seatsNr;
 
     @ManyToMany(mappedBy = "tables", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Restaurant> restaurants = new HashSet<>();
+    private Set<RestaurantEntity> restaurants = new HashSet<>();
 }

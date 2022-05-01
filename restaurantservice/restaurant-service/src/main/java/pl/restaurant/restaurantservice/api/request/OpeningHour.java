@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class OpeningHour {
     private Integer weekDayNr;
 
     @NotNull(message = "Godzina otwrcia jest wymagana")
-    private LocalDateTime fromHour;
+    private LocalTime fromHour;
 
     @NotNull(message = "Godzina zamknięcia jest wymagana")
-    private LocalDateTime toHour;
+    private LocalTime toHour;
 }

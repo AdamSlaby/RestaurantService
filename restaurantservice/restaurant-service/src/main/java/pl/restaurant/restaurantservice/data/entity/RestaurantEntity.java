@@ -14,7 +14,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Restaurant implements Serializable {
+@Table(name = "Restaurant")
+public class RestaurantEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long restaurantId;
@@ -32,15 +33,15 @@ public class Restaurant implements Serializable {
     private BigDecimal minimalDeliveryPrice;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
-    private Address address;
+    @JoinColumn(name = "address_id", nullable = false)
+    private AddressEntity address;
 
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<OpeningHour> openingHours = new HashSet<>();
+    private Set<OpeningHourEntity> openingHourEntities = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "Restaurant_Tables",
             joinColumns = {@JoinColumn(name = "restaurant_id")},
             inverseJoinColumns = {@JoinColumn(name = "table_id")})
-    private Set<Table> tables = new HashSet<>();
+    private Set<FoodTable> tables = new HashSet<>();
 }

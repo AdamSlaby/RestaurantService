@@ -1,6 +1,7 @@
 package pl.restaurant.restaurantservice.api.request;
 
 import lombok.*;
+import org.springframework.validation.annotation.Validated;
 import pl.restaurant.restaurantservice.api.response.Table;
 
 import javax.validation.Valid;
@@ -39,7 +40,7 @@ public class Restaurant {
     private BigDecimal minimalDeliveryPrice;
 
     @NotEmpty(message = "Lista godzin otwarcia nie może być pusta")
-    @Size(min = 7, max = 7, message = "Lista godzin otwarcia musi zawierać wszytskie 7 dni")
+    @Size(min = 7, message = "Lista godzin otwarcia musi zawierać wszystkie 7 dni")
     private List<@Valid OpeningHour> openingHours;
 
     @NotEmpty(message = "Lista stolików w restauracji nie może być pusta")

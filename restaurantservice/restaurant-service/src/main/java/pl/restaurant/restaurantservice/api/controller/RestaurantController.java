@@ -3,6 +3,7 @@ package pl.restaurant.restaurantservice.api.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.restaurantservice.api.request.Restaurant;
 import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
@@ -14,8 +15,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/restaurants")
 @Log4j2
+@Validated
 @AllArgsConstructor
 public class RestaurantController {
     private RestaurantService restaurantService;

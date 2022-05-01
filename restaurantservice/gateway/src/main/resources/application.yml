@@ -1,0 +1,32 @@
+server:
+  port: 9000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      routes:
+        - id: RESTAURANT-SERVICE
+          uri: lb://RESTAURANT-SERVICE
+          predicates:
+            - Path=/restaurant/**
+          filters:
+            - RewritePath=/restaurant/(?<path>.*), /$\{path}
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: restaurant
+        url: /v3/api-docs/restaurant

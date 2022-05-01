@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -12,7 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OpeningHour implements Serializable {
+@Table(name = "Opening_hour")
+public class OpeningHourEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hourId;
@@ -21,12 +23,12 @@ public class OpeningHour implements Serializable {
     private int weekDayNr;
 
     @Column(nullable = false)
-    private LocalDateTime fromHour;
+    private LocalTime fromHour;
 
     @Column(nullable = false)
-    private LocalDateTime toHour;
+    private LocalTime toHour;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+    private RestaurantEntity restaurant;
 }

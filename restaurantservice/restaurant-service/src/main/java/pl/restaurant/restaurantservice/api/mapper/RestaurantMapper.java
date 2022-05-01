@@ -1,13 +1,15 @@
 package pl.restaurant.restaurantservice.api.mapper;
 
 import lombok.experimental.UtilityClass;
+import pl.restaurant.restaurantservice.api.request.Restaurant;
 import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
 import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
-import pl.restaurant.restaurantservice.data.entity.Restaurant;
+import pl.restaurant.restaurantservice.data.entity.AddressEntity;
+import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
 
 @UtilityClass
 public class RestaurantMapper {
-    public RestaurantShortInfo mapRestaurantToShortInfo(Restaurant restaurant) {
+    public RestaurantShortInfo mapRestaurantToShortInfo(RestaurantEntity restaurant) {
         return new RestaurantShortInfo().builder()
                 .restaurantId(restaurant.getRestaurantId())
                 .city(restaurant.getAddress().getCity())
@@ -15,24 +17,34 @@ public class RestaurantMapper {
                 .build();
     }
 
-    public RestaurantInfo mapRestaurantToInfo(Restaurant restaurant) {
+    public RestaurantInfo mapRestaurantToInfo(RestaurantEntity restaurantEntity) {
         return new RestaurantInfo().builder()
-                .email(restaurant.getEmail())
-                .phoneNr(restaurant.getPhoneNr())
-                .address(AddressMapper.mapDataToObject(restaurant.getAddress()))
+                .email(restaurantEntity.getEmail())
+                .phoneNr(restaurantEntity.getPhoneNr())
+                .address(AddressMapper.mapDataToObject(restaurantEntity.getAddress()))
                 .build();
     }
 
-    public pl.restaurant.restaurantservice.api.request.Restaurant mapDataToObject(Restaurant restaurant) {
-        return new pl.restaurant.restaurantservice.api.request.Restaurant().builder()
-                .restaurantId(restaurant.getRestaurantId())
-                .phoneNr(restaurant.getPhoneNr())
+    public Restaurant mapDataToObject(RestaurantEntity restaurantEntity) {
+        return new Restaurant().builder()
+                .restaurantId(restaurantEntity.getRestaurantId())
+                .phoneNr(restaurantEntity.getPhoneNr())
+                .email(restaurantEntity.getEmail())
+                .deliveryFee(restaurantEntity.getDeliveryFee())
+                .minimalDeliveryPrice(restaurantEntity.getMinimalDeliveryPrice())
+                .address(AddressMapper.mapDataToObject(restaurantEntity.getAddress()))
+                .openingHours(OpeningHourMapper.mapDataToObject(restaurantEntity.getOpeningHourEntities()))
+                .tables(TableMapper.mapDataToObject(restaurantEntity.getTables()))
+                .build();
+    }
+
+    public RestaurantEntity mapObjectToData(Restaurant restaurant, AddressEntity address) {
+        return new RestaurantEntity().builder()
                 .email(restaurant.getEmail())
+                .phoneNr(restaurant.getPhoneNr())
+                .address(address)
                 .deliveryFee(restaurant.getDeliveryFee())
                 .minimalDeliveryPrice(restaurant.getMinimalDeliveryPrice())
-                .address(AddressMapper.mapDataToObject(restaurant.getAddress()))
-                .openingHours(OpeningHourMapper.mapDataToObject(restaurant.getOpeningHours()))
-                .tables(TableMapper.mapDataToObject(restaurant.getTables()))
                 .build();
     }
 }
