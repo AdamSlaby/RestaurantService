@@ -6,13 +6,14 @@ import pl.restaurant.restaurantservice.data.entity.OpeningHourEntity;
 import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class OpeningHourMapper {
-    public List<OpeningHour> mapDataToObject(Set<OpeningHourEntity> hours) {
+    public List<OpeningHour> mapDataToObject(Collection<OpeningHourEntity> hours) {
         return hours.stream()
                 .map(el -> new OpeningHour().builder()
                     .hourId(el.getHourId())

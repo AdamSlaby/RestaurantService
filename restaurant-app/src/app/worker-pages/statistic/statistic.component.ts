@@ -9,6 +9,7 @@ import {LegendPosition} from "@swimlane/ngx-charts";
 import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateToStringAdapter} from "../../adapter/datepicker-string-adapter";
 import {ChartName} from "../../model/chart/chart-name";
+import {RestaurantService} from "../../service/restaurant.service";
 
 @Component({
   selector: 'app-statistic',
@@ -52,25 +53,10 @@ export class StatisticComponent implements OnInit, AfterViewInit {
   chartTypes!: ChartType[];
   orderTypes = Object.values(OrderType);
   chartData!: Chart;
-  restaurants: RestaurantShortInfo[] = [
-    {
-      restaurantId: 1,
-      city: 'Kielce',
-      street: 'al. XI wieków Kielc'
-    },
-    {
-      restaurantId: 2,
-      city: 'Warszawa',
-      street: 'Jagiellońska'
-    },
-    {
-      restaurantId: 3,
-      city: 'Kraków',
-      street: 'Warszawska'
-    }
-  ];
+  restaurants!: RestaurantShortInfo[]
 
-  constructor(private zone: NgZone, private cd: ChangeDetectorRef) {
+  constructor(private zone: NgZone, private cd: ChangeDetectorRef,
+              private restaurantService: RestaurantService) {
   }
 
   ngOnInit(): void {
@@ -78,6 +64,11 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     let index = types.length - 1;
     types.splice(index, 1);
     this.chartTypes = types;
+    this.restaurantService.getAllRestaurants().subscribe(data => {
+      this.restaurants = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   ngAfterViewInit() {

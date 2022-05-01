@@ -245,7 +245,7 @@
             <hr class="mt-0 mb-2 mb-md-4">
             <h5 class="fw-light">Godziny otwarcia</h5>
 
-            <div class="row m-0">
+            <div *ngIf="restaurantInfo" class="row m-0">
               <div *ngFor="let hour of restaurantInfo.openingHours; index as i" class="col-md-6 mb-2 mb-md-4">
                 <label class="fw-bolder" for="monday">{{(i + 1) | day}}:</label>
                 <div class="d-flex justify-content-start align-items-start" id="monday">
@@ -304,9 +304,15 @@
 
             <div class="form-group">
               <div class="d-flex justify-content-center align-items-center">
-                <button class="btn btn-outline-grey">
+                <button class="btn" [ngClass]="isSuccessful ? 'btn-success': 'btn-outline-grey'">
                   Zapisz
                 </button>
+              </div>
+            </div>
+
+            <div *ngIf="isSuccessful" class="d-block alert-success">
+              <div class="d-grid text-center mt-2" style="font-size: 1.5rem;">
+                Dane zostały zaktualizowane
               </div>
             </div>
 

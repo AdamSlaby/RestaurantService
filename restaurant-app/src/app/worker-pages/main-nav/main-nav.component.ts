@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
+import {RestaurantService} from "../../service/restaurant.service";
 
 @Component({
   selector: 'app-main-nav',
@@ -46,25 +47,10 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   contentHeight!: number;
   navItemWidth!: number;
   restaurantId!: any;
-  restaurants: RestaurantShortInfo[] = [
-    {
-      restaurantId: 1,
-      city: 'Kielce',
-      street: 'al. XI wieków Kielc'
-    },
-    {
-      restaurantId: 2,
-      city: 'Warszawa',
-      street: 'Jagiellońska'
-    },
-    {
-      restaurantId: 3,
-      city: 'Kraków',
-      street: 'Warszawska'
-    }
-  ]
+  restaurants!: RestaurantShortInfo[]
 
-  constructor(private cd: ChangeDetectorRef, private router: Router) {
+  constructor(private cd: ChangeDetectorRef, private router: Router,
+              private restaurantService: RestaurantService) {
     this.router.events.subscribe(val => {
       let url = this.router.url;
       this.contentHeader = MainNavComponent.getHeader(url);
@@ -76,6 +62,11 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
     this.restaurantId = localStorage.getItem('restaurantId');
+    this.restaurantService.getAllRestaurants().subscribe(data => {
+      this.restaurants = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   ngAfterViewInit() {

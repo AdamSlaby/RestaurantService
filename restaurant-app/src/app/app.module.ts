@@ -57,6 +57,7 @@ import { StatisticComponent } from './worker-pages/statistic/statistic.component
 import { InvoicesComponent } from './worker-pages/invoice-page/invoices/invoices.component';
 import { InvoiceFormComponent } from './worker-pages/invoice-page/invoice-form/invoice-form.component';
 import { ReservationsComponent } from './worker-pages/reservations/reservations.component';
+import {HttpClientModule} from "@angular/common/http";
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -119,6 +120,7 @@ FullCalendarModule.registerPlugins([
     FormsModule,
     NgxChartsModule,
     FullCalendarModule,
+    HttpClientModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}, BasketService],
   bootstrap: [AppComponent]

@@ -6,6 +6,7 @@ import {Restaurant} from "../../model/restaurant/restaurant";
 import {NgbTimeAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbTimeDateAdapter} from "../../adapter/timepicker-adapter";
 import {Table} from "../../model/table";
+import {RestaurantService} from "../../service/restaurant.service";
 
 @Component({
   selector: 'app-restaurant',
@@ -20,6 +21,8 @@ export class RestaurantComponent implements OnInit {
   faPlus = faPlus;
   faPenToSquare = faPenToSquare;
   restaurantInfo!: Restaurant;
+  isSuccessful: boolean = false;
+  loading!: boolean;
   seatsAmount!: any;
   newRestaurant: boolean = false;
   tables!: Table[];
@@ -36,90 +39,27 @@ export class RestaurantComponent implements OnInit {
     postcode: [null, [Validators.required, Validators.pattern(RegexPattern.POSTCODE)]],
   });
 
-  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
+  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef,
+              private restaurantService: RestaurantService) { }
 
   ngOnInit(): void {
-    this.restaurantInfo = {
-      restaurantId: 1,
-      email: 'restaurant24@gmail.com',
-      phoneNr: '+48600200300',
-      deliveryFee: 5,
-      minimalDeliveryPrice: 30,
-      address: {
-        city: 'Kielce',
-        street: 'Niewiadomskiego',
-        houseNr: '102',
-        flatNr: '10',
-        postcode: '25-000',
-      },
-      openingHours: [
-        {
-          hourId: 1,
-          weekDayNr: 1,
-          fromHour: new Date('04 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('04 Apr 2022 18:00:00 UTC'),
-        },
-        {
-          hourId: 2,
-          weekDayNr: 2,
-          fromHour: new Date('05 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('05 Apr 2022 18:00:00 UTC'),
-        },
-        {
-          hourId: 3,
-          weekDayNr: 3,
-          fromHour: new Date('06 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('06 Apr 2022 18:00:00 UTC'),
-        },
-        {
-          hourId: 4,
-          weekDayNr: 4,
-          fromHour: new Date('07 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('07 Apr 2022 18:00:00 UTC'),
-        },
-        {
-          hourId: 5,
-          weekDayNr: 5,
-          fromHour: new Date('08 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('08 Apr 2022 18:00:00 UTC'),
-        },
-        {
-          hourId: 6,
-          weekDayNr: 6,
-          fromHour: new Date('09 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('09 Apr 2022 18:00:00 UTC'),
-        },
-        {
-          hourId: 7,
-          weekDayNr: 7,
-          fromHour: new Date('10 Apr 2022 10:00:00 UTC'),
-          toHour: new Date('10 Apr 2022 18:00:00 UTC'),
-        },
-      ],
-      tables: [
-        {
-          id: 1,
-          seatsNr: 4,
-        },
-        {
-          id: 2,
-          seatsNr: 5,
-        },
-        {
-          id: 3,
-          seatsNr: 6,
-        },
-        {
-          id: 4,
-          seatsNr: 4,
-        },
-        {
-          id: 5,
-          seatsNr: 3,
-        },
-      ],
-    } as Restaurant;
-    this.updateRestaurantFormValues();
+    localStorage.setItem('restaurantId', '4');
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.loading = true;
+    this.restaurantService.getRestaurant(restaurantId).subscribe(data => {
+      this.restaurantInfo = data;
+      console.log(this.restaurantInfo);
+      this.restaurantInfo.openingHours.forEach(el => {
+        el.fromHour = new Date(el.fromHour);
+        el.toHour = new Date(el.toHour);
+      });
+      console.log(this.restaurantInfo);
+      this.loading = false;
+      this.updateRestaurantFormValues();
+    }, error => {
+      console.error(error);
+      this.loading = false;
+    })
   }
 
   get f() {
@@ -151,7 +91,7 @@ export class RestaurantComponent implements OnInit {
   }
 
   onRestaurantFormSubmit() {
-    //todo
+    this.errors.clear();
     let restaurant: Restaurant = {
       restaurantId: this.restaurantInfo.restaurantId,
       email: this.restaurantForm.get('email')?.value,
@@ -169,23 +109,49 @@ export class RestaurantComponent implements OnInit {
       tables: this.tables,
     };
     console.log(restaurant);
+    this.loading = true;
     if (this.newRestaurant) {
-
+      this.restaurantService.addRestaurant(restaurant).subscribe(response => {
+        this.loading = false
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.restaurantForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
     } else {
-
+      this.restaurantService.updateRestaurant(restaurant, this.getRestaurantId()).subscribe(response => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.restaurantForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      })
     }
   }
 
   removeTable(index: number) {
-    this.tables.splice(index, 1);
+    let restaurantId = this.getRestaurantId();
+    this.restaurantService.removeRestaurantTable(restaurantId, this.tables[index].id).subscribe(data => {
+        this.tables.splice(index, 1);
+      },
+      error => {
+        console.error(error);
+      });
   }
 
   addTable() {
-    this.tables.push({
-      id: this.restaurantInfo.tables[this.restaurantInfo.tables.length - 1].id + 1,
-      seatsNr: this.seatsAmount,
+    this.restaurantService.getTable(this.seatsAmount, this.getRestaurantId()).subscribe(data => {
+      this.tables.push(data);
+      this.seatsAmount = null;
+    }, error => {
+      console.error(error);
     });
-    this.seatsAmount = null;
   }
 
   addNewRestaurant() {
@@ -205,5 +171,12 @@ export class RestaurantComponent implements OnInit {
         return true;
     }
     return false;
+  }
+
+  getRestaurantId(): any {
+    if (!this.newRestaurant) {
+      return  localStorage.getItem('restaurantId');
+    } else
+      return -1;
   }
 }

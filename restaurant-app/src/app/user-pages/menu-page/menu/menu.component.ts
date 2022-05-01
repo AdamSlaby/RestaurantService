@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {Dish} from "../../../model/dish/dish";
 import {ActivatedRoute} from "@angular/router";
 
@@ -82,7 +82,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     },
   ]
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private cd: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -105,11 +105,13 @@ export class MenuComponent implements OnInit, AfterViewInit {
       }
     );
     this.innerWidth = window.innerWidth;
+    this.cd.detectChanges();
   }
 
   @HostListener('window:resize', ['$event'])
   onResize($event: any) {
     this.innerWidth = window.innerWidth;
+    this.cd.detectChanges();
   }
 
   getDishes(type: string, colNr: number) {

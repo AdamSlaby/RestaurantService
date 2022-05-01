@@ -8,6 +8,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Workstation} from "../../model/workstation/workstation";
 import {WorkstationListView} from "../../model/workstation/workstation-list-view";
 import {HtmlUtility} from "../../utility/html-utility";
+import {RestaurantService} from "../../service/restaurant.service";
 
 @Component({
   selector: 'app-employees-page',
@@ -42,23 +43,7 @@ export class EmployeesPageComponent implements OnInit {
       name: Workstation.COOK,
     },
   ];
-  restaurants: RestaurantShortInfo[] = [
-    {
-      restaurantId: 1,
-      city: 'Kielce',
-      street: 'al. XI wieków Kielc'
-    },
-    {
-      restaurantId: 2,
-      city: 'Warszawa',
-      street: 'Jagiellońska'
-    },
-    {
-      restaurantId: 3,
-      city: 'Kraków',
-      street: 'Warszawska'
-    }
-  ]
+  restaurants!: RestaurantShortInfo[]
   employeesList: EmployeeListView = {
     maxPage: 10,
     totalElements: 110,
@@ -126,11 +111,17 @@ export class EmployeesPageComponent implements OnInit {
     ]
   }
 
-  constructor(private cd: ChangeDetectorRef, private modalService: NgbModal) { }
+  constructor(private cd: ChangeDetectorRef, private modalService: NgbModal,
+              private restaurantService: RestaurantService) { }
 
   ngOnInit(): void {
     this.pageNr = 1;
     this.previousPage = 1;
+    this.restaurantService.getAllRestaurants().subscribe(data => {
+      this.restaurants = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   open(content: any) {

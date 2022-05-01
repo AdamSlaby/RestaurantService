@@ -1,6 +1,8 @@
 package pl.restaurant.restaurantservice.business.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.springframework.stereotype.Service;
 import pl.restaurant.restaurantservice.api.mapper.AddressMapper;
 import pl.restaurant.restaurantservice.api.mapper.OpeningHourMapper;
@@ -24,10 +26,12 @@ import pl.restaurant.restaurantservice.data.repository.TableRepo;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Service
+@Log4j2
 @AllArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepo restaurantRepo;
@@ -36,9 +40,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     private TableRepo tableRepo;
     private TableService tableService;
     @Override
+    @Transactional
     public RestaurantInfo getRestaurantInfo(Long id) {
-        return RestaurantMapper.mapRestaurantToInfo(restaurantRepo.findById(id)
-                .orElseThrow(RestaurantNotFoundException::new));
+        RestaurantEntity restaurantEntity = restaurantRepo.findById(id)
+                .orElseThrow(RestaurantNotFoundException::new);
+        List<OpeningHour> hours = OpeningHourMapper.mapDataToObject(openingHourRepo.getHoursByRestaurant(id));
+        log.log(Level.INFO, hours.toString());
+        return RestaurantMapper.mapRestaurantToInfo(restaurantEntity, hours);
     }
 
     @Override
@@ -67,9 +75,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurantDetailedInfo(Long id) {
-        return RestaurantMapper.mapDataToObject(restaurantRepo
+        RestaurantEntity restaurantEntity = restaurantRepo
                 .findById(id)
-                .orElseThrow(RestaurantNotFoundException::new));
+                .orElseThrow(RestaurantNotFoundException::new);
+        List<OpeningHour> hours = OpeningHourMapper.mapDataToObject(openingHourRepo.getHoursByRestaurant(id));
+        return RestaurantMapper.mapDataToObject(restaurantEntity, hours);
     }
 
     @Override

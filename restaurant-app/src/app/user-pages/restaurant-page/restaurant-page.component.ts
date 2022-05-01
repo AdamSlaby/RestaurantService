@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {Router} from "@angular/router";
+import {RestaurantService} from "../../service/restaurant.service";
 
 @Component({
   selector: 'app-restaurant',
@@ -8,33 +9,21 @@ import {Router} from "@angular/router";
   styleUrls: ['./restaurant-page.component.scss']
 })
 export class RestaurantPageComponent implements OnInit {
-  restaurants: RestaurantShortInfo[] = [
-    {
-      restaurantId: 1,
-      city: 'Kielce',
-      street: 'al. XI wieków Kielc'
-    },
-    {
-      restaurantId: 2,
-      city: 'Warszawa',
-      street: 'Jagiellońska'
-    },
-    {
-      restaurantId: 3,
-      city: 'Kraków',
-      street: 'Warszawska'
-    }
-  ]
+  restaurants!: RestaurantShortInfo[];
 
-  constructor(private router: Router) {
-
+  constructor(private router: Router, private restaurantService: RestaurantService) {
   }
 
   ngOnInit(): void {
-    if (this.restaurants.length === 1) {
-      sessionStorage.setItem('restaurantId', this.restaurants[0].restaurantId + '');
-      this.router.navigateByUrl('/main-site');
-    }
+    this.restaurantService.getAllRestaurants().subscribe(data => {
+      this.restaurants = data;
+      if (this.restaurants.length === 1) {
+        sessionStorage.setItem('restaurantId', this.restaurants[0].restaurantId + '');
+        this.router.navigateByUrl('/main-site');
+      }
+    }, error => {
+      console.error(error);
+    });
   }
 
   chooseRestaurant(restaurant: RestaurantShortInfo) {

@@ -22,6 +22,7 @@ export class EmployeeInfoComponent implements OnInit {
   @ViewChild('eventForm', {static: false}) private eventForm: any;
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   @ViewChild('form') form!: NgForm;
+  @Input() restaurants!: RestaurantShortInfo[]
   @Input() workstations!: WorkstationListView[];
   @Input() set employeeId(value: any) {
     this._employeeId = value;
@@ -140,23 +141,6 @@ export class EmployeeInfoComponent implements OnInit {
       removeBtn.addEventListener('click', this.removeEvent.bind(this, removeBtn))
     }
   };
-  restaurants: RestaurantShortInfo[] = [
-    {
-      restaurantId: 1,
-      city: 'Kielce',
-      street: 'al. XI wieków Kielc'
-    },
-    {
-      restaurantId: 2,
-      city: 'Warszawa',
-      street: 'Jagiellońska'
-    },
-    {
-      restaurantId: 3,
-      city: 'Kraków',
-      street: 'Warszawska'
-    }
-  ]
   schedule!: Schedule;
   employeeInfo!: EmployeeInfo;
 

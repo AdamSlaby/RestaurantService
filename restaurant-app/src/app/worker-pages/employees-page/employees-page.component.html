@@ -93,7 +93,8 @@
   </div>
 
   <app-employee-info id="employeeInfo" *ngIf="showEmployeeDetails" (closeEmployeeDetails)="closeEmployeeDetails()"
-                     [employeeId]="selectedEmployeeId" [workstations]="workstations"></app-employee-info>
+                     [employeeId]="selectedEmployeeId" [restaurants]="restaurants"
+                     [workstations]="workstations"></app-employee-info>
 </div>
 
 <ng-template #dismissEmployeeForm let-modal>

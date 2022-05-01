@@ -1,11 +1,14 @@
 package pl.restaurant.restaurantservice.api.mapper;
 
 import lombok.experimental.UtilityClass;
+import pl.restaurant.restaurantservice.api.request.OpeningHour;
 import pl.restaurant.restaurantservice.api.request.Restaurant;
 import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
 import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
 import pl.restaurant.restaurantservice.data.entity.AddressEntity;
 import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
+
+import java.util.List;
 
 @UtilityClass
 public class RestaurantMapper {
@@ -17,15 +20,16 @@ public class RestaurantMapper {
                 .build();
     }
 
-    public RestaurantInfo mapRestaurantToInfo(RestaurantEntity restaurantEntity) {
+    public RestaurantInfo mapRestaurantToInfo(RestaurantEntity restaurantEntity, List<OpeningHour> hours) {
         return new RestaurantInfo().builder()
                 .email(restaurantEntity.getEmail())
                 .phoneNr(restaurantEntity.getPhoneNr())
                 .address(AddressMapper.mapDataToObject(restaurantEntity.getAddress()))
+                .openingHours(hours)
                 .build();
     }
 
-    public Restaurant mapDataToObject(RestaurantEntity restaurantEntity) {
+    public Restaurant mapDataToObject(RestaurantEntity restaurantEntity, List<OpeningHour> hours) {
         return new Restaurant().builder()
                 .restaurantId(restaurantEntity.getRestaurantId())
                 .phoneNr(restaurantEntity.getPhoneNr())
@@ -33,7 +37,7 @@ public class RestaurantMapper {
                 .deliveryFee(restaurantEntity.getDeliveryFee())
                 .minimalDeliveryPrice(restaurantEntity.getMinimalDeliveryPrice())
                 .address(AddressMapper.mapDataToObject(restaurantEntity.getAddress()))
-                .openingHours(OpeningHourMapper.mapDataToObject(restaurantEntity.getOpeningHourEntities()))
+                .openingHours(hours)
                 .tables(TableMapper.mapDataToObject(restaurantEntity.getTables()))
                 .build();
     }

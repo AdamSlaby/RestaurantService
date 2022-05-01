@@ -8,18 +8,18 @@
         Cras pharetra mauris tortor, nec egestas massa bibendum vitae.
       </p>
     </div>
-    <div class="col-xl-2 me-lg-5">
+    <div *ngIf="restaurantInfo" class="col-xl-2 me-lg-5">
       <span class="d-flex text-uppercase text-light pt-4 mb-3" style="font-size: 18px">godziny otwarcia</span>
-      <ng-container *ngFor="let hour of openingHours">
+      <ng-container *ngFor="let hour of restaurantInfo.openingHours">
         <div class="d-inline-block text-black text-capitalize">{{hour.weekDayNr | day}}</div>
         <div class="d-inline-block text-white float-end me-5">
-          {{hour.fromHour | date:'HH:mm':'+0000':'pl-PL'}} -
-          {{hour.toHour| date:'HH:mm':'+0000':'pl-PL'}}
+          {{hour.fromHour | date:'HH:mm':'+0200':'pl-PL'}} -
+          {{hour.toHour| date:'HH:mm':'+0200':'pl-PL'}}
         </div>
         <div class="d-block mb-2"></div>
       </ng-container>
     </div>
-    <div class="col-xl-2 pb-3">
+    <div *ngIf="restaurantInfo" class="col-xl-2 pb-3">
       <span class="d-flex text-uppercase text-light pt-4 mb-3" style="font-size: 18px">kontakt</span>
       <div class="text-black text-capitalize mb-1">adres</div>
       <div class="text-white text-capitalize mb-1">

@@ -1,7 +1,7 @@
 <app-header></app-header>
 <section class="container-fluid">
   <app-topic-image [urlImage]="contactImg" [minHeight]="600" content="Kontakt"></app-topic-image>
-  <div class="row my-5">
+  <div *ngIf="restaurantInfo" class="row my-5">
     <div class="col-xl-3 offset-xl-3 mb-3">
       <h2 class="text-center mb-4">Restaurant</h2>
       <span class="d-block text-black fw-bold">Adres:</span>
@@ -25,10 +25,10 @@
         {{restaurantInfo.email}}
       </span>
       <span class="d-block text-black fw-bold">Godziny otwarcia:</span>
-      <ng-container *ngFor="let hour of openingHours">
+      <ng-container *ngFor="let hour of restaurantInfo.openingHours">
         <span class="d-block text-black text-capitalize fw-light py-1">
-          <span class="fw-normal">{{hour.weekDayNr | day}}</span>: {{hour.fromHour | date:'HH:mm':'+0000':'pl-PL'}} -
-          {{hour.toHour | date:'HH:mm':'+0000':'pl-PL'}}
+          <span class="fw-normal">{{hour.weekDayNr | day}}</span>: {{hour.fromHour | date:'HH:mm':'+0200':'pl-PL'}} -
+          {{hour.toHour | date:'HH:mm':'+0200':'pl-PL'}}
         </span>
       </ng-container>
     </div>

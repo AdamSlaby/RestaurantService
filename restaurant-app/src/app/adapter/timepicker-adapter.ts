@@ -9,9 +9,8 @@ export class NgbTimeDateAdapter extends NgbTimeAdapter<Date> {
     if (!value) {
       return null;
     }
-    let offset = value.getTimezoneOffset() / 60;
     return {
-      hour: value.getHours() + offset,
+      hour: value.getHours(),
       minute: value.getMinutes(),
       second: value.getSeconds(),
     } as NgbTimeStruct;

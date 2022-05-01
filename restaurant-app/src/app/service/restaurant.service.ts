@@ -15,8 +15,8 @@ export class RestaurantService {
   private GET_RESTAURANT_INFO = `${this.COMMON_URL}/`;
   private GET_TABLE = `${this.COMMON_URL}/table`;
   private GET_RESTAURANT = `${this.COMMON_URL}/details/`;
-  private GET_ALL_RESTAURANTS = `${this.COMMON_URL}`;
-  private ADD_RESTAURANT = `${this.COMMON_URL}`;
+  private GET_ALL_RESTAURANTS = `${this.COMMON_URL}/`;
+  private ADD_RESTAURANT = `${this.COMMON_URL}/`;
   private UPDATE_RESTAURANT = `${this.COMMON_URL}/`;
   private REMOVE_RESTAURANT_TABLE = `${this.COMMON_URL}/table`;
 
@@ -46,5 +46,11 @@ export class RestaurantService {
   updateRestaurant(restaurant: Restaurant, restaurantId: any): Observable<any> {
     // const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token')});
     return this.http.put<any>(this.UPDATE_RESTAURANT + restaurantId, restaurant);
+  }
+
+  removeRestaurantTable(restaurantId: any, tableId: number): Observable<any> {
+    // const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('token')});
+    return this.http
+      .delete<any>(this.REMOVE_RESTAURANT_TABLE + '?tableId=' + tableId + '&restaurantId=' + restaurantId);
   }
 }
