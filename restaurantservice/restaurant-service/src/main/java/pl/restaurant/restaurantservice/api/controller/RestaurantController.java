@@ -27,6 +27,12 @@ public class RestaurantController {
         return restaurantService.getRestaurantInfo(id);
     }
 
+    @GetMapping("/exist/{id}")
+    public boolean isRestaurantExists(@PathVariable Long id) {
+        log.log(Level.INFO, "Is restaurant of id = " +  id + " exist");
+        return restaurantService.isRestaurantExist(id);
+    }
+
     @GetMapping("/table")
     public Table getTable(@RequestParam("seats") Integer seats, @RequestParam("restaurantId") Long restaurantId) {
         log.log(Level.INFO, "Getting restaurant of id = " + restaurantId + " table with seats = " + seats);

@@ -16,4 +16,6 @@ public interface RestaurantRepo extends JpaRepository<RestaurantEntity, Long> {
     List<RestaurantShortInfo> getAllRestaurants();
 
     Optional<RestaurantInfo> findByRestaurantId(Long restaurantId);
+
+    boolean existsByRestaurantId(Long restaurantId);
 }

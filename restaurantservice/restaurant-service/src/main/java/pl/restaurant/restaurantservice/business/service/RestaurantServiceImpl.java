@@ -50,6 +50,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public boolean isRestaurantExist(Long id) {
+        return restaurantRepo.existsByRestaurantId(id);
+    }
+
+    @Override
     @Transactional
     public Table getRestaurantTable(int seatsNr, long restaurantId) {
         Optional<RestaurantEntity> optionalRestaurant = restaurantRepo.findById(restaurantId);

@@ -10,6 +10,8 @@ import java.util.List;
 public interface RestaurantService {
     RestaurantInfo getRestaurantInfo(Long id);
 
+    boolean isRestaurantExist(Long id);
+
     Table getRestaurantTable(int seatsNr, long restaurantId);
 
     Restaurant getRestaurantDetailedInfo(Long id);
