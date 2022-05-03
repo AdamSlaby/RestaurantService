@@ -2,6 +2,7 @@ package pl.restaurant.restaurantservice.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
 import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
 import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
@@ -14,6 +15,12 @@ public interface RestaurantRepo extends JpaRepository<RestaurantEntity, Long> {
             ".RestaurantShortInfo(r.restaurantId, r.address.city, r.address.street) " +
             "from RestaurantEntity r")
     List<RestaurantShortInfo> getAllRestaurants();
+
+    @Query("select new pl.restaurant.restaurantservice.api.response" +
+            ".RestaurantShortInfo(r.restaurantId, r.address.city, r.address.street) " +
+            "from RestaurantEntity r " +
+            "where r.restaurantId = :id")
+    Optional<RestaurantShortInfo> getRestaurant(@Param("id") Long restaurantId);
 
     Optional<RestaurantInfo> findByRestaurantId(Long restaurantId);
 

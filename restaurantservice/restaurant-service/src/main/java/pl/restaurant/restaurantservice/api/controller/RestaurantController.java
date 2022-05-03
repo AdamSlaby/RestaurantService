@@ -45,6 +45,12 @@ public class RestaurantController {
         return restaurantService.getRestaurantDetailedInfo(id);
     }
 
+    @GetMapping("/short/{id}")
+    public RestaurantShortInfo getRestaurantShortInfo(@PathVariable Long id) {
+        log.log(Level.INFO, "Getting short info about restaurant of id = " + id);
+        return restaurantService.getRestaurantShortInfo(id);
+    }
+
     @GetMapping()
     public List<RestaurantShortInfo> getAllRestaurants() {
         log.log(Level.INFO, "Getting all restaurants");

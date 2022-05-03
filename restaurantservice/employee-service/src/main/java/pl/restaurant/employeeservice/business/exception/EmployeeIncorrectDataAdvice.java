@@ -16,6 +16,51 @@ import java.util.Map;
 @ControllerAdvice
 public class EmployeeIncorrectDataAdvice {
     @ResponseBody
+    @ExceptionHandler(WorkstationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> invalidAccountNrHandler(WorkstationNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("workstationId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidAccountException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invalidAccountNrHandler(InvalidAccountException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("accountNr", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidPeselException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invalidPeselHandler(InvalidPeselException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("pesel", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ScheduleNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> scheduleNotFoundHandler(ScheduleNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("scheduleId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> columnNotFoundHandler(RestaurantNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("restaurantId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
     @ExceptionHandler(EmployeeNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> columnNotFoundHandler(EmployeeNotFoundException ex) {

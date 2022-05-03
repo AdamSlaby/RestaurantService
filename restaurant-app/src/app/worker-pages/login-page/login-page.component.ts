@@ -1,5 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
+import {Credentials} from "../../model/credentials";
+import {EmployeeService} from "../../service/employee.service";
 
 @Component({
   selector: 'app-login-page',
@@ -17,7 +19,8 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
   loading = false;
   errors: Map<string, string> = new Map<string, string>();
 
-  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
+  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef,
+              private employeeService: EmployeeService) { }
 
   ngOnInit(): void {
   }
@@ -40,7 +43,21 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    //todo
+    let credentials: Credentials = {
+      username: this.loginForm.get('username')?.value,
+      password: this.loginForm.get('password')?.value
+    }
+    this.loading = true;
+    this.employeeService.login(credentials).subscribe(data => {
+      //todo
+      this.loading = false;
+
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+      this.loginForm.markAsPristine();
+      this.loading = false;
+      console.error(error);
+    })
   }
 
   setSectionHeight() {

@@ -12,6 +12,7 @@ import {personIdValidator} from "../../validators/pesel-validator";
 import {WorkstationListView} from "../../model/workstation/workstation-list-view";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {Employee} from "../../model/employee/employee";
+import {EmployeeService} from "../../service/employee.service";
 
 @Component({
   selector: 'app-employee-info',
@@ -170,7 +171,7 @@ export class EmployeeInfoComponent implements OnInit {
   })
 
   constructor(private modalService: NgbModal, private fb: FormBuilder,
-              private calendar: NgbCalendar) {
+              private calendar: NgbCalendar, private employeeService: EmployeeService) {
   }
 
   ngOnInit(): void {

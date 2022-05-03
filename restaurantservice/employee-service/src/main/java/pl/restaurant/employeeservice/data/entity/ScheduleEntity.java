@@ -5,8 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -26,6 +24,7 @@ public class ScheduleEntity implements Serializable {
     @Column(nullable = false)
     private LocalDateTime endShift;
 
-    @ManyToMany(mappedBy = "schedules", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<EmployeeEntity> employees = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private EmployeeEntity employee;
 }

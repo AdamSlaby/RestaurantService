@@ -3,9 +3,13 @@ package pl.restaurant.employeeservice.api.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
+import pl.restaurant.employeeservice.api.request.Credentials;
 import pl.restaurant.employeeservice.api.request.Employee;
 import pl.restaurant.employeeservice.api.request.Filter;
+import pl.restaurant.employeeservice.api.request.Schedule;
+import pl.restaurant.employeeservice.api.response.EmployeeInfo;
 import pl.restaurant.employeeservice.api.response.EmployeeListView;
+import pl.restaurant.employeeservice.api.response.ScheduleInfo;
 import pl.restaurant.employeeservice.business.service.EmployeeService;
 
 import javax.validation.Valid;
@@ -17,10 +21,55 @@ import javax.validation.Valid;
 public class EmployeeController {
     private EmployeeService employeeService;
 
-    @PostMapping()
+    @PostMapping("/list")
     public EmployeeListView getEmployees(@RequestBody @Valid Filter filter) {
         return employeeService.getEmployees(filter);
     }
 
+    @GetMapping("/{id}")
+    public EmployeeInfo getEmployeeInfo(@PathVariable("id") Long employeeId) {
+        return employeeService.getEmployeeInfo(employeeId);
+    }
 
+    @PostMapping("/schedule")
+    public ScheduleInfo addScheduleForEmployee(@RequestBody @Valid Schedule schedule) {
+        return employeeService.addScheduleForEmployee(schedule);
+    }
+
+    @PostMapping("/login")
+    public String logIn(@RequestBody @Valid Credentials credentials) {
+        //todo
+        return null;
+    }
+
+    @GetMapping("/logout")
+    public void logOut() {
+        //todo
+    }
+
+    @PostMapping()
+    public Credentials addEmployee(@RequestBody @Valid Employee employee) {
+        return employeeService.addEmployee(employee);
+    }
+
+    @PutMapping("/schedule")
+    public void updateEmployeeSchedule(@RequestBody @Valid ScheduleInfo scheduleInfo) {
+        employeeService.updateEmployeeSchedule(scheduleInfo);
+    }
+
+    @PutMapping("/{id}")
+    public void updateEmployee(@RequestBody @Valid Employee employee,
+                               @PathVariable("id") Long employeeId) {
+        employeeService.updateEmployee(employee, employeeId);
+    }
+
+    @DeleteMapping("/{id}")
+    public void dismissEmployee(@PathVariable("id") Long employeeId) {
+        employeeService.dismissEmployee(employeeId);
+    }
+
+    @DeleteMapping("/schedule/{id}")
+    public void removeEmployeeSchedule(@PathVariable("id") Long scheduleId) {
+        employeeService.removeEmployeeSchedule(scheduleId);
+    }
 }

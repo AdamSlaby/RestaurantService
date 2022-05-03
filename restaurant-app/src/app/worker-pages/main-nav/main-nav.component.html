@@ -92,7 +92,7 @@
               <span *ngIf="!isCollapsed">Arcmistrz</span>
             </a>
             <div class="text-start w-auto" ngbDropdownMenu aria-labelledby="userDropdown">
-              <button ngbDropdownItem>
+              <button (click)="logout()" ngbDropdownItem>
                 <fa-icon class="me-1" [icon]="faArrowRightFromBracket"></fa-icon>
                 <span>Wyloguj się</span>
               </button>

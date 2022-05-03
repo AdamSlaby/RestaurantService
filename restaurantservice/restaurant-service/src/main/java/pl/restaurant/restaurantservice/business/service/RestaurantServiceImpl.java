@@ -88,6 +88,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public RestaurantShortInfo getRestaurantShortInfo(Long restaurantId) {
+        return restaurantRepo.getRestaurant(restaurantId)
+                .orElseThrow(RestaurantNotFoundException::new);
+    }
+
+    @Override
     public List<RestaurantShortInfo> getAllRestaurants() {
         return restaurantRepo.getAllRestaurants();
     }

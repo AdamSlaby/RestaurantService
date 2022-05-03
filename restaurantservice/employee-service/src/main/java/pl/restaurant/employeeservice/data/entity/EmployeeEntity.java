@@ -58,9 +58,6 @@ public class EmployeeEntity implements Serializable {
     @JoinColumn(name = "workstation_id", nullable = false)
     private WorkstationEntity workstation;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "Employee_Schedule",
-                joinColumns = {@JoinColumn(name = "employee_id")},
-                inverseJoinColumns = {@JoinColumn(name = "schedule_id")})
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ScheduleEntity> schedules = new HashSet<>();
 }

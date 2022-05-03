@@ -44,8 +44,6 @@ spring:
               - content-type
               - authorization
 
-
-
 springdoc:
   swagger-ui:
     urls:

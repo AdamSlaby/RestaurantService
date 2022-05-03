@@ -18,6 +18,7 @@ import {
 import {Router} from "@angular/router";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {RestaurantService} from "../../service/restaurant.service";
+import {EmployeeService} from "../../service/employee.service";
 
 @Component({
   selector: 'app-main-nav',
@@ -50,7 +51,8 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   restaurants!: RestaurantShortInfo[]
 
   constructor(private cd: ChangeDetectorRef, private router: Router,
-              private restaurantService: RestaurantService) {
+              private restaurantService: RestaurantService,
+              private employeeService: EmployeeService) {
     this.router.events.subscribe(val => {
       let url = this.router.url;
       this.contentHeader = MainNavComponent.getHeader(url);
@@ -150,5 +152,14 @@ export class MainNavComponent implements OnInit, AfterViewInit {
 
   isAdmin() {
     return localStorage.getItem('role') === 'ADMIN';
+  }
+
+  logout() {
+    //todo
+    this.employeeService.logout().subscribe(data => {
+
+    }, error => {
+      console.error(error);
+    })
   }
 }

@@ -10,6 +10,7 @@ import {HtmlUtility} from "../../utility/html-utility";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {RestaurantService} from "../../service/restaurant.service";
 import {EmployeeFilters} from "../../model/employee/employee-filters";
+import {EmployeeService} from "../../service/employee.service";
 
 @Component({
   selector: 'app-employees-page',
@@ -112,7 +113,8 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   constructor(private cd: ChangeDetectorRef, private modalService: NgbModal,
-              private restaurantService: RestaurantService) { }
+              private restaurantService: RestaurantService,
+              private employeeService: EmployeeService) { }
 
   ngOnInit(): void {
     this.pageNr = 1;
@@ -122,10 +124,15 @@ export class EmployeesPageComponent implements OnInit {
     }, error => {
       console.error(error);
     })
+    this.employeeService.getEmployees(this.filters).subscribe(data => {
+      this.employeesList = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   open(content: any) {
-    this.modalService.open(content, {}).result.then((result) => {});
+    this.modalService.open(content, {}).result.then((result) => {}).catch(() => {});
   }
 
   editEmployee(id: number) {
@@ -143,10 +150,15 @@ export class EmployeesPageComponent implements OnInit {
 
   loadPage(page: number) {
     let filters = this.filters;
-    filters.pageNr = page;
+    filters.pageNr = page - 1;
     if (this.previousPage !== this.pageNr) {
       //todo
-      this.previousPage = this.pageNr;
+      this.employeeService.getEmployees(filters).subscribe(data => {
+        this.previousPage = this.pageNr;
+        this.employeesList = data;
+      }, error => {
+        console.error(error);
+      });
     }
   }
 
@@ -158,12 +170,21 @@ export class EmployeesPageComponent implements OnInit {
     //todo
     let filters = this.filters
     filters.sortEvent = event;
-
+    this.employeeService.getEmployees(filters).subscribe(data => {
+      this.employeesList = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   filterEmployees() {
     //todo
     let filters = this.filters
+    this.employeeService.getEmployees(filters).subscribe(data => {
+      this.employeesList = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   resetFilters() {
@@ -172,6 +193,12 @@ export class EmployeesPageComponent implements OnInit {
     this.chosenEmployeeId = null;
     this.chosenSurname = null;
     this.chosenWorkstation = null;
+    let filters = this.filters
+    this.employeeService.getEmployees(filters).subscribe(data => {
+      this.employeesList = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   getWorkstationById(id: number): string {
@@ -188,7 +215,11 @@ export class EmployeesPageComponent implements OnInit {
 
   dismissEmployee(dismissEmployeeForm: any) {
     //todo
-    dismissEmployeeForm.close();
+    this.employeeService.dismissEmployee(this.selectedEmployeeId).subscribe(data => {
+      dismissEmployeeForm.close();
+    }, error => {
+      console.error(error);
+    });
   }
 
   get filters() {

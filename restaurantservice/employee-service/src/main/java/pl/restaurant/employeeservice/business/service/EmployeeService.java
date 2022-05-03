@@ -21,9 +21,11 @@ public interface EmployeeService {
 
     Credentials addEmployee(Employee employee);
 
-    void updateEmployeeSchedule(ScheduleInfo scheduleInfo, Long employeeId);
+    void updateEmployeeSchedule(ScheduleInfo scheduleInfo);
 
-    void updateEmployee(Employee employee);
+    void updateEmployee(Employee employee, Long employeeId);
 
     void dismissEmployee(Long employeeId);
+
+    void removeEmployeeSchedule(Long scheduleId);
 }
