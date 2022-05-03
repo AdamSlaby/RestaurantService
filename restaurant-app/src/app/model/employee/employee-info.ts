@@ -14,5 +14,5 @@ export interface EmployeeInfo {
   dismissalDate: any;
   address: Address;
   restaurantInfo: RestaurantShortInfo;
-  scheduleInfo: ScheduleInfo[];
+  schedulesInfo: ScheduleInfo[];
 }

@@ -53,7 +53,7 @@ export class EmployeeInfoComponent implements OnInit {
           city: 'Kielce',
           street: 'Warszawska'
         },
-        scheduleInfo: [
+        schedulesInfo: [
           {
             id: 1,
             startShift: new Date('8 April 2022 08:00:00 UTC'),
@@ -87,7 +87,7 @@ export class EmployeeInfoComponent implements OnInit {
         salary: this.employeeInfo?.salary,
         restaurant: this.employeeInfo?.restaurantInfo?.restaurantId,
       });
-      for (let schedule of this.employeeInfo.scheduleInfo) {
+      for (let schedule of this.employeeInfo.schedulesInfo) {
         this.addScheduleToCalendar(schedule, schedule.id);
       }
     } else {
@@ -192,15 +192,18 @@ export class EmployeeInfoComponent implements OnInit {
   onScheduleFormSubmit(modal: any) {
     //todo
     let schedule: Schedule = {
+      employeeId: this.employeeInfo.shortInfo.id,
       startShift: this.convertNgbDateTimeToDate(this.scheduleForm.get('startShiftDate')?.value,
         this.scheduleForm.get('startShiftTime')?.value),
       endShift: this.convertNgbDateTimeToDate(this.scheduleForm.get('startShiftDate')?.value,
         this.scheduleForm.get('endShiftTime')?.value)
     }
     if (this.editScheduleId) {
+      //todo
       this.editScheduleFromCalendar(schedule, this.editScheduleId)
       this.editScheduleId = null;
     } else {
+      //todo
       this.addScheduleToCalendar(schedule, 10);
     }
     modal.close();

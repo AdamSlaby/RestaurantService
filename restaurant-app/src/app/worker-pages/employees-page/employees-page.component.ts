@@ -3,12 +3,13 @@ import {faEye, faPenToSquare, faUserPlus, faXmark} from "@fortawesome/free-solid
 import {EmployeeListView} from "../../model/employee/employee-list-view";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
-import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Workstation} from "../../model/workstation/workstation";
 import {WorkstationListView} from "../../model/workstation/workstation-list-view";
 import {HtmlUtility} from "../../utility/html-utility";
+import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {RestaurantService} from "../../service/restaurant.service";
+import {EmployeeFilters} from "../../model/employee/employee-filters";
 
 @Component({
   selector: 'app-employees-page',
@@ -21,14 +22,15 @@ export class EmployeesPageComponent implements OnInit {
   faPenToSquare = faPenToSquare;
   faXmark = faXmark;
   faUserPlus = faUserPlus;
-  keyword!: string;
   previousPage!: number;
-  chosenRestaurant!: string;
-  chosenEmployee!: string;
+  restaurants!: RestaurantShortInfo[];
   pageNr!: number;
   selectedEmployeeId: any;
   showEmployeeDetails: boolean = false;
   chosenWorkstation: any = null;
+  chosenEmployeeId!: any;
+  chosenSurname!: any;
+  chosenActive: any = true;
   workstations: WorkstationListView[] = [
     {
       id: 1,
@@ -43,9 +45,7 @@ export class EmployeesPageComponent implements OnInit {
       name: Workstation.COOK,
     },
   ];
-  restaurants!: RestaurantShortInfo[]
   employeesList: EmployeeListView = {
-    maxPage: 10,
     totalElements: 110,
     employees: [
       {
@@ -121,7 +121,7 @@ export class EmployeesPageComponent implements OnInit {
       this.restaurants = data;
     }, error => {
       console.error(error);
-    });
+    })
   }
 
   open(content: any) {
@@ -137,13 +137,15 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   openDismissModal(id: number, dismissEmployeeForm: any) {
-    //todo
     this.selectedEmployeeId = id;
     this.open(dismissEmployeeForm);
   }
 
   loadPage(page: number) {
+    let filters = this.filters;
+    filters.pageNr = page;
     if (this.previousPage !== this.pageNr) {
+      //todo
       this.previousPage = this.pageNr;
     }
   }
@@ -154,19 +156,22 @@ export class EmployeesPageComponent implements OnInit {
 
   onSort(event: SortEvent) {
     //todo
+    let filters = this.filters
+    filters.sortEvent = event;
+
   }
 
-  getEmployeesByRestaurant() {
+  filterEmployees() {
     //todo
-    console.log(this.chosenRestaurant.split(" ")[0]);
+    let filters = this.filters
   }
 
-  getEmployeeById() {
+  resetFilters() {
     //todo
-  }
-
-  getEmployeeBySurname() {
-    //todo
+    this.chosenActive = null;
+    this.chosenEmployeeId = null;
+    this.chosenSurname = null;
+    this.chosenWorkstation = null;
   }
 
   getWorkstationById(id: number): string {
@@ -182,15 +187,19 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   dismissEmployee(dismissEmployeeForm: any) {
+    //todo
     dismissEmployeeForm.close();
   }
 
-  resetFilters() {
-    //todo
-    this.chosenWorkstation = null;
-  }
-
-  getEmployeesByWorkstation() {
-    //todo
+  get filters() {
+    return {
+      restaurantId: localStorage.getItem('restaurantId'),
+      employeeId: this.chosenEmployeeId,
+      surname: this.chosenSurname,
+      workstation: this.chosenWorkstation,
+      active: this.chosenActive,
+      sortEvent: null,
+      pageNr: 0
+    } as EmployeeFilters;
   }
 }

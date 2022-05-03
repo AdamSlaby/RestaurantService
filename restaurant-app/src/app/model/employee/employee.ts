@@ -1,6 +1,7 @@
 import {Address} from "../address";
 
 export interface Employee {
+  restaurantId: number;
   name: string;
   surname: string;
   workstationId: number;
@@ -12,5 +13,4 @@ export interface Employee {
   employmentDate: Date | any;
   dismissalDate: Date | any;
   address: Address;
-  restaurantId: number;
 }
