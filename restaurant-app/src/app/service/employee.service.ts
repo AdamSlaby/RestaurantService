@@ -16,14 +16,14 @@ import {Employee} from "../model/employee/employee";
 export class EmployeeService {
   private COMMON_URL = `${GeneralService.BASE_URL}/employee`;
   private GET_EMPLOYEES = `${this.COMMON_URL}/list`;
-  private GET_EMPLOYEE_INFO = `${this.COMMON_URL}/`;
-  private ADD_SCHEDULE_FOR_EMPLOYEE = `${this.COMMON_URL}/schedule`;
+  private GET_EMPLOYEE_INFO = `${this.COMMON_URL}/info/`;
+  private ADD_SCHEDULE_FOR_EMPLOYEE = `${this.COMMON_URL}/schedule/new`;
   private LOGIN = `${this.COMMON_URL}/login`;
   private LOGOUT = `${this.COMMON_URL}/logout`;
   private ADD_EMPLOYEE = `${this.COMMON_URL}/`;
   private UPDATE_EMPLOYEE_SCHEDULE = `${this.COMMON_URL}/schedule`;
   private UPDATE_EMPLOYEE = `${this.COMMON_URL}/`;
-  private DISMISS_EMPLOYEE = `${this.COMMON_URL}/`;
+  private DISMISS_EMPLOYEE = `${this.COMMON_URL}/dsmiss/`;
   private REMOVE_EMPLOYEE_SCHEDULE = `${this.COMMON_URL}/schedule/`;
 
   constructor(private http: HttpClient) { }

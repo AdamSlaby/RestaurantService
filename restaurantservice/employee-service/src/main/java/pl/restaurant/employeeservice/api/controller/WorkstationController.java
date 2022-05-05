@@ -18,7 +18,7 @@ import java.util.List;
 public class WorkstationController {
     private WorkstationService workstationService;
 
-    @GetMapping()
+    @GetMapping("/workstation")
     public List<WorkstationListView> getAllWorkstations() {
         log.log(Level.INFO, "Returning all workstations");
         return workstationService.getAllWorkstation();

@@ -6,16 +6,20 @@ import pl.restaurant.employeeservice.api.request.Filter;
 import pl.restaurant.employeeservice.api.request.Schedule;
 import pl.restaurant.employeeservice.api.response.EmployeeInfo;
 import pl.restaurant.employeeservice.api.response.EmployeeListView;
+import pl.restaurant.employeeservice.api.response.LoginResponse;
 import pl.restaurant.employeeservice.api.response.ScheduleInfo;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 public interface EmployeeService {
     EmployeeListView getEmployees(Filter filter);
 
     EmployeeInfo getEmployeeInfo(Long employeeId);
 
-    String logIn(Credentials credentials);
+    LoginResponse logIn(Credentials credentials);
 
-    void logOut();
+    void logOut(HttpServletRequest request) throws ServletException;
 
     ScheduleInfo addScheduleForEmployee(Schedule schedule);
 

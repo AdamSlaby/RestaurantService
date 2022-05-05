@@ -26,7 +26,7 @@ public class Address {
     private String houseNr;
 
     @NotBlank(message = "Numer mieszkania jest wymagany")
-    @Pattern(regexp = "^[1-9]\\d{1,3}$", message = "Numer mieszkania jest nieprawidłowy")
+    @Pattern(regexp = "^[1-9]\\d{0,3}$", message = "Numer mieszkania jest nieprawidłowy")
     private String flatNr;
 
     @NotBlank(message = "Kod pocztowy jest wymagany")

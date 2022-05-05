@@ -9,9 +9,12 @@ import pl.restaurant.employeeservice.api.request.Filter;
 import pl.restaurant.employeeservice.api.request.Schedule;
 import pl.restaurant.employeeservice.api.response.EmployeeInfo;
 import pl.restaurant.employeeservice.api.response.EmployeeListView;
+import pl.restaurant.employeeservice.api.response.LoginResponse;
 import pl.restaurant.employeeservice.api.response.ScheduleInfo;
 import pl.restaurant.employeeservice.business.service.EmployeeService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -26,25 +29,24 @@ public class EmployeeController {
         return employeeService.getEmployees(filter);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/info/{id}")
     public EmployeeInfo getEmployeeInfo(@PathVariable("id") Long employeeId) {
         return employeeService.getEmployeeInfo(employeeId);
     }
 
-    @PostMapping("/schedule")
+    @PostMapping("/schedule/new")
     public ScheduleInfo addScheduleForEmployee(@RequestBody @Valid Schedule schedule) {
         return employeeService.addScheduleForEmployee(schedule);
     }
 
     @PostMapping("/login")
-    public String logIn(@RequestBody @Valid Credentials credentials) {
-        //todo
-        return null;
+    public LoginResponse logIn(@RequestBody @Valid Credentials credentials) {
+        return employeeService.logIn(credentials);
     }
 
     @GetMapping("/logout")
-    public void logOut() {
-        //todo
+    public void logOut(HttpServletRequest request) throws ServletException {
+        employeeService.logOut(request);
     }
 
     @PostMapping()
@@ -63,7 +65,7 @@ public class EmployeeController {
         employeeService.updateEmployee(employee, employeeId);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/dismiss/{id}")
     public void dismissEmployee(@PathVariable("id") Long employeeId) {
         employeeService.dismissEmployee(employeeId);
     }

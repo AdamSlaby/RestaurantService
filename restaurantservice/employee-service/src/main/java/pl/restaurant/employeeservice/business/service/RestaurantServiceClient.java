@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import pl.restaurant.employeeservice.api.response.RestaurantShortInfo;
 
-@FeignClient(name = "RESTAURANT-SERVICE")
+@FeignClient(url = "http://localhost:9998", name = "RESTAURANT-SERVICE")
 public interface RestaurantServiceClient {
     @GetMapping("/exist/{id}")
     boolean isRestaurantExist(@PathVariable("id") Long restaurantId);
