@@ -6,6 +6,7 @@ import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,11 +50,14 @@ public class KeycloakService {
         return keycloak;
     }
 
-    public List<RoleRepresentation> getRoles(String[] roleNames) {
+    public List<RoleRepresentation> getRoles(String[] roleNames, String clientId) {
         List<RoleRepresentation> roles = new LinkedList<>();
+
         for (String roleName : roleNames) {
             roles.add(getInstance()
                     .realm(realm)
+                    .clients()
+                    .get(clientId)
                     .roles()
                     .get(roleName)
                     .toRepresentation());
@@ -72,6 +76,14 @@ public class KeycloakService {
                 .realm(getRealm())
                 .users()
                 .get(userId);
+    }
+
+    public ClientRepresentation getClientRep() {
+        return getInstance()
+                .realm(realm)
+                .clients()
+                .findByClientId(clientId)
+                .get(0);
     }
 
     public String getRealm() {

@@ -43,7 +43,6 @@ export class RestaurantComponent implements OnInit {
               private restaurantService: RestaurantService) { }
 
   ngOnInit(): void {
-    localStorage.setItem('restaurantId', '4');
     let restaurantId = localStorage.getItem('restaurantId');
     this.loading = true;
     this.restaurantService.getRestaurant(restaurantId).subscribe(data => {

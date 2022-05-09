@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.restaurant.employeeservice.api.response.Workstation;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,8 +22,7 @@ public class WorkstationEntity implements Serializable {
     private Integer workstationId;
 
     @Column(length = 30, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Workstation name;
+    private String name;
 
     @OneToMany(mappedBy = "workstation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<EmployeeEntity> employees = new HashSet<>();

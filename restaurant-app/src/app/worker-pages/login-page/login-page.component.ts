@@ -2,6 +2,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from 
 import {FormBuilder, Validators} from "@angular/forms";
 import {Credentials} from "../../model/credentials";
 import {EmployeeService} from "../../service/employee.service";
+import {LoginResponse} from "../../model/login-response";
 
 @Component({
   selector: 'app-login-page',
@@ -12,6 +13,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
   innerWidth!: number;
   innerHeight!: number;
   sectionHeight!: string;
+  loginResponse!: LoginResponse;
   loginForm = this.fb.group({
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
@@ -43,15 +45,21 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
+    this.errors.clear();
     let credentials: Credentials = {
       username: this.loginForm.get('username')?.value,
       password: this.loginForm.get('password')?.value
     }
     this.loading = true;
     this.employeeService.login(credentials).subscribe(data => {
-      //todo
       this.loading = false;
-
+      this.loginResponse = data;
+      localStorage.setItem("accessToken", this.loginResponse.accessToken);
+      localStorage.setItem("refreshToken", this.loginResponse.refreshToken);
+      localStorage.setItem("role", this.loginResponse.role);
+      localStorage.setItem("fullName", this.loginResponse.fullName);
+      localStorage.setItem("restaurantId", this.loginResponse.restaurantId.toString());
+      location.assign("/admin");
     }, error => {
       this.errors = new Map(Object.entries(error.error));
       this.loginForm.markAsPristine();

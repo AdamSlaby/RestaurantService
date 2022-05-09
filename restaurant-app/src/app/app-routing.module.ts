@@ -28,6 +28,8 @@ import {StatisticsPageComponent} from "./worker-pages/statistics-page/statistics
 import {InvoicesComponent} from "./worker-pages/invoice-page/invoices/invoices.component";
 import {RestaurantGuard} from "./guard/restaurant.guard";
 import {ReservationsComponent} from "./worker-pages/reservations/reservations.component";
+import {AuthenticationGuard} from "./guard/authentication.guard";
+import {UnauthenticatedGuard} from "./guard/unauthenticated.guard";
 
 const routes: Routes = [
   {
@@ -99,6 +101,7 @@ const routes: Routes = [
   {
     path: "login",
     component: LoginPageComponent,
+    canActivate: [UnauthenticatedGuard, RestaurantGuard]
   },
   {
     path: "admin",
@@ -107,46 +110,105 @@ const routes: Routes = [
       {
         path: '',
         component: DashboardComponent,
+        canActivate: [AuthenticationGuard],
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [AuthenticationGuard],
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'employees',
         component: EmployeesPageComponent,
+        canActivate: [AuthenticationGuard],
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'news',
         component: NewsPageComponent,
+        canActivate: [AuthenticationGuard],
+        data: {
+          role: [
+            "admin"
+          ]
+        }
       },
       {
         path: 'menu',
         component: MenuPageComponent,
+        data: {
+          role: [
+            "admin"
+          ]
+        }
       },
       {
         path: 'orders',
         component: OrderPageComponent,
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'invoices',
         component: InvoicesComponent,
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'restaurant',
         component: RestaurantComponent,
+        data: {
+          role: [
+            "admin"
+          ]
+        }
       },
       {
         path: 'supply',
         component: SupplyPageComponent,
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'statistics',
         component: StatisticsPageComponent,
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
       {
         path: 'reservations',
         component: ReservationsComponent,
+        data: {
+          role: [
+            "admin", "manager"
+          ]
+        }
       },
     ]
   },

@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class WorkstationListView {
     private Integer id;
-    private Workstation name;
+    private String name;
 }

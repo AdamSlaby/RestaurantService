@@ -151,13 +151,17 @@ export class MainNavComponent implements OnInit, AfterViewInit {
   }
 
   isAdmin() {
-    return localStorage.getItem('role') === 'ADMIN';
+    return localStorage.getItem('role') === 'admin';
+  }
+
+  getFullName() {
+    return localStorage.getItem('fullName');
   }
 
   logout() {
-    //todo
     this.employeeService.logout().subscribe(data => {
-
+      localStorage.clear();
+      location.replace('/login');
     }, error => {
       console.error(error);
     })

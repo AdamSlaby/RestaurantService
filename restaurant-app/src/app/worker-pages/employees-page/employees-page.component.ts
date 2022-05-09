@@ -4,13 +4,13 @@ import {EmployeeListView} from "../../model/employee/employee-list-view";
 import {NgbdSortableHeaderDirective} from "../../directive/ngbd-sortable-header.directive";
 import {SortEvent} from "../../model/sort-event";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {Workstation} from "../../model/workstation/workstation";
 import {WorkstationListView} from "../../model/workstation/workstation-list-view";
 import {HtmlUtility} from "../../utility/html-utility";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {RestaurantService} from "../../service/restaurant.service";
 import {EmployeeFilters} from "../../model/employee/employee-filters";
 import {EmployeeService} from "../../service/employee.service";
+import {Workstation} from "../../model/workstation/workstation";
 
 @Component({
   selector: 'app-employees-page',
@@ -32,85 +32,8 @@ export class EmployeesPageComponent implements OnInit {
   chosenEmployeeId!: any;
   chosenSurname!: any;
   chosenActive: any = true;
-  workstations: WorkstationListView[] = [
-    {
-      id: 1,
-      name: Workstation.CHEF,
-    },
-    {
-      id: 2,
-      name: Workstation.KITCHEN_MANAGER,
-    },
-    {
-      id: 3,
-      name: Workstation.COOK,
-    },
-  ];
-  employeesList: EmployeeListView = {
-    totalElements: 110,
-    employees: [
-      {
-        id: 1,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 2,
-        name: 'Adam',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 3,
-        name: 'Marcin',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 4,
-        name: 'Łukasz',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 5,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 6,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 7,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 8,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 9,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-      {
-        id: 10,
-        name: 'Marek',
-        surname: 'Bykowski',
-        workstationId: 1,
-      },
-    ]
-  }
+  workstations!: WorkstationListView[];
+  employeesList!: EmployeeListView;
 
   constructor(private cd: ChangeDetectorRef, private modalService: NgbModal,
               private restaurantService: RestaurantService,
@@ -121,6 +44,11 @@ export class EmployeesPageComponent implements OnInit {
     this.previousPage = 1;
     this.restaurantService.getAllRestaurants().subscribe(data => {
       this.restaurants = data;
+    }, error => {
+      console.error(error);
+    })
+    this.employeeService.getWorkstations().subscribe(data => {
+      this.workstations = data;
     }, error => {
       console.error(error);
     })
@@ -202,7 +130,10 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   getWorkstationById(id: number): string {
-    return this.workstations.filter(el => el.id === id)[0].name.toString();
+    if (this.workstations) {
+      return this.workstations.filter(el => el.id === id)[0].name.toString();
+    }
+    return '';
   }
 
   addNewEmployee() {
@@ -227,7 +158,7 @@ export class EmployeesPageComponent implements OnInit {
       restaurantId: localStorage.getItem('restaurantId'),
       employeeId: this.chosenEmployeeId,
       surname: this.chosenSurname,
-      workstation: this.chosenWorkstation,
+      workstationId: this.chosenWorkstation,
       active: this.chosenActive,
       sortEvent: null,
       pageNr: 0

@@ -42,6 +42,6 @@ public class CredentialsGenerator {
     }
 
     public String generateUsername(String name, Long id) {
-        return name.toLowerCase() + id;
+        return name.toLowerCase() + "-" + id;
     }
 }

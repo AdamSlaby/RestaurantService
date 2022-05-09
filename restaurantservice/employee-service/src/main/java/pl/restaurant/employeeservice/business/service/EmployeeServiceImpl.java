@@ -1,6 +1,9 @@
 package pl.restaurant.employeeservice.business.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
+import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.ClientRepresentation;
@@ -34,14 +37,18 @@ import pl.restaurant.employeeservice.data.repository.WorkstationRepo;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Log4j2
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private final static int AMOUNT = 10;
+    private final static String ADMIN = "Administrator";
+    private final static String MANAGER = "Menedżer";
     private EmployeeRepo employeeRepo;
     private ScheduleRepo scheduleRepo;
     private RestaurantServiceClient restaurantServiceClient;
@@ -53,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeListView getEmployees(Filter filter) {
         Pageable pageable = mapSortEventToPageable(filter);
         Page<EmployeeShortInfo> page = employeeRepo.getEmployees(filter.getRestaurantId(), filter.getEmployeeId(),
-                filter.getActive(), filter.getSurname(), filter.getWorkstation().toString(),
+                filter.getActive(), filter.getSurname(), filter.getWorkstationId(),
                 pageable);
         return new EmployeeListView().builder()
                 .totalElements(page.getTotalElements())
@@ -78,20 +85,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     public LoginResponse logIn(Credentials credentials) {
         KeycloakResponse response = loginService.login(credentials);
         UserResource user = keycloakService.getUser(credentials.getUsername());
+        Long employeeId = Long.parseLong(credentials.getUsername().split("-")[1]);
+        Long restaurantId = null;
+        Optional<Long> restaurantIdOpt = employeeRepo.getEmployeeRestaurantId(employeeId);
+        if (restaurantIdOpt.isPresent())
+            restaurantId = restaurantIdOpt.get();
+
         return new LoginResponse().builder()
                 .accessToken(response.getAccess_token())
+                .refreshToken(response.getRefresh_token())
                 .fullName(user.toRepresentation().getFirstName() + " " + user.toRepresentation().getLastName())
-                .role(user.roles().realmLevel().listAll().get(1).toString())
+                .role(user.roles().clientLevel(keycloakService.getClientRep().getId())
+                        .listAll().get(0).toString())
+                .restaurantId(restaurantId)
                 .build();
     }
 
     @Override
-    public void logOut(HttpServletRequest request) throws ServletException {
-        request.logout();
+    public void logOut(LogoutRequest logoutRequest) {
+        loginService.logout(logoutRequest);
     }
 
     @Override
     public ScheduleInfo addScheduleForEmployee(Schedule schedule) {
+        if (scheduleRepo.getScheduleByDateAndEmployeeId(schedule.getStartShift(),
+                schedule.getEndShift(), schedule.getEmployeeId()).isPresent()) {
+            throw new ScheduleAlreadyExistsException();
+        }
         EmployeeEntity employee = employeeRepo.findById(schedule.getEmployeeId())
                 .orElseThrow(EmployeeNotFoundException::new);
         ScheduleEntity savedSchedule = scheduleRepo.save(new ScheduleEntity().builder()
@@ -121,12 +141,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void updateEmployeeSchedule(ScheduleInfo scheduleInfo) {
+    @Transactional
+    public ScheduleInfo updateEmployeeSchedule(ScheduleInfo scheduleInfo) {
         ScheduleEntity schedule = scheduleRepo.findById(scheduleInfo.getId())
                 .orElseThrow(ScheduleNotFoundException::new);
+        Optional<ScheduleEntity> savedSchedule = scheduleRepo.getScheduleByDateAndEmployeeId(scheduleInfo.getStartShift(),
+                scheduleInfo.getEndShift(), schedule.getEmployee().getEmployeeId());
+        if (savedSchedule.isPresent() && !Objects.equals(savedSchedule.get().getScheduleId(), scheduleInfo.getId())) {
+            throw new ScheduleAlreadyExistsException();
+        }
         schedule.setStartShift(scheduleInfo.getStartShift());
         schedule.setEndShift(scheduleInfo.getEndShift());
-        scheduleRepo.save(schedule);
+        return ScheduleMapper.mapDataToInfo(scheduleRepo.save(schedule));
     }
 
     @Override
@@ -137,6 +163,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RestaurantNotFoundException();
         EmployeeEntity employeeEntity = employeeRepo.findById(employeeId)
                 .orElseThrow(EmployeeNotFoundException::new);
+        String oldName = employeeEntity.getName();
         employeeEntity.setName(employee.getName());
         employeeEntity.setSurname(employee.getSurname());
         employeeEntity.setWorkstation(workstationRepo.findById(employee.getWorkstationId())
@@ -158,13 +185,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             UserRepresentation user = new UserRepresentation();
             user.setFirstName(employee.getName());
             user.setLastName(employee.getSurname());
-
-            UsersResource usersResource = getInstance();
-            usersResource.get(employeeId.toString()).update(user);
+            user.setUsername(CredentialsGenerator.generateUsername(employee.getName(), employeeId));
+            keycloakService.getUser(CredentialsGenerator.generateUsername(oldName, employeeId)).
+                    update(user);
         }
     }
 
     @Override
+    @Transactional
     public void dismissEmployee(Long employeeId) {
         EmployeeEntity employee = employeeRepo.findById(employeeId)
                 .orElseThrow(EmployeeNotFoundException::new);
@@ -172,8 +200,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setDismissalDate(LocalDate.now());
         employeeRepo.save(employee);
         if (isKeycloakUser(employee.getWorkstation())) {
-            UsersResource usersResource = getInstance();
-            usersResource.get(employee.getEmployeeId().toString()).remove();
+            keycloakService.getUser(CredentialsGenerator
+                    .generateUsername(employee.getName(), employee.getEmployeeId()))
+                    .remove();
         }
     }
 
@@ -189,7 +218,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             try {
                 String column = filter.getSortEvent().getColumn();
-                Employee.class.getField(column);
+                EmployeeEntity.class.getDeclaredField(column);
                 if (filter.getSortEvent().getDirection().equals(SortDirection.ASC))
                     return PageRequest.of(filter.getPageNr(), AMOUNT, Sort.by(Sort.Direction.ASC, column));
                 else if (filter.getSortEvent().getDirection().equals(SortDirection.DESC)) {
@@ -212,7 +241,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private boolean isKeycloakUser(WorkstationEntity workstation) {
-        return workstation.getName() == Workstation.ADMIN || workstation.getName() == Workstation.MANAGER;
+        return Objects.equals(workstation.getName(), ADMIN) || Objects.equals(workstation.getName(), MANAGER);
     }
 
     private Credentials createKeycloakUser(EmployeeEntity employee, WorkstationEntity workstation) {
@@ -231,13 +260,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         UserResource userResource = keycloakService.getUser(username);
         List<RoleRepresentation> roles;
-        if (workstation.getName() == Workstation.ADMIN) {
-            roles = keycloakService.getRoles(new String[]{"admin"});
+        ClientRepresentation clientRepresentation = keycloakService.getClientRep();
+        if (Objects.equals(workstation.getName(), ADMIN)) {
+            roles = keycloakService.getRoles(new String[]{"admin"}, clientRepresentation.getId());
         }
         else {
-            roles = keycloakService.getRoles(new String[]{"manager"});
+            roles = keycloakService.getRoles(new String[]{"manager"}, clientRepresentation.getId());
         }
-        userResource.roles().realmLevel().add(roles);
+        log.log(Level.INFO, clientRepresentation.toString());
+        userResource.roles().clientLevel(clientRepresentation.getId()).add(roles);
         return new Credentials(username, password);
     }
 }

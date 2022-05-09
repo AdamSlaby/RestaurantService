@@ -22,7 +22,7 @@
             Wybierz stanowisko pracy
           </option>
           <option *ngFor="let workstation of workstations"
-                  [ngValue]="workstation.id">{{workstation.name.toString()}}</option>
+                  [ngValue]="workstation.id">{{workstation.name}}</option>
         </select>
       </div>
       <div class="d-grid">
@@ -56,7 +56,7 @@
             <th scope="col">Opcje</th>
           </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="employeesList">
           <tr *ngFor="let employee of employeesList.employees">
             <th scope="row">{{employee.id}}</th>
             <td>{{employee.surname}}</td>
@@ -76,7 +76,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="d-flex justify-content-center align-items-center">
+        <div *ngIf="employeesList" class="d-flex justify-content-center align-items-center">
           <ngb-pagination [collectionSize]="employeesList.totalElements"
                           [(page)]="pageNr"
                           [maxSize]="5"

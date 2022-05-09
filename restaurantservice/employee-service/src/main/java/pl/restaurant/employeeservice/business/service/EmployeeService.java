@@ -1,9 +1,6 @@
 package pl.restaurant.employeeservice.business.service;
 
-import pl.restaurant.employeeservice.api.request.Credentials;
-import pl.restaurant.employeeservice.api.request.Employee;
-import pl.restaurant.employeeservice.api.request.Filter;
-import pl.restaurant.employeeservice.api.request.Schedule;
+import pl.restaurant.employeeservice.api.request.*;
 import pl.restaurant.employeeservice.api.response.EmployeeInfo;
 import pl.restaurant.employeeservice.api.response.EmployeeListView;
 import pl.restaurant.employeeservice.api.response.LoginResponse;
@@ -19,13 +16,13 @@ public interface EmployeeService {
 
     LoginResponse logIn(Credentials credentials);
 
-    void logOut(HttpServletRequest request) throws ServletException;
+    void logOut(LogoutRequest request) throws ServletException;
 
     ScheduleInfo addScheduleForEmployee(Schedule schedule);
 
     Credentials addEmployee(Employee employee);
 
-    void updateEmployeeSchedule(ScheduleInfo scheduleInfo);
+    ScheduleInfo updateEmployeeSchedule(ScheduleInfo scheduleInfo);
 
     void updateEmployee(Employee employee, Long employeeId);
 

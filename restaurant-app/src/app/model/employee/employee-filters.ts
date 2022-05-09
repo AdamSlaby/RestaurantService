@@ -5,7 +5,7 @@ export interface EmployeeFilters {
   employeeId: any;
   active: any;
   surname: any;
-  workstation: any;
+  workstationId: any;
   sortEvent: SortEvent | null;
   pageNr: number;
 }

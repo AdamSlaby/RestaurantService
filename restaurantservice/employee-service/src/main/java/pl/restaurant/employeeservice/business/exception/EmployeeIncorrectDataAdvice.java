@@ -16,6 +16,23 @@ import java.util.Map;
 @ControllerAdvice
 public class EmployeeIncorrectDataAdvice {
     @ResponseBody
+    @ExceptionHandler(ScheduleAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invalidCredentialsHandler(ScheduleAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("startShift", ex.getMessage());
+        return errors;
+    }
+    @ResponseBody
+    @ExceptionHandler(InvalidLoginCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> invalidCredentialsHandler(InvalidLoginCredentialsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("password", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
     @ExceptionHandler(WorkstationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> invalidAccountNrHandler(WorkstationNotFoundException ex) {

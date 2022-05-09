@@ -47,16 +47,16 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/list").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
-                .antMatchers("/info/{id}").permitAll()
-                .antMatchers("/workstation").permitAll()
+                .antMatchers("/list").hasAnyRole(Role.MANAGER.toString(), "admin")
+                .antMatchers("/info/{id}").hasAnyRole(Role.MANAGER.toString(), "admin")
                 .antMatchers("/schedule/new").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/logout").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
-                .antMatchers("/").permitAll()
+                .antMatchers("/").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/schedule").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/dismiss/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/schedule/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/workstation").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .anyRequest().permitAll();
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);

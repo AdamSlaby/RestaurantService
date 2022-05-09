@@ -57,7 +57,8 @@ import { StatisticComponent } from './worker-pages/statistic/statistic.component
 import { InvoicesComponent } from './worker-pages/invoice-page/invoices/invoices.component';
 import { InvoiceFormComponent } from './worker-pages/invoice-page/invoice-form/invoice-form.component';
 import { ReservationsComponent } from './worker-pages/reservations/reservations.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {TokenExpirationInterceptor} from "./interceptor/token-expiration.interceptor";
 
 FullCalendarModule.registerPlugins([
   timeGridPlugin,
@@ -122,7 +123,8 @@ FullCalendarModule.registerPlugins([
     FullCalendarModule,
     HttpClientModule
   ],
-  providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}, BasketService],
+  providers: [{ provide: LOCALE_ID, useValue: "pl-PL"}, BasketService,
+    { provide: HTTP_INTERCEPTORS, useClass: TokenExpirationInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

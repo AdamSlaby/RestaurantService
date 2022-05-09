@@ -20,7 +20,7 @@
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Panel główny</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isAdmin()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/restaurant" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faInfo"></fa-icon>
@@ -62,14 +62,14 @@
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Zaopatrzenie</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isAdmin()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/news" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faNewspaper"></fa-icon>
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Aktualności</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isAdmin()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/menu" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faUtensils"></fa-icon>
@@ -89,7 +89,7 @@
           <div ngbDropdown class="d-inline-block">
             <a style="cursor: pointer" class="text-white" id="userDropdown" ngbDropdownToggle>
               <fa-icon class="me-2" [icon]="faUser"></fa-icon>
-              <span *ngIf="!isCollapsed">Arcmistrz</span>
+              <span *ngIf="!isCollapsed">{{getFullName()}}</span>
             </a>
             <div class="text-start w-auto" ngbDropdownMenu aria-labelledby="userDropdown">
               <button (click)="logout()" ngbDropdownItem>
@@ -118,7 +118,7 @@
 
         <div *ngIf="isAdmin()" class="float-end" style="padding-right: 36px">
           <select class="form-select" [(ngModel)]="restaurantId" (ngModelChange)="changeRestaurantId()">
-            <option *ngFor="let restaurant of restaurants" [ngValue]="restaurant.restaurantId">
+            <option *ngFor="let restaurant of restaurants" [ngValue]="restaurant.restaurantId.toString()">
               {{restaurant.city}}, ul. {{restaurant.street}}
             </option>
             <option [ngValue]="null">Wszystkie</option>

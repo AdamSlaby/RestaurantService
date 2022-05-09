@@ -140,7 +140,7 @@
                 <input type="text" placeholder="Wpisz miasto zamieszkania pracownika" formControlName="city"
                        class="form-control" id="city"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['city'].errors ||
-                    (errors.has('city') && fe['city'].pristine)  }"/>
+                    (errors.has('address.city') && fe['city'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['city'].errors" class="invalid-feedback">
                   <div *ngIf="fe['city'].errors['required']">
                     Miasto jest wymagane
@@ -149,9 +149,9 @@
                     Miasto jest nieprawidłowe
                   </div>
                 </div>
-                <div *ngIf="errors.has('city') && fe['city'].valid && fe['city'].pristine"
+                <div *ngIf="errors.has('address.city') && fe['city'].valid && fe['city'].pristine"
                      class="invalid-feedback d-block">
-                  {{errors.get('city')}}
+                  {{errors.get('address.city')}}
                 </div>
               </div>
             </div>
@@ -160,7 +160,7 @@
                 <label class="fw-bolder" for="street">Ulica:</label>
                 <input type="text" placeholder="Podaj ulicę" formControlName="street" class="form-control" id="street"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['street'].errors ||
-                    (errors.has('street') && fe['street'].pristine)  }"/>
+                    (errors.has('address.street') && fe['street'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['street'].errors" class="invalid-feedback">
                   <div *ngIf="fe['street'].errors['required']">
                     Nazwa ulicy jest wymagana
@@ -169,9 +169,9 @@
                     Nazwa ulicy jest nieprawidłowa
                   </div>
                 </div>
-                <div *ngIf="errors.has('street') && fe['street'].valid && fe['street'].pristine"
+                <div *ngIf="errors.has('address.street') && fe['street'].valid && fe['street'].pristine"
                      class="invalid-feedback d-block">
-                  {{errors.get('street')}}
+                  {{errors.get('address.street')}}
                 </div>
               </div>
             </div>
@@ -181,7 +181,7 @@
                 <input type="text" placeholder="Podaj numer domu" formControlName="houseNr" class="form-control"
                        id="houseNr"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['houseNr'].errors ||
-                    (errors.has('houseNr') && fe['houseNr'].pristine)  }"/>
+                    (errors.has('address.houseNr') && fe['houseNr'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['houseNr'].errors" class="invalid-feedback">
                   <div *ngIf="fe['houseNr'].errors['required']">
                     Numer domu jest wymagany
@@ -190,9 +190,9 @@
                     Numer domu jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('houseNr') && fe['houseNr'].valid && fe['houseNr'].pristine"
+                <div *ngIf="errors.has('address.houseNr') && fe['houseNr'].valid && fe['houseNr'].pristine"
                      class="invalid-feedback d-block">
-                  {{errors.get('houseNr')}}
+                  {{errors.get('address.houseNr')}}
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@
                 <input type="text" placeholder="Podaj numer mieszkania" formControlName="flatNr" class="form-control"
                        id="flatNr"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['flatNr'].errors ||
-                    (errors.has('flatNr') && fe['flatNr'].pristine)  }"/>
+                    (errors.has('address.flatNr') && fe['flatNr'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['flatNr'].errors" class="invalid-feedback">
                   <div *ngIf="fe['flatNr'].errors['required']">
                     Numer mieszkania jest wymagany
@@ -211,9 +211,9 @@
                     Numer mieszkania jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('flatNr') && fe['flatNr'].valid && fe['flatNr'].pristine"
+                <div *ngIf="errors.has('address.flatNr') && fe['flatNr'].valid && fe['flatNr'].pristine"
                      class="invalid-feedback d-block">
-                  {{errors.get('flatNr')}}
+                  {{errors.get('address.flatNr')}}
                 </div>
               </div>
             </div>
@@ -223,7 +223,7 @@
                 <input type="text" placeholder="Podaj kod pocztowy" formControlName="postcode" class="form-control"
                        id="postcode"
                        [ngClass]="{ 'is-invalid': form.submitted && fe['postcode'].errors ||
-                    (errors.has('postcode') && fe['postcode'].pristine)  }"/>
+                    (errors.has('address.postcode') && fe['postcode'].pristine)  }"/>
                 <div *ngIf="form.submitted && fe['postcode'].errors" class="invalid-feedback">
                   <div *ngIf="fe['postcode'].errors['required']">
                     Kod pocztowy jest wymagany
@@ -232,9 +232,9 @@
                     Kod pocztowy jest nieprawidłowy
                   </div>
                 </div>
-                <div *ngIf="errors.has('postcode') && fe['postcode'].valid && fe['postcode'].pristine"
+                <div *ngIf="errors.has('address.postcode') && fe['postcode'].valid && fe['postcode'].pristine"
                      class="invalid-feedback d-block">
-                  {{errors.get('postcode')}}
+                  {{errors.get('address.postcode')}}
                 </div>
               </div>
             </div>
@@ -249,7 +249,7 @@
                   <input class="form-control" placeholder="yyyy-mm-dd"
                          [ngClass]="{ 'is-invalid': form.submitted && fe['employmentDate'].errors ||
                     (errors.has('employmentDate') && fe['employmentDate'].pristine)}"
-                         id="employmentDate" formControlName="employmentDate" [minDate]="startDate" ngbDatepicker
+                         id="employmentDate" formControlName="employmentDate" ngbDatepicker
                          #d="ngbDatepicker">
                   <button class="btn btn-outline-grey calendar" (click)="d.toggle()" type="button"></button>
                 </div>
@@ -360,6 +360,7 @@
                 </div>
               </div>
             </div>
+
             <div class="form-group">
               <div class="d-flex justify-content-center align-items-center">
                 <button class="btn btn-outline-grey">
@@ -367,6 +368,17 @@
                 </button>
               </div>
             </div>
+
+            <div *ngIf="isSuccessful" class="d-block alert-success mt-2">
+              <div class="d-grid text-center" style="font-size: 1.5rem;">
+                Dane zostały zaktualizowane
+              </div>
+              <div *ngIf="credentials.username" class="d-grid text-center" style="font-size: 1.5rem;">
+                Username: {{credentials.username}} <br>
+                Password: {{credentials.password}} 
+              </div>
+            </div>
+
             <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
               <div class="d-flex justify-content-center align-items-center">
                 Formularz zawiera błędy
@@ -392,7 +404,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="dismiss(modal)"></button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="scheduleForm" #form="ngForm" (ngSubmit)="!scheduleForm.invalid && onScheduleFormSubmit(modal)">
+    <form [formGroup]="scheduleForm" #form="ngForm" (ngSubmit)="!scheduleForm.invalid && onScheduleFormSubmit(modal, editScheduleId)">
       <div class="form-group mb-3">
         <label for="startShift">Data rozpoczęcia</label>
         <div class="input-group">
@@ -421,7 +433,7 @@
 
       <div class="form-group mb-3">
         <label for="startHour">Godzina rozpoczęcia pracy</label>
-        <div id="startHour" class="d-flex justify-content-center align-items-center">
+        <div id="startHour" class="d-flex justify-content-center align-items-center position-relative">
           <ngb-timepicker formControlName="startShiftTime"></ngb-timepicker>
         </div>
         <div *ngIf="form.submitted && fs['startShiftTime'].errors" class="invalid-feedback d-block">
@@ -429,15 +441,15 @@
             Godzina rozpoczęcia pracy jest wymagana
           </div>
         </div>
-        <div *ngIf="errors.has('startShiftTime') && fs['startShiftTime'].valid && fs['startShiftTime'].pristine"
+        <div *ngIf="errors.has('startShift') && fs['startShiftTime'].valid"
              class="invalid-feedback d-block">
-          {{errors.get('startShiftTime')}}
+          {{errors.get('startShift')}}
         </div>
       </div>
 
       <div class="form-group mb-3">
         <label for="endHour">Godzina zakończenia pracy</label>
-        <div id="endHour" class="d-flex justify-content-center align-items-center">
+        <div id="endHour" class="d-flex justify-content-center align-items-center position-relative">
           <ngb-timepicker formControlName="endShiftTime"></ngb-timepicker>
         </div>
         <div *ngIf="form.submitted && fs['endShiftTime'].errors" class="invalid-feedback d-block">
@@ -445,9 +457,9 @@
             Godzina zakończenia pracy jest wymagana
           </div>
         </div>
-        <div *ngIf="errors.has('endShiftTime') && fs['endShiftTime'].valid && fs['endShiftTime'].pristine"
+        <div *ngIf="errors.has('endShift') && fs['endShiftTime'].valid"
              class="invalid-feedback d-block">
-          {{errors.get('endShiftTime')}}
+          {{errors.get('endShift')}}
         </div>
       </div>
 

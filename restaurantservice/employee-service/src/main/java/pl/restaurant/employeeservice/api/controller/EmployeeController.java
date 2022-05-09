@@ -3,10 +3,7 @@ package pl.restaurant.employeeservice.api.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
-import pl.restaurant.employeeservice.api.request.Credentials;
-import pl.restaurant.employeeservice.api.request.Employee;
-import pl.restaurant.employeeservice.api.request.Filter;
-import pl.restaurant.employeeservice.api.request.Schedule;
+import pl.restaurant.employeeservice.api.request.*;
 import pl.restaurant.employeeservice.api.response.EmployeeInfo;
 import pl.restaurant.employeeservice.api.response.EmployeeListView;
 import pl.restaurant.employeeservice.api.response.LoginResponse;
@@ -44,9 +41,9 @@ public class EmployeeController {
         return employeeService.logIn(credentials);
     }
 
-    @GetMapping("/logout")
-    public void logOut(HttpServletRequest request) throws ServletException {
-        employeeService.logOut(request);
+    @PostMapping("/logout")
+    public void logOut(@RequestBody @Valid LogoutRequest logoutRequest) throws ServletException {
+        employeeService.logOut(logoutRequest);
     }
 
     @PostMapping()
@@ -55,8 +52,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/schedule")
-    public void updateEmployeeSchedule(@RequestBody @Valid ScheduleInfo scheduleInfo) {
-        employeeService.updateEmployeeSchedule(scheduleInfo);
+    public ScheduleInfo updateEmployeeSchedule(@RequestBody @Valid ScheduleInfo scheduleInfo) {
+        return employeeService.updateEmployeeSchedule(scheduleInfo);
     }
 
     @PutMapping("/{id}")
