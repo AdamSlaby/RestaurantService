@@ -8,6 +8,7 @@ import {NewsInfo} from "../../../model/news/news-info";
 })
 export class NewsFeedComponent implements OnInit, AfterViewInit {
   newsPage!: number
+  pageNr!: number;
   newsFeed: NewsInfo[] = [
     {
       newsId: 1,
@@ -42,6 +43,7 @@ export class NewsFeedComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.pageNr = 0;
   }
 
   ngAfterViewInit(): void {

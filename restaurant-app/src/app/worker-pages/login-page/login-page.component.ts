@@ -59,6 +59,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit {
       localStorage.setItem("role", this.loginResponse.role);
       localStorage.setItem("fullName", this.loginResponse.fullName);
       localStorage.setItem("restaurantId", this.loginResponse.restaurantId.toString());
+      localStorage.setItem("employeeId", this.loginResponse.employeeId.toString());
       location.assign("/admin");
     }, error => {
       this.errors = new Map(Object.entries(error.error));

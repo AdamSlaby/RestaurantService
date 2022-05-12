@@ -10,7 +10,6 @@ import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info"
 import {RestaurantService} from "../../service/restaurant.service";
 import {EmployeeFilters} from "../../model/employee/employee-filters";
 import {EmployeeService} from "../../service/employee.service";
-import {Workstation} from "../../model/workstation/workstation";
 
 @Component({
   selector: 'app-employees-page',
@@ -80,7 +79,6 @@ export class EmployeesPageComponent implements OnInit {
     let filters = this.filters;
     filters.pageNr = page - 1;
     if (this.previousPage !== this.pageNr) {
-      //todo
       this.employeeService.getEmployees(filters).subscribe(data => {
         this.previousPage = this.pageNr;
         this.employeesList = data;
@@ -95,7 +93,6 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   onSort(event: SortEvent) {
-    //todo
     let filters = this.filters
     filters.sortEvent = event;
     this.employeeService.getEmployees(filters).subscribe(data => {
@@ -106,7 +103,6 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   filterEmployees() {
-    //todo
     let filters = this.filters
     this.employeeService.getEmployees(filters).subscribe(data => {
       this.employeesList = data;
@@ -116,7 +112,6 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   resetFilters() {
-    //todo
     this.chosenActive = null;
     this.chosenEmployeeId = null;
     this.chosenSurname = null;
@@ -145,9 +140,9 @@ export class EmployeesPageComponent implements OnInit {
   }
 
   dismissEmployee(dismissEmployeeForm: any) {
-    //todo
     this.employeeService.dismissEmployee(this.selectedEmployeeId).subscribe(data => {
       dismissEmployeeForm.close();
+      this.filterEmployees();
     }, error => {
       console.error(error);
     });

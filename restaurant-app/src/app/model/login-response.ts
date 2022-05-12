@@ -4,4 +4,5 @@ export interface LoginResponse {
   fullName: string;
   role: string;
   restaurantId: number;
+  employeeId: number;
 }

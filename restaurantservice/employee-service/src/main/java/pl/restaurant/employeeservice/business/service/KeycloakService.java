@@ -30,6 +30,8 @@ public class KeycloakService {
     private String username;
     @Value("${app.keycloak.password}")
     private String password;
+    @Value("${app.keycloak.clients}")
+    private String[] clients;
 
 
     public Keycloak getInstance(){
@@ -86,11 +88,19 @@ public class KeycloakService {
                 .get(0);
     }
 
+    public ClientRepresentation getClientRep(String clientId) {
+        return getInstance()
+                .realm(realm)
+                .clients()
+                .findByClientId(clientId)
+                .get(0);
+    }
+
     public String getRealm() {
         return realm;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String[] getClients() {
+        return clients;
     }
 }

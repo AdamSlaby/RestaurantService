@@ -7,10 +7,9 @@ import pl.restaurant.employeeservice.api.response.LoginResponse;
 import pl.restaurant.employeeservice.api.response.ScheduleInfo;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 public interface EmployeeService {
-    EmployeeListView getEmployees(Filter filter);
+    EmployeeListView getEmployees(EmployeeFilters filter);
 
     EmployeeInfo getEmployeeInfo(Long employeeId);
 
@@ -29,4 +28,8 @@ public interface EmployeeService {
     void dismissEmployee(Long employeeId);
 
     void removeEmployeeSchedule(Long scheduleId);
+
+    boolean isAdminEmployeeExist(Long employeeId);
+
+    String getEmployeeFullName(Long employeeId);
 }

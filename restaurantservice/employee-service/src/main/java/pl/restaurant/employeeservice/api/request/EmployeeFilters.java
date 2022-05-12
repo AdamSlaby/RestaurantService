@@ -10,7 +10,7 @@ import javax.validation.Valid;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Filter {
+public class EmployeeFilters {
     private Long restaurantId;
     private Long employeeId;
     private Boolean active;

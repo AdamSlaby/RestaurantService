@@ -21,7 +21,7 @@ import java.util.List;
 public class RestaurantController {
     private RestaurantService restaurantService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/info/{id}")
     public RestaurantInfo getRestaurantInfo(@PathVariable Long id) {
         log.log(Level.INFO, "Getting restaurant of id = " + id);
         return restaurantService.getRestaurantInfo(id);
@@ -57,7 +57,7 @@ public class RestaurantController {
         return restaurantService.getAllRestaurants();
     }
 
-    @PostMapping()
+    @PostMapping("/new")
     public void addRestaurant(@RequestBody @Valid Restaurant restaurant) {
         restaurantService.addRestaurant(restaurant);
         log.log(Level.INFO, "Add new restaurant with given fields = " + restaurant);

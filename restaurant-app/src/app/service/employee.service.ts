@@ -10,7 +10,6 @@ import {ScheduleInfo} from "../model/schedule/schedule-info";
 import {Credentials} from "../model/credentials";
 import {Employee} from "../model/employee/employee";
 import {LoginResponse} from "../model/login-response";
-import {Workstation} from "../model/workstation/workstation";
 import {WorkstationListView} from "../model/workstation/workstation-list-view";
 import { LogoutRequest } from '../model/logout-request';
 
@@ -27,7 +26,7 @@ export class EmployeeService {
   private ADD_EMPLOYEE = `${this.COMMON_URL}/`;
   private UPDATE_EMPLOYEE_SCHEDULE = `${this.COMMON_URL}/schedule`;
   private UPDATE_EMPLOYEE = `${this.COMMON_URL}/`;
-  private DISMISS_EMPLOYEE = `${this.COMMON_URL}/dsmiss/`;
+  private DISMISS_EMPLOYEE = `${this.COMMON_URL}/dismiss/`;
   private REMOVE_EMPLOYEE_SCHEDULE = `${this.COMMON_URL}/schedule/`;
   private GET_WORKSTATIONS = `${this.COMMON_URL}/workstation`;
 

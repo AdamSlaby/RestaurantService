@@ -4,6 +4,7 @@ import {faEye, faPenToSquare, faPlus, faXmark} from "@fortawesome/free-solid-svg
 import {NewsListView} from "../../model/news/news-list-view";
 import {SortEvent} from "../../model/sort-event";
 import {HtmlUtility} from "../../utility/html-utility";
+import { NewsFilters } from 'src/app/model/news/news-filters';
 
 @Component({
   selector: 'app-news-page',
@@ -15,16 +16,15 @@ export class NewsPageComponent implements OnInit {
   faEye = faEye;
   faPenToSquare = faPenToSquare;
   faXmark = faXmark;
-  chosenNews!: number;
-  titleKeyword!: string;
+  chosenNewsId!: any;
+  chosenTitle!: any;
+  chosenEmployeeId: any;
+  chosenDate!: NgbDateStruct | any;
   selectedNewsId!: number;
   previousPage!: number;
   pageNr!: number;
-  chosenEmployeeId: any;
   showNewsDetails: boolean = false;
-  chosenDate!: NgbDateStruct | any;
   newsList: NewsListView = {
-    maxPage: 10,
     totalElements: 110,
     news: [
       {
@@ -49,36 +49,32 @@ export class NewsPageComponent implements OnInit {
   }
 
   open(content: any) {
-    this.modalService.open(content, {}).result.then(() => {});
+    this.modalService.open(content, {}).result.then(() => {}).catch(() => {});
   }
 
-  getNewsById() {
+  filterNews() {
     //todo
-  }
-
-  getNewsByTitle() {
-    //todo
-  }
-
-  getNewsByDate() {
-    //todo
-    console.log(this.chosenDate);
-  }
-
-  getNewsByEmployeeId() {
-    //todo
+    let filters = this.filters
   }
 
   resetFilters() {
     //todo
-    this.chosenDate = undefined;
+    this.chosenNewsId = null;
+    this.chosenEmployeeId = null;
+    this.chosenTitle = null;
+    this.chosenDate = null;
+    let filters = this.filters;
   }
 
   onSort($event: SortEvent) {
     //todo
+    let filters = this.filters
+    filters.sortEvent = event;
   }
 
   loadPage(page: number) {
+    let filters = this.filters;
+    filters.pageNr = page - 1;
     if (this.previousPage !== this.pageNr) {
       this.previousPage = this.pageNr;
     }
@@ -93,7 +89,7 @@ export class NewsPageComponent implements OnInit {
     }, 1);
   }
 
-  removeNews(removeNewsForm: any) {
+  removeNews(modal: any) {
     //todo
   }
 
@@ -114,5 +110,16 @@ export class NewsPageComponent implements OnInit {
 
   closeNewsDetails() {
     this.showNewsDetails = false;
+  }
+
+  get filters() {
+    return {
+      newsId: this.chosenNewsId,
+      employeeId: this.chosenEmployeeId,
+      title: this.chosenTitle,
+      date: this.chosenDate,
+      sortEvent: null,
+      pageNr: 0
+    } as NewsFilters;
   }
 }

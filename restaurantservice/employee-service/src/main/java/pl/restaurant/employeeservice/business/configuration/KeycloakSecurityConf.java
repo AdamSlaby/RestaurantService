@@ -56,6 +56,8 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/dismiss/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/schedule/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/name/{id}").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/exist/{id}").permitAll()
                 .antMatchers("/workstation").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .anyRequest().permitAll();
 

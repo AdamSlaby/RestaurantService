@@ -2,8 +2,6 @@ package pl.restaurant.employeeservice.business.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
-import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.ClientRepresentation;
@@ -20,7 +18,6 @@ import pl.restaurant.employeeservice.api.mapper.EmployeeMapper;
 import pl.restaurant.employeeservice.api.mapper.ScheduleMapper;
 import pl.restaurant.employeeservice.api.request.*;
 import pl.restaurant.employeeservice.api.response.*;
-import pl.restaurant.employeeservice.business.configuration.Role;
 import pl.restaurant.employeeservice.business.exception.*;
 import pl.restaurant.employeeservice.business.utility.CredentialsGenerator;
 import pl.restaurant.employeeservice.business.utility.PasswordMapper;
@@ -34,10 +31,7 @@ import pl.restaurant.employeeservice.data.repository.EmployeeRepo;
 import pl.restaurant.employeeservice.data.repository.ScheduleRepo;
 import pl.restaurant.employeeservice.data.repository.WorkstationRepo;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -56,8 +50,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private WorkstationRepo workstationRepo;
     private LoginService loginService;
     private KeycloakService keycloakService;
+
     @Override
-    public EmployeeListView getEmployees(Filter filter) {
+    public EmployeeListView getEmployees(EmployeeFilters filter) {
         Pageable pageable = mapSortEventToPageable(filter);
         Page<EmployeeShortInfo> page = employeeRepo.getEmployees(filter.getRestaurantId(), filter.getEmployeeId(),
                 filter.getActive(), filter.getSurname(), filter.getWorkstationId(),
@@ -94,6 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new LoginResponse().builder()
                 .accessToken(response.getAccess_token())
                 .refreshToken(response.getRefresh_token())
+                .employeeId(employeeId)
                 .fullName(user.toRepresentation().getFirstName() + " " + user.toRepresentation().getLastName())
                 .role(user.roles().clientLevel(keycloakService.getClientRep().getId())
                         .listAll().get(0).toString())
@@ -201,7 +197,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepo.save(employee);
         if (isKeycloakUser(employee.getWorkstation())) {
             keycloakService.getUser(CredentialsGenerator
-                    .generateUsername(employee.getName(), employee.getEmployeeId()))
+                            .generateUsername(employee.getName(), employee.getEmployeeId()))
                     .remove();
         }
     }
@@ -212,7 +208,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         scheduleRepo.deleteById(scheduleId);
     }
 
-    private Pageable mapSortEventToPageable(Filter filter) {
+    @Override
+    public boolean isAdminEmployeeExist(Long employeeId) {
+        return employeeRepo.existsByEmployeeIdAndWorkstationName(employeeId, ADMIN);
+    }
+
+    @Override
+    public String getEmployeeFullName(Long employeeId) {
+        return employeeRepo.getEmployeeFullNameById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+    }
+
+    private Pageable mapSortEventToPageable(EmployeeFilters filter) {
         if (filter.getSortEvent() == null) {
             return PageRequest.of(filter.getPageNr(), AMOUNT);
         } else {
@@ -258,17 +264,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         UsersResource instance = getInstance();
         instance.create(user);
 
+        addRoles(username, workstation);
+        return new Credentials(username, password);
+    }
+
+    private void addRoles(String username, WorkstationEntity workstation) {
         UserResource userResource = keycloakService.getUser(username);
         List<RoleRepresentation> roles;
-        ClientRepresentation clientRepresentation = keycloakService.getClientRep();
-        if (Objects.equals(workstation.getName(), ADMIN)) {
-            roles = keycloakService.getRoles(new String[]{"admin"}, clientRepresentation.getId());
+        for (String clientId : keycloakService.getClients()) {
+            ClientRepresentation clientRepresentation = keycloakService.getClientRep(clientId);
+            if (Objects.equals(workstation.getName(), ADMIN)) {
+                roles = keycloakService.getRoles(new String[]{"admin"}, clientRepresentation.getId());
+            } else {
+                roles = keycloakService.getRoles(new String[]{"manager"}, clientRepresentation.getId());
+            }
+            userResource.roles().clientLevel(clientRepresentation.getId()).add(roles);
         }
-        else {
-            roles = keycloakService.getRoles(new String[]{"manager"}, clientRepresentation.getId());
-        }
-        log.log(Level.INFO, clientRepresentation.toString());
-        userResource.roles().clientLevel(clientRepresentation.getId()).add(roles);
-        return new Credentials(username, password);
     }
 }

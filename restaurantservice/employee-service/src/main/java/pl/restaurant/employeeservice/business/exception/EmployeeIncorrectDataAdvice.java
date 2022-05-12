@@ -80,7 +80,7 @@ public class EmployeeIncorrectDataAdvice {
     @ResponseBody
     @ExceptionHandler(EmployeeNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> columnNotFoundHandler(EmployeeNotFoundException ex) {
+    public Map<String, String> employeeNotFoundHandler(EmployeeNotFoundException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("employeeId", ex.getMessage());
         return errors;

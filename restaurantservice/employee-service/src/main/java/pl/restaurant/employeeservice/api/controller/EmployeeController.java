@@ -11,7 +11,6 @@ import pl.restaurant.employeeservice.api.response.ScheduleInfo;
 import pl.restaurant.employeeservice.business.service.EmployeeService;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -22,13 +21,23 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/list")
-    public EmployeeListView getEmployees(@RequestBody @Valid Filter filter) {
+    public EmployeeListView getEmployees(@RequestBody @Valid EmployeeFilters filter) {
         return employeeService.getEmployees(filter);
     }
 
     @GetMapping("/info/{id}")
     public EmployeeInfo getEmployeeInfo(@PathVariable("id") Long employeeId) {
         return employeeService.getEmployeeInfo(employeeId);
+    }
+
+    @GetMapping("/exist/{id}")
+    public boolean isAdminEmployeeExist(@PathVariable("id") Long employeeId) {
+        return employeeService.isAdminEmployeeExist(employeeId);
+    }
+
+    @GetMapping("/name/{id}")
+    public String getEmployeeFullName(@PathVariable("id") Long employeeId) {
+        return employeeService.getEmployeeFullName(employeeId);
     }
 
     @PostMapping("/schedule/new")
