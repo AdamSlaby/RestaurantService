@@ -3,6 +3,7 @@ import {faXmark, faNewspaper} from "@fortawesome/free-solid-svg-icons";
 import {NgbCalendar} from "@ng-bootstrap/ng-bootstrap";
 import {News} from "../../model/news/news";
 import {FormBuilder, NgForm, Validators} from "@angular/forms";
+import { NewsService } from 'src/app/service/news.service';
 
 @Component({
   selector: 'app-news-form',
@@ -14,23 +15,16 @@ export class NewsFormComponent implements OnInit {
   @Input() set newsId(value: any) {
     this._newsId = value;
     if (value !== -1) {
-      this.newsInfo = {
-        employeeName: 'Marek Bykowski',
-        info: {
-          newsId: 1,
-          imageUrl: 'assets/mexican_food.jpg',
-          title: 'Tydzień meksykański tylko u nas',
-          content:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse a maximus nisl, eu ultricies nibh. Nam id tortor porta, aliquam eros congue, pellentesque nisi. Pellentesque ullamcorper dolor nec neque luctus facilisis. Donec dignissim nibh non lorem iaculis interdum. Nullam interdum sit amet ante sed mollis. Vestibulum vel lobortis risus. Fusce consectetur turpis vitae vulputate vulputate. Phasellus consequat at tortor vitae lacinia. Duis efficitur libero eget ante porta, a finibus sem congue. Donec at augue mauris. Mauris et porttitor mi. In eu ultrices quam, in egestas nunc. Aliquam convallis quam sed nisl pretium tempor. Nam condimentum ornare justo, a tempus est pharetra nec. Phasellus tincidunt, ex in pharetra blandit, nunc est pulvinar massa, sit amet dictum nibh erat eleifend sapien. Phasellus tincidunt ullamcorper nisl, et sollicitudin magna consectetur eget.<br><br>' +
-            'Pellentesque erat mi, congue a ipsum consectetur, mattis molestie purus. Pellentesque non aliquam quam. Quisque at lorem id eros pretium porta sed id felis. Vestibulum sit amet lectus pellentesque, gravida nibh eu, malesuada risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut vel tellus ut sem ultrices imperdiet. Phasellus ornare, mi eu semper condimentum, ligula diam sollicitudin lorem, ac vestibulum erat est id magna. Maecenas feugiat tincidunt nisl, id mattis odio porttitor dapibus. Morbi rhoncus ultrices mauris, ac porta felis. Phasellus convallis nec eros quis egestas. Donec ultricies id magna vel lacinia. Nulla ac tempor dolor, sed hendrerit dolor. Nullam hendrerit turpis purus, sit amet pulvinar felis tempus et. Aliquam ut enim imperdiet, dignissim lacus a, euismod ante. Proin id mi ullamcorper, bibendum augue ac, dignissim dui. Integer varius libero maximus odio accumsan, et elementum justo faucibus.<br><br>' +
-            'Etiam vitae efficitur est. Praesent in nibh eget arcu porttitor dapibus. In hac habitasse platea dictumst. Praesent sed turpis massa. Nam rhoncus eget velit a ultrices. Nulla convallis, sem in condimentum vehicula, erat nisi viverra nulla, ac ullamcorper arcu tortor vehicula ante. Pellentesque sagittis iaculis sagittis.',
-          date: new Date(),
-        },
-      };
-      this.newsForm.patchValue({
-        title: this.newsInfo.info.title,
-        content: this.newsInfo.info.content,
-      });
+      this.newsService.getNews(this._newsId).subscribe(data => {
+        this.newsInfo = data;
+        this.newsInfo.info.date = new Date(this.newsInfo.info.date);
+        this.newsForm.patchValue({
+          title: this.newsInfo.info.title,
+          content: this.newsInfo.info.content,
+        });
+      }, error => {
+        console.error(error);
+      })
     } else {
       setTimeout(() => {
         this.form.resetForm();
@@ -45,15 +39,17 @@ export class NewsFormComponent implements OnInit {
   loading = false;
   minDate = this.calendar.getToday();
   newsInfo!: News;
+  isSuccessful: boolean = false;
   imageUrl: any;
   news: FormData = new FormData();
   newsForm = this.fb.group({
-    image: ['', [Validators.required]],
+    image: [null],
     title: ['', [Validators.required, Validators.maxLength(200)]],
     content: ['', [Validators.required, Validators.maxLength(2500)]],
   });
 
-  constructor(private calendar: NgbCalendar, private fb: FormBuilder) { }
+  constructor(private calendar: NgbCalendar, private fb: FormBuilder, 
+              private newsService: NewsService) { }
 
   ngOnInit(): void {
   }
@@ -63,11 +59,39 @@ export class NewsFormComponent implements OnInit {
   }
 
   onNewsFormSubmit() {
-    //todo
-    this.news.set('image', this.newsForm.get('image')?.value);
+    this.errors.clear();
+    let employeeId = '';
+    if (localStorage.getItem('employeeId'))
+      employeeId = localStorage.getItem('employeeId') as string;
+    this.news.set('employeeId', employeeId);
+    if (this.newsForm.get('image')?.value) 
+      this.news.set('image', this.newsForm.get('image')?.value);
     this.news.set('title', this.newsForm.get('title')?.value);
     this.news.set('content', this.newsForm.get('content')?.value);
-    console.log(this.news.get('title'));
+    this.loading = true;
+    if (this._newsId === -1) {
+      this.newsService.addNews(this.news).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.newsForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
+    } else {
+      this.newsService.patchNews(this.news, this._newsId).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.newsForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
+    }
   }
 
   closeComponent() {

@@ -1,5 +1,6 @@
 package pl.restaurant.newsservice.api.request;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

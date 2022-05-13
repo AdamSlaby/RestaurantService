@@ -12,7 +12,7 @@ import {RestaurantShortInfo} from "../model/restaurant/restaurant-short-info";
 })
 export class RestaurantService {
   private COMMON_URL = `${GeneralService.BASE_URL}/restaurant`;
-  private GET_RESTAURANT_INFO = `${this.COMMON_URL}/info`;
+  private GET_RESTAURANT_INFO = `${this.COMMON_URL}/info/`;
   private GET_TABLE = `${this.COMMON_URL}/table`;
   private GET_RESTAURANT = `${this.COMMON_URL}/details/`;
   private GET_ALL_RESTAURANTS = `${this.COMMON_URL}/`;

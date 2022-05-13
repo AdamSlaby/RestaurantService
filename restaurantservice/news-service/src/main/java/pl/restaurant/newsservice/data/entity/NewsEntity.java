@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,5 +31,5 @@ public class NewsEntity implements Serializable {
     private String imageUrl;
 
     @Column(nullable = false)
-    private LocalDateTime publishedDate;
+    private LocalDate publishedDate;
 }

@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="newsFeed" class="row">
   <div id="news-{{i}}" class="d-flex col-lg-6 offset-lg-3 my-5 mb-3 border-bottom pb-5"
        *ngFor="let news of newsFeed; index as i">
     <div class="col-4">
@@ -11,7 +11,7 @@
           {{news.title}}
         </a>
         <span class="d-block" style="color: gray; font-size: 12px">
-            {{news.date | date :'longDate':'UTC+1':'pl-PL'}}
+            {{news.date | date :'longDate':'+0200':'pl-PL'}}
           </span>
       </div>
       <div class="pt-4" style="text-align: justify;font-weight: 200">
@@ -25,6 +25,6 @@
     </div>
   </div>
 </div>
-<div class="row mb-5">
+<div *ngIf="!isNewsListEmpty" class="row mb-5">
   <button (click)="loadMore()" class="btn btn-grey w-auto mx-auto">Wczytaj więcej</button>
 </div>

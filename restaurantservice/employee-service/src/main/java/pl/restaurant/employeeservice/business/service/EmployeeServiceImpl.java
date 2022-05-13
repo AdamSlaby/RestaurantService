@@ -210,7 +210,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public boolean isAdminEmployeeExist(Long employeeId) {
-        return employeeRepo.existsByEmployeeIdAndWorkstationName(employeeId, ADMIN);
+        return employeeRepo.existsByEmployeeIdAndWorkstationNameAndActive(employeeId, ADMIN, true);
     }
 
     @Override

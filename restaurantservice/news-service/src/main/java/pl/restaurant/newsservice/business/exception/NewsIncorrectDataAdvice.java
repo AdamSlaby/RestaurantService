@@ -16,6 +16,15 @@ import java.util.Map;
 @ControllerAdvice
 public class NewsIncorrectDataAdvice {
     @ResponseBody
+    @ExceptionHandler(CannotSaveImageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> cannotSaveImageHandler(CannotSaveImageException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("image", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
     @ExceptionHandler(InvalidImageSizeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> invalidImageSizeHandler(InvalidImageSizeException ex) {

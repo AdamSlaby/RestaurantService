@@ -1,9 +1,9 @@
 <div class="row mt-5" id="newsContent">
   <div class="col-lg-6 offset-lg-3">
-    <img class="img-fluid d-flex mx-auto" src="{{news.imageUrl}}" alt="{{news.imageUrl}}">
+    <img *ngIf="news" class="img-fluid d-flex mx-auto" src="{{news.imageUrl}}" alt="{{news.imageUrl}}">
   </div>
 </div>
-<div class="row my-5">
+<div *ngIf="news" class="row my-5">
   <div class="col-lg-6 offset-lg-3 mb-2">
     <h1 class="mb-4">{{news.title}}</h1>
     <p [innerHTML]="news.content" style="font-weight: 200"></p>

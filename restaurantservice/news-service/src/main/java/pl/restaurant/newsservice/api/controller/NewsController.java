@@ -2,6 +2,7 @@ package pl.restaurant.newsservice.api.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.newsservice.api.request.NewsFilters;
 import pl.restaurant.newsservice.api.request.NewsRequest;
@@ -10,6 +11,7 @@ import pl.restaurant.newsservice.api.response.NewsInfo;
 import pl.restaurant.newsservice.api.response.NewsListView;
 import pl.restaurant.newsservice.business.service.NewsService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -31,8 +33,8 @@ public class NewsController {
     }
 
     @GetMapping("/details/{id}")
-    public News getNewsDetails(@RequestParam("id") Long newsId) {
-        return newsService.getNewsDetails(newsId);
+    public News getNewsDetails(@PathVariable("id") Long newsId, HttpServletRequest request) {
+        return newsService.getNewsDetails(newsId, request);
     }
 
     @PostMapping("/list")

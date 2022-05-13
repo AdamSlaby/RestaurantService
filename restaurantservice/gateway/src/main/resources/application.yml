@@ -28,6 +28,12 @@ spring:
             - Path=/employee/**
           filters:
             - RewritePath=/employee/(?<path>.*), /$\{path}
+        - id: NEWS-SERVICE
+          uri: lb://NEWS-SERVICE
+          predicates:
+            - Path=/news/**
+          filters:
+            - RewritePath=/news/(?<path>.*), /$\{path}
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -55,3 +61,5 @@ springdoc:
         url: /v3/api-docs/restaurant
       - name: employee
         url: /v3/api-docs/employee
+      - name: news
+        url: /v3/api-docs/news

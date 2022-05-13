@@ -29,7 +29,7 @@ public interface EmployeeRepo extends JpaRepository<EmployeeEntity, Long> {
     @Query("select e.restaurantId from EmployeeEntity e where e.employeeId = :id")
     Optional<Long> getEmployeeRestaurantId(@Param("id") Long employeeId);
 
-    boolean existsByEmployeeIdAndWorkstationName(Long employeeId, String workstationName);
+    boolean existsByEmployeeIdAndWorkstationNameAndActive(Long employeeId, String workstationName, boolean active);
 
     @Query("select concat(e.name, ' ', e.surname) from EmployeeEntity e where e.employeeId = :id")
     Optional<String> getEmployeeFullNameById(@Param("id") Long employeeId);

@@ -12,6 +12,6 @@ export class DateUtility {
   }
 
   public static mapNgbDateStructToDateString(date: NgbDateStruct): string {
-    return new Date(Date.UTC(date.year, date.month, date.day)).toUTCString();
+    return new Date(Date.UTC(date.year, date.month - 1, date.day)).toUTCString();
   }
 }

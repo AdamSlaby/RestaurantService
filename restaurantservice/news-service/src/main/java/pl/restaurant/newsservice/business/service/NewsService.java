@@ -6,12 +6,13 @@ import pl.restaurant.newsservice.api.response.News;
 import pl.restaurant.newsservice.api.response.NewsInfo;
 import pl.restaurant.newsservice.api.response.NewsListView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface NewsService {
     NewsInfo getNewsInfo(Long newsId);
     List<NewsInfo> getNews(Integer pageNr);
-    News getNewsDetails(Long newsId);
+    News getNewsDetails(Long newsId, HttpServletRequest request);
     NewsListView getNewsList(NewsFilters newsFilters);
     void createNews(NewsRequest news);
     void updateNews(Long newsId, NewsRequest news);

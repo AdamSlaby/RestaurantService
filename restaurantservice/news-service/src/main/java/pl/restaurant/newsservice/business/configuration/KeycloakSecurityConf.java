@@ -46,8 +46,14 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
-
+                .antMatchers("/image/**").permitAll()
+                .antMatchers("/info/{id}").permitAll()
+                .antMatchers("/list/info").permitAll()
+                .antMatchers("/details/{id}").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/list").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/{id}").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/{id}").hasAnyRole(Role.ADMIN.toString())
                 .anyRequest().permitAll();
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);

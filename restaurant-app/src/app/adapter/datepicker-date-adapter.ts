@@ -11,7 +11,7 @@ export class NgbDateToDateAdapter extends NgbDateAdapter<Date> {
     }
     return {
       year: value.getFullYear(),
-      month: value.getMonth(),
+      month: value.getMonth() + 1,
       day: value.getDate(),
     } as NgbDateStruct;
   }
