@@ -1,4 +1,4 @@
-import {Unit} from "../unit";
+import {Unit} from "../meal/unit";
 import {TaxType} from "./tax-type";
 
 export interface Good {

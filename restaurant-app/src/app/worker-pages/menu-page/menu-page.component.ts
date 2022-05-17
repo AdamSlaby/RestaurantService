@@ -5,13 +5,14 @@ import {MealListView} from "../../model/meal/meal-list-view";
 import {SortEvent} from "../../model/sort-event";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {MenuView} from "../../model/menu-view";
-import {Season} from "../../model/season";
 import {MealShortView} from "../../model/meal/meal-short-view";
 import {FormBuilder, Validators} from "@angular/forms";
 import {MealInfo} from "../../model/meal/meal-info";
-import {Ingredient} from "../../model/meal/ingredient";
+import {IngredientView} from "../../model/meal/ingredient-view";
 import {IngredientInfo} from "../../model/meal/ingredient-info";
-import {Unit} from "../../model/unit";
+import {Unit} from "../../model/meal/unit";
+import { Season } from 'src/app/model/season';
+import { Ingredient } from 'src/app/model/meal/ingredient';
 
 @Component({
   selector: 'app-menu-page',
@@ -31,15 +32,15 @@ export class MenuPageComponent implements OnInit {
   pageNr!: number;
   chosenType: any = null;
   selectedMealId!: number;
-  dishName!: string;
+  dish!: string;
   typeName!: string;
   errors: Map<string, string> = new Map<string, string>();
   imageUrl: any;
   meal!: MealInfo;
-  newIngredients: Ingredient[] = [];
-  measures = Object.values(Unit);
+  newIngredients: IngredientView[] = [];
   chosenMealId!: number;
   fd: FormData = new FormData();
+  units!: Unit[];
   ingredients: IngredientInfo[] = [
     {
       id: 1,
@@ -73,7 +74,6 @@ export class MenuPageComponent implements OnInit {
     },
   ];
   mealList: MealListView = {
-    maxPage: 10,
     totalElements: 110,
     meals: [
       {
@@ -87,22 +87,22 @@ export class MenuPageComponent implements OnInit {
   menus: MenuView[] = [
     {
       id: 1,
-      season: Season.WINTER,
+      season: "Zima",
       mealMap: new Map<string, MealShortView[]>(),
     },
     {
       id: 2,
-      season: Season.SPRING,
+      season: "Wiosna",
       mealMap: new Map<string, MealShortView[]>(),
     },
     {
       id: 3,
-      season: Season.SUMMER,
+      season: "Lato",
       mealMap: new Map<string, MealShortView[]>(),
     },
     {
       id: 4,
-      season: Season.AUTUMN,
+      season: "Jesień",
       mealMap: new Map<string, MealShortView[]>(),
     },
   ];
@@ -188,31 +188,13 @@ export class MenuPageComponent implements OnInit {
       typeId: 1,
       imageUrl: 'assets/soup.jpg',
       ingredients: [
-        {
-          id: 1,
-          name: 'Mięso',
-          amount: 1,
-          measure: 'kg',
-        },
-        {
-          id: 2,
-          name: 'marchewka',
-          amount: 280,
-          measure: 'g',
-        },
-        {
-          id: 3,
-          name: 'Pietruszka',
-          amount: 90,
-          measure: 'g',
-        },
       ]
     };
     this.mealForm.patchValue({
       type: this.meal.typeId,
       name: this.meal.name,
       price: this.meal.price,
-      ingredients: this.meal.ingredients as Ingredient[],
+      ingredients: this.meal.ingredients as IngredientView[],
     });
     this.open(modal);
   }
@@ -231,11 +213,11 @@ export class MenuPageComponent implements OnInit {
     this.open(removeMealForm);
   }
 
-  getMenuBySeason(season: Season) {
+  getMenuBySeason(season: string) {
     return this.menus.filter(el => el.season === season)[0];
   }
 
-  removeDishFromMenu(season: Season, type: string, id: number) {
+  removeDishFromMenu(season: string, type: string, id: number) {
     let mealArray = this.menus.filter(el => el.season === season)[0]
       .mealMap.get(type);
     console.log(mealArray);
@@ -245,20 +227,20 @@ export class MenuPageComponent implements OnInit {
     }
   }
 
-  addMealToMenu(season: Season, type: string) {
+  addMealToMenu(season: string, type: string) {
     //todo
     let menu = this.menus.filter(el => el.season === season)[0];
     let mealArray = menu.mealMap.get(type);
     if (mealArray) {
       mealArray.push({
         id: 5,
-        name: this.dishName,
+        name: this.dish,
       });
     } else {
       let newArray = []
       newArray.push({
         id: 5,
-        name: this.dishName,
+        name: this.dish,
       });
       menu.mealMap.set(type, newArray);
     }
@@ -293,9 +275,8 @@ export class MenuPageComponent implements OnInit {
 
   onMealFormSubmit(modal: any) {
     //todo
-    //todo
     this.errors.clear();
-    let resultArr;
+    let resultArr: IngredientView[];
     this.fd.set('name', this.mealForm.get('name')?.value);
     this.fd.set('typeId', this.mealForm.get('type')?.value);
     this.fd.set('price', this.mealForm.get('price')?.value);
@@ -310,6 +291,15 @@ export class MenuPageComponent implements OnInit {
       resultArr = value.concat(this.newIngredients);
     } else
       resultArr = this.newIngredients;
+    let ingredients = resultArr.map(el => {
+      return {
+        id: el.id,
+        name: el.name,
+        amount: el.amount,
+        unitId: el.unit.id
+      } as Ingredient 
+    });
+    this.fd.set('ingredients', JSON.stringify(ingredients));
     modal.close();
   }
 
@@ -335,16 +325,16 @@ export class MenuPageComponent implements OnInit {
       id: -1,
       name: '',
       amount: -1,
-      measure: '',
-    });
+      unit: this.units[0],
+    } as IngredientView);
   }
 
-  removeIngredient(ingredient: Ingredient) {
+  removeIngredient(ingredient: IngredientView) {
     let index = this.newIngredients.findIndex(el => el === ingredient);
     this.newIngredients.splice(index, 1);
   }
 
-  removeExistingIngredient(ingredient: Ingredient) {
+  removeExistingIngredient(ingredient: IngredientView) {
     let ingredients = this.meal.ingredients;
     let index = ingredients.findIndex(el => el === ingredient);
     ingredients.splice(index, 1);

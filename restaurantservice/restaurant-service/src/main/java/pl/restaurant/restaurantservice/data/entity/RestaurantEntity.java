@@ -23,7 +23,7 @@ public class RestaurantEntity implements Serializable {
     @Column(length = 31, nullable = false)
     private String email;
 
-    @Column(length = 14, nullable = false)
+    @Column(length = 16, nullable = false)
     private String phoneNr;
 
     @Column(precision = 4, scale = 2, nullable = false)
@@ -39,9 +39,6 @@ public class RestaurantEntity implements Serializable {
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<OpeningHourEntity> openingHourEntities = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "Restaurant_Tables",
-            joinColumns = {@JoinColumn(name = "restaurant_id")},
-            inverseJoinColumns = {@JoinColumn(name = "table_id")})
-    private Set<FoodTableEntity> tables = new HashSet<>();
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<RestaurantTableEntity> restaurantTables = new HashSet<>();
 }

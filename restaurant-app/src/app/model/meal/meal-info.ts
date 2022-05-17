@@ -1,4 +1,4 @@
-import {Ingredient} from "./ingredient";
+import {IngredientView} from "./ingredient-view";
 
 export interface MealInfo {
   id: number;
@@ -6,5 +6,5 @@ export interface MealInfo {
   typeId: number;
   price: number;
   imageUrl: string;
-  ingredients: Ingredient[];
+  ingredients: IngredientView[];
 }

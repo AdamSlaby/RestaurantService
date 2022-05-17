@@ -5,7 +5,7 @@ import {CountryCode, parsePhoneNumber} from 'libphonenumber-js';
   name: 'phone'
 })
 export class PhonePipe implements PipeTransform {
-  transform(phoneNr: number | string, country: string): unknown {
+  transform(phoneNr: string, country: string): unknown {
     try {
       const phoneNumber = parsePhoneNumber(phoneNr + '', country as CountryCode);
       return phoneNumber.formatNational();

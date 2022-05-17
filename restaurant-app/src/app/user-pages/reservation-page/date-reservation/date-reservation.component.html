@@ -35,12 +35,12 @@
                           (dateSelect)="onDateSelect($event)"
                           class="d-inline-block w-auto" #d></ngb-datepicker>
         </div>
-        <div *ngIf="(selectedGuestsNumber || selectedGroupGuests) && selectedDate"
+        <div *ngIf="(selectedGuestsNumber || selectedGroupGuests) && selectedDate && availableHours"
              style="font-size: 20px" class="pb-2 col-xl-6 d-inline-block">
           <span class="mb-2 d-flex"><fa-icon class="me-2" [icon]="faClock"></fa-icon> Wybierz czas</span>
           <a *ngFor="let hour of availableHours" (click)="hourClick(hour)"
              class="btn btn-outline-grey me-2 mb-2">
-            {{hour.getTime() | date: 'HH:mm':'UTC+1':'pl-PL'}}
+            {{hour.hour | date: 'HH:mm':'+0200':'pl-PL'}}
           </a>
         </div>
       </div>

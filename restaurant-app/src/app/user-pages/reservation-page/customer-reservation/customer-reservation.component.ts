@@ -5,6 +5,7 @@ import {faUserGroup, faCalendar, faClock} from "@fortawesome/free-solid-svg-icon
 import {RegexPattern} from "../../../model/regex-pattern";
 import {Reservation} from "../../../model/reservation/reservation";
 import {DateUtility} from "../../../utility/date-utility";
+import { ReservationService } from 'src/app/service/reservation.service';
 
 @Component({
   selector: 'app-customer-reservation',
@@ -16,6 +17,7 @@ export class CustomerReservationComponent implements OnInit, AfterViewInit {
   faUserGroup = faUserGroup;
   faCalendar = faCalendar;
   faClock = faClock;
+  isSuccessful: boolean = false;
   errors: Map<string, string> = new Map<string, string>();
   customerForm = this.fb.group({
     firstName: ['', [Validators.required, Validators.pattern(RegexPattern.NAME)]],
@@ -24,9 +26,11 @@ export class CustomerReservationComponent implements OnInit, AfterViewInit {
     phoneNumber: ['', [Validators.required, Validators.pattern(RegexPattern.PHONE)]],
   });
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) { }
+  constructor(private route: ActivatedRoute, private fb: FormBuilder,
+              private reservationService: ReservationService) { }
 
   ngOnInit(): void {
+    console.log(this.getTables());
   }
 
   ngAfterViewInit() {
@@ -51,17 +55,35 @@ export class CustomerReservationComponent implements OnInit, AfterViewInit {
     return date ? date : new Date().toUTCString();
   }
 
+  getTables(): number[] {
+    let tables = sessionStorage.getItem('tables');
+    if (tables)
+      return JSON.parse(tables);
+    return [];
+  }
+
   onSubmit() {
-    //todo
+    this.errors.clear();
     let reservation: Reservation = {
-      restaurantId: localStorage.getItem('restaurantId'),
+      restaurantId: sessionStorage.getItem('restaurantId'),
       name: this.customerForm.get('firstName')?.value,
       surname: this.customerForm.get('surname')?.value,
       email: this.customerForm.get('email')?.value,
-      phoneNr: this.customerForm.get('phoneNumber')?.value,
+      phoneNr: this.customerForm.get('phoneNumber')?.value.replaceAll(' ', ''),
       fromHour: new Date(this.getDate()),
       peopleNr: Number.parseInt(this.getPeopleNr()),
+      tableIds: this.getTables()
     }
-    console.log(reservation);
+    this.loading = true;
+    this.reservationService.addReservation(reservation).subscribe(data => {
+      this.loading = false;
+      this.isSuccessful = true;
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+      this.customerForm.markAsPristine();
+      this.loading = false;
+      this.isSuccessful = false;
+      console.error(error);
+    });
   }
 }

@@ -1,13 +1,16 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {NgbCalendar, NgbDate} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDate, NgbDateAdapter, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {faUserGroup, faCalendar, faClock} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DateUtility} from "../../../utility/date-utility";
+import { AvailableHour } from 'src/app/model/reservation/available-hours';
+import { ReservationService } from 'src/app/service/reservation.service';
+import { NgbDateToDateAdapter } from 'src/app/adapter/datepicker-date-adapter';
 
 @Component({
   selector: 'app-date-reservation',
   templateUrl: './date-reservation.component.html',
-  styleUrls: ['./date-reservation.component.scss']
+  styleUrls: ['./date-reservation.component.scss'],
 })
 export class DateReservationComponent implements OnInit, AfterViewInit {
   faUserGroup = faUserGroup;
@@ -20,10 +23,9 @@ export class DateReservationComponent implements OnInit, AfterViewInit {
   selectedGroupGuests!: any;
   guestsNumberArray = Array.from({length: 8}, (_, i) => i + 1);
   guestsGroupNumberArray = Array.from({length: 20}, (_, i) => i + 10);
-  availableHours: Date[] = [
-      new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()
-  ]
-  constructor(private calendar: NgbCalendar, private router: Router,
+  availableHours!: AvailableHour[];
+  constructor(private calendar: NgbCalendar, private router: Router, 
+              private reservationService: ReservationService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -60,9 +62,15 @@ export class DateReservationComponent implements OnInit, AfterViewInit {
     this.selectedGuestsNumber = undefined;
   }
 
-  onDateSelect($event: NgbDate) {
-    this.selectedDate = new Date($event.year, $event.month - 1, $event.day);
-    console.log(this.selectedDate);
+  onDateSelect($event: NgbDateStruct) {
+    this.selectedDate = new Date($event.year, $event.month - 1, $event.day, 14, 0);
+    this.reservationService.getAvailableHours(this.selectedDate, this.getPeopleNr(), sessionStorage.getItem('restaurantId'))
+      .subscribe(data => {
+        this.availableHours = data;
+        this.availableHours.forEach(el => el.hour = new Date(el.hour));
+      }, error => {
+        console.error(error);
+      });
   }
 
   getPeopleNr() {
@@ -72,10 +80,11 @@ export class DateReservationComponent implements OnInit, AfterViewInit {
       return this.selectedGroupGuests;
   }
 
-  hourClick(hour: Date) {
-    this.selectedDate.setHours(hour.getHours(), hour.getMinutes());
+  hourClick(hour: AvailableHour) {
+    this.selectedDate.setHours(hour.hour.getHours(), hour.hour.getMinutes());
     sessionStorage.setItem('peopleNr', this.getPeopleNr());
     sessionStorage.setItem('date', new Date(DateUtility.getUtcDAte(this.selectedDate)).toISOString());
+    sessionStorage.setItem('tables', JSON.stringify(hour.tables));
     this.router.navigate( ['/reservation/customer'], {fragment: 'customerForm'});
   }
 }

@@ -5,7 +5,7 @@ import {RegexPattern} from "../../../model/regex-pattern";
 import {Invoice} from "../../../model/invoice/invoice";
 import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateToDateAdapter} from "../../../adapter/datepicker-date-adapter";
-import {Unit} from "../../../model/unit";
+import {Unit} from "../../../model/meal/unit";
 import {TaxType} from "../../../model/invoice/tax-type";
 import {Good} from "../../../model/invoice/good";
 
@@ -62,7 +62,10 @@ export class InvoiceFormComponent implements OnInit {
             ingredientId: 1,
             ingredient: 'Pomidor',
             quantity: 10,
-            unit: Unit.KG,
+            unit: {
+              id: 1,
+              name: 'kg'
+            },
             discount: 0.00,
             unitNetPrice: 5.00,
             netPrice: 50.00,
@@ -74,7 +77,10 @@ export class InvoiceFormComponent implements OnInit {
             ingredientId: 2,
             ingredient: 'Ogórek',
             quantity: 5,
-            unit: Unit.KG,
+            unit: {
+              id: 1,
+              name: 'kg'
+            },
             discount: 1.00,
             unitNetPrice: 6.00,
             netPrice: 30.00,
@@ -112,7 +118,7 @@ export class InvoiceFormComponent implements OnInit {
   faPlus = faPlus;
   _invoiceNr!: string;
   invoiceInfo!: Invoice;
-  units = Object.values(Unit);
+  units!: Unit[];
   taxTypes = Object.values(TaxType);
   errors: Map<string, string> = new Map<string, string>();
   invoiceForm = this.fb.group({

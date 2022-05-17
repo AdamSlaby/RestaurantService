@@ -9,6 +9,8 @@ export class NgbDateToDateAdapter extends NgbDateAdapter<Date> {
     if (!value) {
       return null;
     }
+    if (!(value instanceof Date)) 
+      return value;
     return {
       year: value.getFullYear(),
       month: value.getMonth() + 1,

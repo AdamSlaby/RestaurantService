@@ -1,6 +1,6 @@
 export interface ReservationInfo {
   id: number;
-  tableId: number;
+  tableIds: number[];
   name: string;
   surname: string;
   email: string;

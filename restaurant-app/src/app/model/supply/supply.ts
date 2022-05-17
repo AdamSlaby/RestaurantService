@@ -1,4 +1,4 @@
-import {Unit} from "../unit";
+import {Unit} from "../meal/unit";
 
 export interface Supply {
   restaurantId: any;

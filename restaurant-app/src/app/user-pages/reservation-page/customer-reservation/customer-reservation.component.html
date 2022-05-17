@@ -91,6 +91,13 @@
           </button>
         </div>
       </div>
+
+      <div *ngIf="isSuccessful" class="d-block alert-success">
+        <div class="d-grid text-center mt-2" style="font-size: 1.5rem;">
+          Termin został zarezerwowany. Potwierdzenie znajduje się na podanej skrzynce pocztowej.
+        </div>
+      </div>
+
       <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
         Formularz zawiera błędy
       </div>

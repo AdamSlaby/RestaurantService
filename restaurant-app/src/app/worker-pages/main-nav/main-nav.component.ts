@@ -63,7 +63,7 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     this.isNavCollapsed = true;
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
-    this.restaurantId = localStorage.getItem('restaurantId');
+    this.restaurantId = localStorage.getItem('restaurantId') === 'null' ? null : localStorage.getItem('restaurantId');
     this.restaurantService.getAllRestaurants().subscribe(data => {
       this.restaurants = data;
     }, error => {

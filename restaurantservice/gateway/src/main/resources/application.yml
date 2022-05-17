@@ -34,6 +34,18 @@ spring:
             - Path=/news/**
           filters:
             - RewritePath=/news/(?<path>.*), /$\{path}
+        - id: MAIL-SERVICE
+          uri: lb://MAIL-SERVICE
+          predicates:
+            - Path=/mail/**
+          filters:
+            - RewritePath=/mail/(?<path>.*), /$\{path}
+        - id: MENU-SERVICE
+          uri: lb://MENU-SERVICE
+          predicates:
+            - Path=/menu/**
+          filters:
+            - RewritePath=/menu/(?<path>.*), /$\{path}
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -63,3 +75,5 @@ springdoc:
         url: /v3/api-docs/employee
       - name: news
         url: /v3/api-docs/news
+      - name: menu
+        url: /v3/api-docs/menu

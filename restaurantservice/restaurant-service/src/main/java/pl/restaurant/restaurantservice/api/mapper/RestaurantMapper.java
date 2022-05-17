@@ -38,7 +38,7 @@ public class RestaurantMapper {
                 .minimalDeliveryPrice(restaurantEntity.getMinimalDeliveryPrice())
                 .address(AddressMapper.mapDataToObject(restaurantEntity.getAddress()))
                 .openingHours(hours)
-                .tables(TableMapper.mapDataToObject(restaurantEntity.getTables()))
+                .tables(TableMapper.mapDataToObject(restaurantEntity.getRestaurantTables()))
                 .build();
     }
 

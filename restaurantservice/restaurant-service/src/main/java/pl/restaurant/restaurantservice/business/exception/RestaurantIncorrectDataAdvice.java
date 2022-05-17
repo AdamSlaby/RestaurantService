@@ -16,6 +16,32 @@ import java.util.Map;
 
 @ControllerAdvice
 public class RestaurantIncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(CannotDeleteReservationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> cannotDeleteReservationHandler(CannotDeleteReservationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("reservationId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ReservationAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> reservationAlreadyExistsHandler(ReservationAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("email", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ReservationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> reservationNotFoundHandler(ReservationNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("reservationId", ex.getMessage());
+        return errors;
+    }
 
     @ResponseBody
     @ExceptionHandler(RestaurantNotFoundException.class)

@@ -6,6 +6,7 @@ import {MailInfo} from "../../model/mail-info";
 import {RestaurantInfo} from "../../model/restaurant/restaurant-info";
 import {RegexPattern} from "../../model/regex-pattern";
 import {RestaurantService} from "../../service/restaurant.service";
+import { MailService } from 'src/app/service/mail.service';
 
 @Component({
   selector: 'app-contact',
@@ -19,6 +20,7 @@ export class ContactComponent implements OnInit {
   faLocationDot = faLocationDot;
   faCity = faCity;
   loading = false;
+  isSuccessful: boolean = false;
   errors: Map<string, string> = new Map<string, string>();
   restaurantInfo!: RestaurantInfo;
 
@@ -29,7 +31,8 @@ export class ContactComponent implements OnInit {
     subject: ['', [Validators.required, Validators.maxLength(100)]],
     content: ['', [Validators.required, Validators.maxLength(1000)]],
   });
-  constructor(private fb: FormBuilder, private restaurantService: RestaurantService) { }
+  constructor(private fb: FormBuilder, private restaurantService: RestaurantService,
+              private mailService: MailService) { }
 
   ngOnInit(): void {
     let restaurantId = sessionStorage.getItem('restaurantId');
@@ -58,6 +61,16 @@ export class ContactComponent implements OnInit {
       subject: this.contactForm.get('subject')?.value,
       content: this.contactForm.get('content')?.value,
     }
-    console.log(mailInfo);
+    this.loading = true;
+    this.mailService.sendMail(mailInfo).subscribe(data => {
+      this.loading = false;
+      this.isSuccessful = true;
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+      this.contactForm.markAsPristine();
+      this.loading = false;
+      this.isSuccessful = false;
+      console.error(error);
+    });
   }
 }

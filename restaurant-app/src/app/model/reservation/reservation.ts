@@ -6,4 +6,5 @@ export interface Reservation {
   email: string;
   fromHour: Date;
   peopleNr: number;
+  tableIds: number[];
 }

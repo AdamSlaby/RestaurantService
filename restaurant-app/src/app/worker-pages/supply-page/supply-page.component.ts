@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {faSearch, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {SupplyInfo} from "../../model/supply/supply-info";
-import {Unit} from "../../model/unit";
+import {Unit} from "../../model/meal/unit";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {FormBuilder, Validators} from "@angular/forms";
 import {Supply} from "../../model/supply/supply";
@@ -18,7 +18,7 @@ export class SupplyPageComponent implements OnInit {
   supplies!: SupplyInfo[];
   suppliesCopy!: SupplyInfo[];
   errors: Map<string, string> = new Map<string, string>();
-  units = Object.values(Unit);
+  units!: Unit[];
   ingredientForm = this.fb.group({
     ingredientName: ['', [Validators.required]],
     quantity: [null, [Validators.required, Validators.min(0)]],
@@ -34,14 +34,20 @@ export class SupplyPageComponent implements OnInit {
         ingredientId: 1,
         ingredientName: 'Pomidor',
         quantity: 10,
-        unit: Unit.KG,
+        unit: {
+          id: 1,
+          name: 'kg'
+        },
       },
       {
         restaurantId: 1,
         ingredientId: 2,
         ingredientName: 'Ogórek',
         quantity: 10,
-        unit: Unit.KG,
+        unit: {
+          id: 1,
+          name: 'kg'
+        },
       },
     ];
     for (let i = 1; i <= 199; i++) {

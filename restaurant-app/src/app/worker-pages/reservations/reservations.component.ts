@@ -5,6 +5,7 @@ import {ReservationShortInfo} from "../../model/reservation/reservation-short-in
 import {faXmark, faEye, faPenToSquare, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder} from "@angular/forms";
 import {ReservationInfo} from "../../model/reservation/reservation-info";
+import { ReservationService } from 'src/app/service/reservation.service';
 
 @Component({
   selector: 'app-reservations',
@@ -24,28 +25,14 @@ export class ReservationsComponent implements OnInit {
   selectedReservationId!: any;
   reservation!: ReservationInfo;
   reservationsCopy!: ReservationShortInfo[];
-  reservations: ReservationShortInfo[] = [
-    {
-      id: 1,
-      tableId: 1,
-      fromHour: new Date(),
-      toHour: new Date(),
-    },
-    {
-      id: 2,
-      tableId: 2,
-      fromHour: new Date(),
-      toHour: new Date(),
-    },
-  ];
+  reservations!: ReservationShortInfo[];
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder) { }
+  constructor(private modalService: NgbModal, private fb: FormBuilder,
+              private reservationService: ReservationService) { }
 
   ngOnInit(): void {
     this.selectedDate = new Date();
-    for (let i = 1; i <= 9; i++)
-      this.reservations.push(Object.assign({}, this.reservations[0]));
-    this.reservationsCopy = [...this.reservations];
+    this.getReservationsFromDate();
   }
 
   open(content: any) {
@@ -53,21 +40,28 @@ export class ReservationsComponent implements OnInit {
   }
 
   getReservationsFromDate() {
-    //todo
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.reservationService.getReservations(this.selectedDate, restaurantId).subscribe(data => {
+      this.reservations = data;
+      this.reservations.forEach(el => {
+        el.fromHour = new Date(el.fromHour);
+        el.toHour = new Date(el.toHour);
+      });
+      this.reservationsCopy = [...this.reservations];
+    }, error => {
+      console.error(error);
+    });
   }
 
   viewReservation(id: number, reservationView: any) {
-    this.reservation = {
-      id: 1,
-      tableId: 1,
-      fromHour: new Date(),
-      toHour: new Date(),
-      name: 'Marek',
-      surname: 'Marciniak',
-      email: 'adsa3333@interia.pl',
-      phoneNr: '+48602602602',
-    }
-    this.open(reservationView);
+    this.reservationService.getReservationInfo(id).subscribe(data => {
+      this.reservation = data;
+      this.reservation.fromHour = new Date(this.reservation.fromHour);
+      this.reservation.toHour = new Date(this.reservation.toHour);
+      this.open(reservationView);
+    }, error => {
+      console.error(error);
+    });
   }
 
   openRemoveReservationModal(id: number, i: number, modal: any) {
@@ -77,18 +71,21 @@ export class ReservationsComponent implements OnInit {
   }
 
   removeReservation(modal: any) {
-    //todo
-    this.reservations.splice(this.reservationIndex, 1);
-    this.reservationsCopy.splice(this.reservationIndex, 1);
-    modal.close();
-    this.selectedReservationId = null;
+    this.reservationService.deleteReservation(this.selectedReservationId).subscribe(data => {
+      this.reservations.splice(this.reservationIndex, 1);
+      this.reservationsCopy.splice(this.reservationIndex, 1);
+      this.selectedReservationId = null;
+      modal.close();
+    }, error => {
+      console.error(error);
+    });
   }
 
   filterByTableId() {
     this.selectedReservationId = null;
     this.reservationsCopy = [...this.reservations];
     if (this.selectedTableId) {
-      this.reservationsCopy = this.reservationsCopy.filter(el => el.tableId === this.selectedTableId);
+      this.reservationsCopy = this.reservationsCopy.filter(el => el.tableIds.includes(this.selectedTableId));
     }
   }
 

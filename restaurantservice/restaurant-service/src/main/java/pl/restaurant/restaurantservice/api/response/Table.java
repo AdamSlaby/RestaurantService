@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class Table {

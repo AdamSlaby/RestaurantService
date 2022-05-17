@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.springframework.stereotype.Service;
-import pl.restaurant.restaurantservice.api.mapper.AddressMapper;
-import pl.restaurant.restaurantservice.api.mapper.OpeningHourMapper;
-import pl.restaurant.restaurantservice.api.mapper.RestaurantMapper;
-import pl.restaurant.restaurantservice.api.mapper.TableMapper;
+import pl.restaurant.restaurantservice.api.mapper.*;
 import pl.restaurant.restaurantservice.api.request.OpeningHour;
 import pl.restaurant.restaurantservice.api.request.Restaurant;
 import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
@@ -15,14 +12,8 @@ import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
 import pl.restaurant.restaurantservice.api.response.Table;
 import pl.restaurant.restaurantservice.business.exception.RestaurantNotFoundException;
 import pl.restaurant.restaurantservice.business.exception.TableNotFoundException;
-import pl.restaurant.restaurantservice.data.entity.AddressEntity;
-import pl.restaurant.restaurantservice.data.entity.FoodTableEntity;
-import pl.restaurant.restaurantservice.data.entity.OpeningHourEntity;
-import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
-import pl.restaurant.restaurantservice.data.repository.AddressRepo;
-import pl.restaurant.restaurantservice.data.repository.OpeningHourRepo;
-import pl.restaurant.restaurantservice.data.repository.RestaurantRepo;
-import pl.restaurant.restaurantservice.data.repository.TableRepo;
+import pl.restaurant.restaurantservice.data.entity.*;
+import pl.restaurant.restaurantservice.data.repository.*;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -38,6 +29,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private AddressRepo addressRepo;
     private OpeningHourRepo openingHourRepo;
     private TableRepo tableRepo;
+    private RestaurantTableEntityRepo restaurantTableRepo;
     private TableService tableService;
     @Override
     @Transactional
@@ -61,16 +53,19 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<FoodTableEntity> tables = tableRepo.getAllBySeatsNr(seatsNr);
         if (optionalRestaurant.isPresent()) {
             RestaurantEntity restaurant = optionalRestaurant.get();
-            Set<FoodTableEntity> restTables = restaurant.getTables();
+            List<FoodTableEntity> restTables = restaurant.getRestaurantTables()
+                    .stream()
+                    .map(RestaurantTableEntity::getTable)
+                    .collect(Collectors.toList());
             for (FoodTableEntity table:tables) {
                 assertNotNull(restTables);
                 if (!restTables.contains(table)) {
-                    restTables.add(table);
+                    restaurantTableRepo.save(RestaurantTableMapper.mapToData(restaurant, table));
                     return TableMapper.mapDataToObject(table);
                 }
             }
             FoodTableEntity table = tableService.createTable(seatsNr);
-            restTables.add(table);
+            restaurantTableRepo.save(RestaurantTableMapper.mapToData(restaurant, table));
             return TableMapper.mapDataToObject(table);
         } else {
             FoodTableEntity table = tableService.createTable(seatsNr);
@@ -106,12 +101,10 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .save(RestaurantMapper
                         .mapObjectToData(restaurant, addressEntity));
         openingHourRepo.saveAll(OpeningHourMapper.mapObjectToData(restaurant.getOpeningHours(), restaurantEntity));
-        Set<FoodTableEntity> tableSet = new HashSet<>();
         for (Table el:restaurant.getTables()) {
             FoodTableEntity table = tableRepo.findById(el.getId()).orElseThrow(TableNotFoundException::new);
-            tableSet.add(table);
+            restaurantTableRepo.save(RestaurantTableMapper.mapToData(restaurantEntity, table));
         }
-        restaurantEntity.setTables(tableSet);
     }
 
     @Override
@@ -146,17 +139,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional
     public void removeTableFromRestaurant(long tableId, long restaurantId) {
-        RestaurantEntity restaurant = restaurantRepo
-                .findById(restaurantId)
-                .orElseThrow(RestaurantNotFoundException::new);
-        Set<FoodTableEntity> tables = restaurant.getTables();
-        if (tables != null) {
-            for (FoodTableEntity el:tables) {
-                if (Objects.equals(el.getTableId(), tableId)) {
-                    tables.remove(el);
-                    return;
-                }
-            }
-        }
+        restaurantTableRepo.deleteById(new RestaurantTableId(restaurantId, tableId));
     }
 }

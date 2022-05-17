@@ -23,6 +23,7 @@ public class Restaurant {
 
     @NotBlank(message = "Email restauracji jest wymagany")
     @Email(message = "Podany email jest nieprawidłowy")
+    @Size(max = 30, message = "Podany email jest za długi")
     private String email;
 
     @NotBlank(message = "Numer telefonu restauracji jest wymagany")

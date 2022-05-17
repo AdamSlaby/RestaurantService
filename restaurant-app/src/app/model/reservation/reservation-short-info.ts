@@ -1,6 +1,6 @@
 export interface ReservationShortInfo {
   id: number;
-  tableId: number;
+  tableIds: number[];
   fromHour: Date;
   toHour: Date;
 }
