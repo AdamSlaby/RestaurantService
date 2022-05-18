@@ -2,13 +2,11 @@
   <div class="col-xl-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center mb-4">Filtrowanie</h4>
-      <div class="input-group mb-3">
+      <div class="form-group mb-3">
         <input type="text" class="form-control" [(ngModel)]="chosenMeal" placeholder="Nazwa dania bądź napoju"/>
-        <button class="btn btn-outline-grey" type="button" (click)="getMealByName()">Szukaj</button>
       </div>
       <div class="mb-3">
-        <select class="form-select" (ngModelChange)="getMealByType()"
-                [(ngModel)]="chosenType" aria-label="MealInfo type select">
+        <select class="form-select"[(ngModel)]="chosenType" aria-label="MealInfo type select">
           <option disabled hidden [selected]="chosenType === null" [ngValue]="null">
             Wybierz typ
           </option>
@@ -17,6 +15,7 @@
         </select>
       </div>
       <div class="d-flex justify-content-center align-items-center">
+        <button class="btn btn-outline-grey mb-2" type="button" (click)="filterMeals()">Szukaj</button>
         <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
       </div>
     </div>

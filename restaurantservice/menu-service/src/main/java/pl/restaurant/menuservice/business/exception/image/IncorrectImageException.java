@@ -1,4 +1,4 @@
-package pl.restaurant.menuservice.business.exception;
+package pl.restaurant.menuservice.business.exception.image;
 
 public class IncorrectImageException extends RuntimeException {
     public IncorrectImageException() {

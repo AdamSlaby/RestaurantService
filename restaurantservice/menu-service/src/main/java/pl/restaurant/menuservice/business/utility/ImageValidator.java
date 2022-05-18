@@ -2,9 +2,9 @@ package pl.restaurant.menuservice.business.utility;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.web.multipart.MultipartFile;
-import pl.restaurant.menuservice.business.exception.IncorrectImageException;
-import pl.restaurant.menuservice.business.exception.IncorrectImageExtensionException;
-import pl.restaurant.menuservice.business.exception.InvalidImageSizeException;
+import pl.restaurant.menuservice.business.exception.image.IncorrectImageException;
+import pl.restaurant.menuservice.business.exception.image.IncorrectImageExtensionException;
+import pl.restaurant.menuservice.business.exception.image.InvalidImageSizeException;
 
 @UtilityClass
 public class ImageValidator {

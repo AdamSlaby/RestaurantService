@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import pl.restaurant.menuservice.business.exception.image.CannotSaveImageException;
+import pl.restaurant.menuservice.business.exception.image.IncorrectImageException;
+import pl.restaurant.menuservice.business.exception.image.IncorrectImageExtensionException;
+import pl.restaurant.menuservice.business.exception.image.InvalidImageSizeException;
+import pl.restaurant.menuservice.business.exception.type.TypeAlreadyExistsException;
+import pl.restaurant.menuservice.business.exception.type.TypeNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
@@ -15,6 +21,32 @@ import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(ColumnNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> columnNotFoundHandler(ColumnNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("column", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(TypeNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> typeNotFoundHandler(TypeNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("typeId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(TypeAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> typeAlreadyExistsHandler(TypeAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("type", ex.getMessage());
+        return errors;
+    }
 
     @ResponseBody
     @ExceptionHandler(CannotSaveImageException.class)

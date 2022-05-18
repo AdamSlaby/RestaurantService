@@ -3,7 +3,7 @@ package pl.restaurant.menuservice.business.utility;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
-import pl.restaurant.menuservice.business.exception.CannotSaveImageException;
+import pl.restaurant.menuservice.business.exception.image.CannotSaveImageException;
 
 import java.io.*;
 

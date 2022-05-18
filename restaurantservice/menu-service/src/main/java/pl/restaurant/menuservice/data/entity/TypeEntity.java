@@ -25,4 +25,8 @@ public class TypeEntity implements Serializable {
 
     @OneToMany(mappedBy = "type", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MealEntity> meals;
+
+    public TypeEntity(String name) {
+        this.name = name;
+    }
 }
