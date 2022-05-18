@@ -2,7 +2,7 @@ package pl.restaurant.menuservice.api.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import pl.restaurant.menuservice.api.request.MenuMeal;
+import pl.restaurant.menuservice.api.request.MealMenu;
 import pl.restaurant.menuservice.api.response.Dish;
 import pl.restaurant.menuservice.api.response.DishOrderView;
 import pl.restaurant.menuservice.api.response.MealShortView;
@@ -34,13 +34,13 @@ public class MenuController {
     }
 
     @PostMapping("/")
-    public MealShortView addMealToMenu(@RequestBody @Valid MenuMeal menuMeal) {
-        return menuService.addMealToMenu(menuMeal);
+    public MealShortView addMealToMenu(@RequestBody @Valid MealMenu mealMenu) {
+        return menuService.addMealToMenu(mealMenu);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMealFromMenu(@PathVariable("id") Integer menuId,
+    public void removeMealFromMenu(@PathVariable("id") Integer menuId,
                                    @RequestParam("meal") Integer mealId) {
-        menuService.deleteMealFromMenu(menuId, mealId);
+        menuService.removeMealFromMenu(menuId, mealId);
     }
 }

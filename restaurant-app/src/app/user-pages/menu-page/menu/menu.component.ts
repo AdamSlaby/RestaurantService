@@ -1,6 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {Dish} from "../../../model/dish/dish";
 import {ActivatedRoute} from "@angular/router";
+import { MenuService } from 'src/app/service/menu.service';
 
 @Component({
   selector: 'app-menu',
@@ -15,83 +16,18 @@ export class MenuComponent implements OnInit, AfterViewInit {
   saladImg: string = 'assets/salad-image.jpg';
   dessertImg: string = 'assets/dessert_image.jpg';
   beverageImg: string = 'assets/beverage-picture.jpg'
-  menu: Dish[] = [
-    {
-      id: 6,
-      name: 'Barszcz z uszkami',
-      type: 'Zupy',
-      ingredients: '30g uszek',
-      price: 22.32,
-      isBest: true,
-    },
-    {
-      id: 6,
-      name: 'Pomidorowa',
-      type: 'Zupy',
-      ingredients: '30g makaronu',
-      price: 21.32,
-      isBest: true,
-    },
-    {
-      id: 1,
-      name: 'Zupa szczawiowa',
-      type: 'Zupy',
-      ingredients: 'z jajkiem i kiełbasą',
-      price: 20.32,
-      isBest: false,
-    },
-    {
-      id: 2,
-      name: 'Pierogi',
-      type: 'Dania główne',
-      ingredients: 'z kapustą i mięsem',
-      price: 25.00,
-      isBest: false,
-    },
-    {
-      id: 3,
-      name: 'Śledź',
-      type: 'Ryby',
-      ingredients: 'Śledź 300g, frytki, zestaw surówek',
-      price: 18.23,
-      isBest: false,
-    },
-    {
-      id: 4,
-      name: 'Sałatka grecka',
-      type: 'Sałatki',
-      ingredients: 'i kurczakiem i serem pleśniowym',
-      price: 28.23,
-      isBest: false,
-    },
-    {
-      id: 5,
-      name: 'TIRAMISU',
-      type: 'Desery',
-      ingredients: 'bita śmietana',
-      price: 28.23,
-      isBest: false,
-    },
-    {
-      id: 7,
-      name: 'Mirinda 1L',
-      type: 'Napoje',
-      ingredients: '',
-      price: 5.23,
-      isBest: false,
-    },
-  ]
+  menu!: Dish[];
 
-  constructor(private route: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(private route: ActivatedRoute, private cd: ChangeDetectorRef,
+              private menuService: MenuService) {
   }
 
   ngOnInit(): void {
-    for (let i = 2; i < 8; i++) {
-      let dish = {...this.menu[i]};
-      for (let j = 1; j <= 8; j++) {
-        this.menu.push(dish);
-      }
-    }
+    this.menuService.getDishesFromMenu().subscribe(data => {
+      this.menu = data;
+    }, error => {
+      console.error(error);
+    });
   }
 
   ngAfterViewInit() {

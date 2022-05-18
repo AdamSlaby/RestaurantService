@@ -79,7 +79,7 @@ public class IncorrectDataAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> mealNotFoundHandler(MealNotFoundException ex) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("mealId", ex.getMessage());
+        errors.put("meal", ex.getMessage());
         return errors;
     }
 

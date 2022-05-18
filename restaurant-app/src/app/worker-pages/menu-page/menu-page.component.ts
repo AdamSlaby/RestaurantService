@@ -5,7 +5,6 @@ import {MealListView} from "../../model/meal/meal-list-view";
 import {SortEvent} from "../../model/sort-event";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {MenuView} from "../../model/menu-view";
-import {MealShortView} from "../../model/meal/meal-short-view";
 import {FormBuilder, Validators} from "@angular/forms";
 import {MealInfo} from "../../model/meal/meal-info";
 import {IngredientView} from "../../model/meal/ingredient-view";
@@ -13,6 +12,13 @@ import {IngredientInfo} from "../../model/meal/ingredient-info";
 import {Unit} from "../../model/meal/unit";
 import { Season } from 'src/app/model/season';
 import { Ingredient } from 'src/app/model/meal/ingredient';
+import { MealMenu } from 'src/app/model/meal/meal-menu';
+import { IngredientService } from 'src/app/service/ingredient.service';
+import { MealService } from 'src/app/service/meal.service';
+import { MealFilters } from 'src/app/model/meal/meal-filters';
+import { MenuService } from 'src/app/service/menu.service';
+import { TypeService } from 'src/app/service/type.service';
+import { UnitService } from 'src/app/service/unit.service';
 
 @Component({
   selector: 'app-menu-page',
@@ -27,7 +33,7 @@ export class MenuPageComponent implements OnInit {
   faMinus = faMinus;
   error!: any;
   season = Season;
-  chosenMeal!: string;
+  chosenMeal!: string | null;
   chosenType: any = null;
   previousPage!: number;
   pageNr!: number;
@@ -41,71 +47,11 @@ export class MenuPageComponent implements OnInit {
   chosenMealId!: number;
   fd: FormData = new FormData();
   units!: Unit[];
-  ingredients: IngredientInfo[] = [
-    {
-      id: 1,
-      name: 'Mięso',
-    },
-    {
-      id: 2,
-      name: 'Marchewka',
-    },
-    {
-      id: 3,
-      name: 'Szczypiorek',
-    },
-  ];
-  types: Type[] = [
-    {
-      id: 1,
-      name: 'Zupy',
-    },
-    {
-      id: 2,
-      name: 'Dania główne',
-    },
-    {
-      id: 3,
-      name: 'Ryby',
-    },
-    {
-      id: 4,
-      name: 'Desery',
-    },
-  ];
-  mealList: MealListView = {
-    totalElements: 110,
-    meals: [
-      {
-        id: 1,
-        type: 'Zupy',
-        name: 'Pomidorowa',
-        price: 20.50,
-      },
-    ]
-  };
-  menus: MenuView[] = [
-    {
-      id: 1,
-      season: "Zima",
-      mealMap: new Map<string, MealShortView[]>(),
-    },
-    {
-      id: 2,
-      season: "Wiosna",
-      mealMap: new Map<string, MealShortView[]>(),
-    },
-    {
-      id: 3,
-      season: "Lato",
-      mealMap: new Map<string, MealShortView[]>(),
-    },
-    {
-      id: 4,
-      season: "Jesień",
-      mealMap: new Map<string, MealShortView[]>(),
-    },
-  ];
+  loading: boolean = false;
+  ingredients!: IngredientInfo[];
+  types!: Type[];
+  mealList!: MealListView;
+  menus!: MenuView[];
   mealForm = this.fb.group({
     type: [null, [Validators.required]],
     name: ['', [Validators.required, Validators.maxLength(30)]],
@@ -114,21 +60,37 @@ export class MenuPageComponent implements OnInit {
     ingredients: [''],
   });
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder) { }
+  constructor(private modalService: NgbModal, private fb: FormBuilder,
+              private ingredientService: IngredientService, 
+              private mealService: MealService, private menuService: MenuService,
+              private typeService: TypeService, private unitService: UnitService) { }
 
   ngOnInit(): void {
-    let meal = this.mealList.meals[0];
-    let dishes;
-    for (let i = 1; i < 10; i++) {
-      this.mealList.meals.push(Object.assign({}, meal));
-    }
-    for (let dishType of this.types) {
-      dishes = [];
-      for (let i = 1; i < 6; i++) {
-        dishes.push(Object.assign({}, meal));
-      }
-      this.menus[0].mealMap.set(dishType.name, dishes);
-    }
+    this.ingredientService.getAllIngredients().subscribe(data => {
+      this.ingredients = data
+    }, error => {
+      console.error(error);
+    });
+
+    this.getMealList(this.filters);
+
+    this.menuService.getAllMenus().subscribe(data => {
+      this.menus = data;
+    }, error => {
+      console.error(error);
+    });
+
+    this.typeService.getAllTypes().subscribe(data => {
+      this.types = data;
+    }, error => {
+      console.error(error);
+    })
+
+    this.unitService.getAllUnits().subscribe(data => {
+      this.units = data;
+    }, error => {
+      console.error(error);
+    })
     this.pageNr = 1;
     this.previousPage = 1;
   }
@@ -142,16 +104,25 @@ export class MenuPageComponent implements OnInit {
   }
 
   filterMeals() {
-    //todo
+    this.getMealList(this.filters);
   }
 
   resetFilters() {
-    //todo
     this.chosenType = null;
+    this.chosenMeal = null;
+    this.getMealList(this.filters);
+  }
+
+  getMealList(filters: MealFilters) {
+    this.mealService.getMeals(filters).subscribe(data => {
+      this.mealList = data;
+      console.log(data);
+    }, error => {
+      console.error(error);
+    });
   }
 
   addMeal(modal: any) {
-    //todo
     this.chosenMealId = -1;
     this.mealForm.reset();
     this.newIngredients = [];
@@ -159,52 +130,56 @@ export class MenuPageComponent implements OnInit {
   }
 
   addMealType(modal: any) {
-    //todo
     this.open(modal);
   }
 
   onSort($event: SortEvent) {
-    //todo
+    let filters = this.filters
+    filters.sortEvent = $event;
+    this.getMealList(filters);
   }
 
-  loadPage($event: number) {
-    //todo
+  loadPage(page: number) {
+    let filters = this.filters;
+    filters.pageNr = page - 1;
     if (this.previousPage !== this.pageNr) {
-      this.previousPage = this.pageNr;
+      this.mealService.getMeals(filters).subscribe(data => {
+        this.previousPage = this.pageNr;
+        this.mealList = data;
+      }, error => {
+        console.error(error);
+      })
     }
   }
 
   editMeal(id: number, modal: any) {
-    //todo
     this.chosenMealId = id;
-    this.meal = {
-      id: 1,
-      name: 'Pomidorowa',
-      price: 20.50,
-      typeId: 1,
-      imageUrl: 'assets/soup.jpg',
-      ingredients: [
-      ]
-    };
-    this.mealForm.patchValue({
-      type: this.meal.typeId,
-      name: this.meal.name,
-      price: this.meal.price,
-      ingredients: this.meal.ingredients as IngredientView[],
+    this.mealService.getMealInfo(this.chosenMealId).subscribe(data => {
+      this.meal = data;
+      this.mealForm.patchValue({
+        type: this.meal.typeId,
+        name: this.meal.name,
+        price: this.meal.price,
+        ingredients: this.meal.ingredients as IngredientView[],
+      });
+      this.open(modal);
+    }, error => {
+      console.error(error);
     });
-    this.open(modal);
   }
 
   removeMeal(modal: any) {
-    //todo
-    let meals = this.mealList.meals;
-    let index = meals.findIndex(el => el.id === this.chosenMealId);
-    meals.splice(index, 1);
-    modal.close();
+    this.mealService.deleteMeal(this.selectedMealId).subscribe(data => {
+      let meals = this.mealList.meals;
+      let index = meals.findIndex(el => el.id === this.selectedMealId);
+      meals.splice(index, 1);
+      modal.close();
+    }, error => {
+      console.error(error);
+    });
   }
 
   openRemoveModal(id: number, removeMealForm: any) {
-    //todo
     this.selectedMealId = id;
     this.open(removeMealForm);
   }
@@ -213,50 +188,57 @@ export class MenuPageComponent implements OnInit {
     return this.menus.filter(el => el.season === season)[0];
   }
 
-  removeDishFromMenu(season: string, type: string, id: number) {
-    let mealArray = this.menus.filter(el => el.season === season)[0]
-      .mealMap.get(type);
-    if (mealArray) {
-      let index = mealArray.findIndex(el => el.id === id);
-      mealArray.splice(index, 1);
-    }
+  removeMealFromMenu(season: string, type: string, id: number) {
+    let menu = this.menus.filter(el => el.season === season)[0];
+    this.menuService.removeMealFromMenu(menu.id, id).subscribe(data => {
+      let mealArr = menu.mealMap.get(type);
+      if (mealArr) {
+        let index = mealArr.findIndex(el => el.id === id);
+        mealArr.splice(index, 1);
+      }
+    }, error => {
+      console.error(error);
+    });
   }
 
   addMealToMenu(season: string, type: string) {
-    //todo
+    this.errors.clear();
     let menu = this.menus.filter(el => el.season === season)[0];
-    let mealArray = menu.mealMap.get(type);
-    if (mealArray) {
-      mealArray.push({
-        id: 5,
-        name: this.dish,
-      });
-    } else {
-      let newArray = []
-      newArray.push({
-        id: 5,
-        name: this.dish,
-      });
-      menu.mealMap.set(type, newArray);
+    let mealMenu: MealMenu = {
+      meal: this.dish,
+      menuId: menu.id,
     }
-  }
-
-  removeType(id: number) {
-    //todo
-    let index = this.types.findIndex(el => el.id === id);
-    this.types.splice(index, 1);
+    this.menuService.addMealToMenu(mealMenu).subscribe(data => {
+      let mealArray = menu.mealMap.get(type);
+      if (mealArray) {
+        mealArray.push(data);
+      } else {
+        let newArray = []
+        newArray.push(data);
+        menu.mealMap.set(type, newArray);
+      }
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+      console.error(error);
+    })
   }
 
   addType() {
-    //todo
-    this.types.push({
-      id: 10,
-      name: this.typeName,
+    this.errors.clear();
+    this.typeService.addType(this.typeName).subscribe(data => {
+      this.types.push(data);
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+      console.error(error);
     });
   }
 
   editType(type: Type) {
-    //todo
+    this.typeService.updateType(type.name, type.id).subscribe(data => {
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+      console.error(error);
+    });
   }
 
   getInvalidControl() {
@@ -269,7 +251,6 @@ export class MenuPageComponent implements OnInit {
   }
 
   onMealFormSubmit(modal: any) {
-    //todo
     this.errors.clear();
     let resultArr: IngredientView[];
     this.fd.set('name', this.mealForm.get('name')?.value);
@@ -295,7 +276,28 @@ export class MenuPageComponent implements OnInit {
       } as Ingredient 
     });
     this.fd.set('ingredients', JSON.stringify(ingredients));
-    modal.close();
+    this.loading = true;
+    if (this.chosenMealId === -1) {
+      this.mealService.addMeal(this.fd).subscribe(data => {
+        this.loading = false;
+        modal.close();
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.mealForm.markAsPristine();
+        this.loading = false;
+        console.error(error);
+      });
+    } else {
+      this.mealService.updateMeal(this.fd, this.chosenMealId).subscribe(data => {
+        this.loading = false;
+        modal.close();
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.mealForm.markAsPristine();
+        this.loading = false;
+        console.error(error);
+      });
+    }
   }
 
   uploadPhoto($event: any) {
@@ -333,5 +335,14 @@ export class MenuPageComponent implements OnInit {
     let ingredients = this.meal.ingredients;
     let index = ingredients.findIndex(el => el === ingredient);
     ingredients.splice(index, 1);
+  }
+
+  get filters() {
+    return {
+      mealName: this.chosenMeal,
+      typeId: this.chosenType,
+      sortEvent: null,
+      pageNr: 0
+    } as MealFilters;
   }
 }

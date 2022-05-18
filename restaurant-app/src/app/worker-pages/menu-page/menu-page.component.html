@@ -88,7 +88,7 @@
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.WINTER.toString()).mealMap.get(type.name)" class="pb-2">
-              <fa-icon (click)="removeDishFromMenu(season.WINTER.toString(), type.name, dish.id)" style="cursor: pointer"
+              <fa-icon (click)="removeMealFromMenu(season.WINTER.toString(), type.name, dish.id)" style="cursor: pointer"
                        class="d-inline-block me-2" [icon]="faMinus"></fa-icon>
               <span class="d-inline-block">{{dish.name}}</span>
             </div>
@@ -97,6 +97,9 @@
               <button (click)="addMealToMenu(season.WINTER.toString(), type.name)" class="btn btn-outline-grey" type="button">
                 <fa-icon [icon]="faPlus"></fa-icon>
               </button>
+            </div>
+            <div *ngIf="errors.has('meal')" class="invalid-feedback d-block">
+              {{errors.get('meal')}}
             </div>
           </ng-template>
         </ngb-panel>
@@ -111,7 +114,7 @@
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.SPRING.toString()).mealMap.get(type.name)" class="pb-2">
-              <fa-icon (click)="removeDishFromMenu(season.SPRING.toString(), type.name, dish.id)" style="cursor: pointer"
+              <fa-icon (click)="removeMealFromMenu(season.SPRING.toString(), type.name, dish.id)" style="cursor: pointer"
                        class="d-inline-block me-2" [icon]="faMinus"></fa-icon>
               <span class="d-inline-block">{{dish.name}}</span>
             </div>
@@ -120,6 +123,9 @@
               <button (click)="addMealToMenu(season.SPRING.toString(), type.name)" class="btn btn-outline-grey" type="button">
                 <fa-icon [icon]="faPlus"></fa-icon>
               </button>
+            </div>
+            <div *ngIf="errors.has('meal')" class="invalid-feedback d-block">
+              {{errors.get('meal')}}
             </div>
           </ng-template>
         </ngb-panel>
@@ -134,7 +140,7 @@
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.SUMMER.toString()).mealMap.get(type.name)" class="pb-2">
-              <fa-icon (click)="removeDishFromMenu(season.SUMMER.toString(), type.name, dish.id)" style="cursor: pointer"
+              <fa-icon (click)="removeMealFromMenu(season.SUMMER.toString(), type.name, dish.id)" style="cursor: pointer"
                        class="d-inline-block me-2" [icon]="faMinus"></fa-icon>
               <span class="d-inline-block">{{dish.name}}</span>
             </div>
@@ -143,6 +149,9 @@
               <button (click)="addMealToMenu(season.SUMMER.toString(), type.name)" class="btn btn-outline-grey" type="button">
                 <fa-icon [icon]="faPlus"></fa-icon>
               </button>
+            </div>
+            <div *ngIf="errors.has('meal')" class="invalid-feedback d-block">
+              {{errors.get('meal')}}
             </div>
           </ng-template>
         </ngb-panel>
@@ -157,7 +166,7 @@
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.AUTUMN.toString()).mealMap.get(type.name)" class="pb-2">
-              <fa-icon (click)="removeDishFromMenu(season.AUTUMN.toString(), type.name, dish.id)" style="cursor: pointer"
+              <fa-icon (click)="removeMealFromMenu(season.AUTUMN.toString(), type.name, dish.id)" style="cursor: pointer"
                        class="d-inline-block me-2" [icon]="faMinus"></fa-icon>
               <span class="d-inline-block">{{dish.name}}</span>
             </div>
@@ -166,6 +175,9 @@
               <button (click)="addMealToMenu(season.AUTUMN.toString(), type.name)" class="btn btn-outline-grey" type="button">
                 <fa-icon [icon]="faPlus"></fa-icon>
               </button>
+            </div>
+            <div *ngIf="errors.has('meal')" class="invalid-feedback d-block">
+              {{errors.get('meal')}}
             </div>
           </ng-template>
         </ngb-panel>
@@ -200,9 +212,9 @@
           <fa-icon [icon]="faPenToSquare"></fa-icon>
         </button>
       </div>
-      <div *ngIf="error" class="invalid-feedback d-block">
+      <div *ngIf="errors.has('type')" class="invalid-feedback d-block">
         <div class="d-flex justify-content-center align-items-center">
-          {{error}}
+          {{errors.get('type')}}
         </div>
       </div>
     </ng-container>
@@ -212,9 +224,9 @@
         <fa-icon [icon]="faPlus"></fa-icon>
       </button>
     </div>
-    <div *ngIf="error" class="invalid-feedback d-block">
+    <div *ngIf="errors.has('type')" class="invalid-feedback d-block">
       <div class="d-flex justify-content-center align-items-center">
-        {{error}}
+        {{errors.get('type')}}
       </div>
     </div>
   </div>
@@ -322,21 +334,25 @@
               <fa-icon [icon]="faMinus"></fa-icon>
             </button>
             <input class="form-control" type="text" [(ngModel)]="ingredient.name" [ngModelOptions]="{standalone: true}"
-                   [ngClass]="{ 'is-invalid': errors.has('ingredient-' + i)}"
+                   [ngClass]="{ 'is-invalid': errors.has('ingredient[' + i + '].name')}"
                    placeholder="Wpisz nazwę składnika"
                    list="ingredients"/>
             <datalist id="ingredients">
               <option *ngFor="let ingredientInfo of ingredients">{{ingredientInfo.name}}</option>
             </datalist>
+            <div *ngIf="errors.has('ingredient[' + i + '].name')"
+               class="invalid-feedback d-block">
+              {{errors.get('ingredient[' + i + '].name')}}
+            </div>
           </div>
 
           <div class="input-group mt-2">
             <input class="form-control" type="number" [(ngModel)]="ingredient.amount"
-                   [ngClass]="{ 'is-invalid': errors.has('ingredient-' + i)}"
+                   [ngClass]="{ 'is-invalid': errors.has('ingredient[' + i + '].amount')}"
                    [ngModelOptions]="{standalone: true}"
                    placeholder="Wpisz ilość składnika"/>
             <select class="form-select" [(ngModel)]="ingredient.unit" [ngModelOptions]="{standalone: true}"
-                    [ngClass]="{ 'is-invalid': errors.has('ingredient-' + i)}"
+                    [ngClass]="{ 'is-invalid': errors.has('ingredient[' + i + '].unit')}"
                     aria-label="MealInfo type select">
               <option disabled hidden [selected]="ingredient.unit === null" [ngValue]="null">
                 Wybierz miarę
@@ -345,9 +361,10 @@
                       [ngValue]="unit">{{unit.name}}</option>
             </select>
           </div>
-          <div *ngIf="errors.has('ingredient-' + i)"
+          <div *ngIf="errors.has('ingredient[' + i + '].unit') || errors.has('ingredient[' + i + '].amount')"
                class="invalid-feedback d-block">
-            {{errors.get('ingredient-' + i)}}
+            {{errors.get('ingredient[' + i + '].unit')}} <br>
+            {{errors.get('ingredient[' + i + '].amount')}}
           </div>
         </div>
       </ng-container>
@@ -359,20 +376,24 @@
           </button>
           <input class="form-control" type="text" [(ngModel)]="ingredient.name" [ngModelOptions]="{standalone: true}"
                  placeholder="Wpisz nazwę składnika" [size]="ingredients.length" autocomplete="off"
-                 [ngClass]="{ 'is-invalid': errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}"
+                 [ngClass]="{ 'is-invalid': errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')}"
                  list="newIngredients"/>
           <datalist id="newIngredients">
             <option *ngFor="let ingredientInfo of ingredients">{{ingredientInfo.name}}</option>
           </datalist>
+          <div *ngIf="errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')"
+             class="invalid-feedback d-block">
+            {{errors.get('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')}}
+          </div>
         </div>
 
         <div class="input-group mt-2">
           <input class="form-control" type="number" [(ngModel)]="ingredient.amount"
                  [ngModelOptions]="{standalone: true}"
-                 [ngClass]="{ 'is-invalid': errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}"
+                 [ngClass]="{ 'is-invalid': errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount')}"
                  placeholder="Wpisz ilość składnika"/>
           <select class="form-select" [(ngModel)]="ingredient.unit" [ngModelOptions]="{standalone: true}"
-                  [ngClass]="{ 'is-invalid': errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}"
+                  [ngClass]="{ 'is-invalid': errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')}"
                   aria-label="MealInfo type select">
             <option disabled hidden [selected]="ingredient.unit === null" [ngValue]="null">
               Wybierz miarę
@@ -381,9 +402,11 @@
                     [ngValue]="unit">{{unit.name}}</option>
           </select>
         </div>
-        <div *ngIf="errors.has('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))"
+        <div *ngIf="errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount') || 
+                    errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')"
              class="invalid-feedback d-block">
-          {{errors.get('ingredient-' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)))}}
+          {{errors.get('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount')}} <br>
+          {{errors.get('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')}}
         </div>
       </div>
 

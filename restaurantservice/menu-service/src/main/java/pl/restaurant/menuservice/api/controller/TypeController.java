@@ -22,13 +22,13 @@ public class TypeController {
     }
 
     @PostMapping("/")
-    public Type addType(@RequestParam @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
+    public Type addType(@RequestParam("name") @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
                             String type) {
         return typeService.addType(type);
     }
 
     @PutMapping("/{id}")
-    public void updateType(@RequestParam @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
+    public void updateType(@RequestParam("name") @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
                            String type, @PathVariable("id") Integer typeId) {
         typeService.updateType(typeId, type);
     }

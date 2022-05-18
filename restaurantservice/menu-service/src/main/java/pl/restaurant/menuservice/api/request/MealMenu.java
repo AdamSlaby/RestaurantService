@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuMeal {
+public class MealMenu {
     @NotBlank(message = "Nazwa lub identyfikator posiłku nie może być pusty")
     private String meal;
 

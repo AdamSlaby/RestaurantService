@@ -1,6 +1,7 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {faBasketShopping} from "@fortawesome/free-solid-svg-icons";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { MenuService } from 'src/app/service/menu.service';
 import {DishOrderView} from "../../../model/dish/dish-order-view";
 import {BasketService} from "../../../service/basket.service";
 
@@ -15,79 +16,21 @@ export class OrderComponent implements OnInit {
   innerHeight!: number;
   heightDif!: string;
   faBasketShopping = faBasketShopping;
-  dishes: DishOrderView[] = [
-    {
-      id: 10,
-      name: 'Ogórkowa',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Zupy',
-      ingredients: '30g makaronu',
-      amount: 1,
-      price: 21.32,
-    },
-    {
-      id: 6,
-      name: 'Pomidorowa',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Zupy',
-      ingredients: '30g makaronu',
-      amount: 1,
-      price: 21.32,
-    },
-    {
-      id: 2,
-      name: 'Pierogi',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Dania główne',
-      ingredients: 'z kapustą i mięsem',
-      amount: 1,
-      price: 25.00,
-    },
-    {
-      id: 3,
-      name: 'Śledź',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Ryby',
-      ingredients: 'Śledź 300g, frytki, zestaw surówek',
-      amount: 1,
-      price: 18.23,
-    },
-    {
-      id: 4,
-      name: 'Sałatka grecka',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Sałatki',
-      ingredients: 'i kurczakiem i serem pleśniowym',
-      amount: 1,
-      price: 28.23,
-    },
-    {
-      id: 5,
-      name: 'TIRAMISU',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Desery',
-      ingredients: 'bita śmietana',
-      amount: 1,
-      price: 28.23,
-    },
-    {
-      id: 7,
-      name: 'Mirinda 1L',
-      imageUrl: 'assets/soup.jpg',
-      type: 'Napoje',
-      ingredients: '',
-      amount: 1,
-      price: 5.23,
-    },
-  ]
+  dishes!: DishOrderView[];
 
-  constructor(private modalService: NgbModal, private basketService: BasketService) {
+  constructor(private modalService: NgbModal, private basketService: BasketService,
+              private menuService: MenuService) {
   }
 
   ngOnInit(): void {
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
-    this.basketService.addDishes(this.dishes);
+    this.menuService.getDisheOrderViewsFromMenu().subscribe(data => {
+      this.dishes = data;
+      this.basketService.addDishes(this.dishes);
+    }, error => {
+      console.error(error);
+    })
   }
 
   open(content: any) {
