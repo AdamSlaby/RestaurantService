@@ -12,6 +12,11 @@ import pl.restaurant.menuservice.business.exception.image.CannotSaveImageExcepti
 import pl.restaurant.menuservice.business.exception.image.IncorrectImageException;
 import pl.restaurant.menuservice.business.exception.image.IncorrectImageExtensionException;
 import pl.restaurant.menuservice.business.exception.image.InvalidImageSizeException;
+import pl.restaurant.menuservice.business.exception.ingredient.IngredientAlreadyExistsException;
+import pl.restaurant.menuservice.business.exception.ingredient.IngredientNotFoundException;
+import pl.restaurant.menuservice.business.exception.meal.MealAlreadyExistsException;
+import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
+import pl.restaurant.menuservice.business.exception.menu.MenuNotFoundException;
 import pl.restaurant.menuservice.business.exception.type.TypeAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.type.TypeNotFoundException;
 
@@ -21,6 +26,63 @@ import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(MenuNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> menuNotFoundHandler(MenuNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("menuId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(IngredientNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> ingredientNotFoundHandler(IngredientNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        int i = Integer.parseInt(ex.getMessage().split(" ")[0]);
+        errors.put("ingredient[" + i + "].name", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UnitNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> unitNotFoundHandler(UnitNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        int i = Integer.parseInt(ex.getMessage().split(" ")[0]);
+        errors.put("ingredient[" + i + "].unit", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(IngredientAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> ingredientAlreadyExistsHandler(IngredientAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        int i = Integer.parseInt(ex.getMessage().split(" ")[0]);
+        errors.put("ingredient[" + i + "].name", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(MealAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> mealAlreadyExistsHandler(MealAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("name", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(MealNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> mealNotFoundHandler(MealNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("mealId", ex.getMessage());
+        return errors;
+    }
+
     @ResponseBody
     @ExceptionHandler(ColumnNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

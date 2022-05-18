@@ -1,9 +1,6 @@
 package pl.restaurant.menuservice.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Meal_Ingredient")
@@ -19,7 +17,7 @@ public class MealIngredientEntity implements Serializable {
     @EmbeddedId
     private MealIngredientId mealIngredientId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("mealId")
     @JoinColumn(name = "meal_id")
     private MealEntity meal;

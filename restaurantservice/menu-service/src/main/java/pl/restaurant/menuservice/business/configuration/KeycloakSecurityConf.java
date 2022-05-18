@@ -46,8 +46,24 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .authorizeRequests()
+                //ingredient
+                .antMatchers("/ingredient/").hasAnyRole(Role.ADMIN.toString())
+                //meal
+                .antMatchers("/meal/info/{id}").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/meal/list").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/meal/").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/meal/{id}").hasAnyRole(Role.ADMIN.toString())
+                //type
+                .antMatchers("/type/").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/type/{id}").hasAnyRole(Role.ADMIN.toString())
+                //unit
+                .antMatchers("/unit/").hasAnyRole(Role.ADMIN.toString())
                 //menu
-                .antMatchers("/info/{id}").permitAll()
+                .antMatchers("/dishes").permitAll()
+                .antMatchers("/dishes/list").permitAll()
+                .antMatchers("/all").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/{id}").hasAnyRole(Role.ADMIN.toString())
                 .anyRequest().permitAll();
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);

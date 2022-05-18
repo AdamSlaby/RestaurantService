@@ -29,7 +29,7 @@ public class TypeController {
 
     @PutMapping("/{id}")
     public void updateType(@RequestParam @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
-                           String type, @PathVariable Integer typeId) {
+                           String type, @PathVariable("id") Integer typeId) {
         typeService.updateType(typeId, type);
     }
 }

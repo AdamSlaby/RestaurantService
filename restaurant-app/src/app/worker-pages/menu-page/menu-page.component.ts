@@ -28,9 +28,9 @@ export class MenuPageComponent implements OnInit {
   error!: any;
   season = Season;
   chosenMeal!: string;
+  chosenType: any = null;
   previousPage!: number;
   pageNr!: number;
-  chosenType: any = null;
   selectedMealId!: number;
   dish!: string;
   typeName!: string;
@@ -141,11 +141,7 @@ export class MenuPageComponent implements OnInit {
     this.modalService.open(content, {}).result.then(() => {}).catch(() => {});
   }
 
-  getMealByName() {
-    //todo
-  }
-
-  getMealByType() {
+  filterMeals() {
     //todo
   }
 
@@ -220,7 +216,6 @@ export class MenuPageComponent implements OnInit {
   removeDishFromMenu(season: string, type: string, id: number) {
     let mealArray = this.menus.filter(el => el.season === season)[0]
       .mealMap.get(type);
-    console.log(mealArray);
     if (mealArray) {
       let index = mealArray.findIndex(el => el.id === id);
       mealArray.splice(index, 1);
