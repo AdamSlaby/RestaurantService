@@ -43,6 +43,13 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientRepo.save(new IngredientEntity(ingredient.getName()));
     }
 
+    @Override
+    public Integer addIngredient(String ingredient) {
+        if (ingredientRepo.existsByName(ingredient))
+            throw new IngredientAlreadyExistsException();
+        return ingredientRepo.save(new IngredientEntity(ingredient)).getIngredientId();
+    }
+
     @Validated
     @Override
     public void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int i) {

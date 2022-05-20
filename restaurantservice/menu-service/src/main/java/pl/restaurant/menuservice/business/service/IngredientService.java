@@ -14,5 +14,7 @@ public interface IngredientService {
 
     IngredientEntity addIngredient(Ingredient ingredient, int index);
 
+    Integer addIngredient(String ingredient);
+
     void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int i);
 }

@@ -1,15 +1,12 @@
-import {Unit} from "../meal/unit";
-import {TaxType} from "./tax-type";
+import { TaxType } from "./tax-type";
 
 export interface Good {
-  id: number;
   ingredientId: number;
-  ingredient: string;
   quantity: number;
-  unit: Unit | any;
+  unitId: number;
   unitNetPrice: number;
   discount: number;
   netPrice: number;
-  taxType: TaxType | any;
+  taxType: TaxType;
   taxPrice: number;
 }

@@ -17,12 +17,14 @@ export class MenuComponent implements OnInit, AfterViewInit {
   dessertImg: string = 'assets/dessert_image.jpg';
   beverageImg: string = 'assets/beverage-picture.jpg'
   menu!: Dish[];
+  activeFragment!: string;
 
   constructor(private route: ActivatedRoute, private cd: ChangeDetectorRef,
               private menuService: MenuService) {
   }
 
   ngOnInit(): void {
+
     this.menuService.getDishesFromMenu().subscribe(data => {
       this.menu = data;
     }, error => {
@@ -34,10 +36,11 @@ export class MenuComponent implements OnInit, AfterViewInit {
     this.route.fragment.subscribe(fragment => {
         let element = document.querySelector("#" + fragment);
           setTimeout(() => {
-            if (element) {
+            if (element && fragment) {
               element.scrollIntoView();
+              this.activeFragment = fragment;
             }
-          }, 1)
+          }, 100)
       }
     );
     this.innerWidth = window.innerWidth;
@@ -65,9 +68,11 @@ export class MenuComponent implements OnInit, AfterViewInit {
     let image = document.getElementById(fragment);
     let content = document.getElementById(fragment + 'Content');
     if (image && content)
-      return window.scrollY >= window.scrollY + image.getBoundingClientRect().top &&
-        window.scrollY < window.scrollY + content.getBoundingClientRect().bottom;
-    return false;
+      if (window.scrollY >= window.scrollY + image.getBoundingClientRect().top &&
+        window.scrollY < window.scrollY + content.getBoundingClientRect().bottom) {
+          this.activeFragment = fragment;
+          this.cd.detectChanges();
+        }
   }
 
   onScroll() {
@@ -76,6 +81,7 @@ export class MenuComponent implements OnInit, AfterViewInit {
     let imagesDivIds = ['soup', 'main-dish', 'fish', 'salad', 'dessert', 'beverage'];
     let linkIds = ['soupLink', 'mainDishLink', 'fishLink', 'saladLink', 'dessertLink', 'beverageLink'];
     for (let i = 0; i < imagesDivIds.length; i++) {
+      this.isSectionActive(imagesDivIds[i]);
       let image = document.getElementById(imagesDivIds[i]);
       let link = document.getElementById(linkIds[i]);
       if (image)

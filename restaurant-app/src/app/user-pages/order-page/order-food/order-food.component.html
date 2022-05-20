@@ -1,5 +1,5 @@
 <div>
-  <ul ngbNav #nav="ngbNav" class="nav-pills sticky-top bg-white border-bottom border-top py-2">
+  <ul ngbNav [(activeId)]="activeId" #nav="ngbNav" class="nav-pills sticky-top bg-white border-bottom border-top py-2">
     <li *ngIf="!showSearchInput">
       <a style="cursor: pointer" (click)="onSearchClick()">
         <fa-icon style="font-size: 24px" [icon]="faMagnifyingGlass"></fa-icon>

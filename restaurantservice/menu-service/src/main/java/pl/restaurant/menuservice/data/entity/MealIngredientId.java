@@ -14,8 +14,8 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class MealIngredientId implements Serializable {
     @Column(name = "meal_id")
-    Integer mealId;
+    private Integer mealId;
 
     @Column(name = "ingredient_id")
-    Integer ingredientId;
+    private Integer ingredientId;
 }

@@ -17,7 +17,7 @@
         </div>
 
         <div class="mb-2">
-          <button type="button" class="btn btn-outline-grey" (click)="open(ingredientFormModal)">
+          <button type="button" class="btn btn-outline-grey" (click)="open(supplyFormModal)">
             Dodaj nowy składnik
           </button>
         </div>
@@ -33,7 +33,6 @@
             <th scope="col">Nazwa</th>
             <th scope="col">Ilość</th>
             <th scope="col">Jednostka miary</th>
-            <th scope="col">Opcje</th>
           </tr>
           </thead>
           <tbody>
@@ -44,14 +43,9 @@
               <input type="number" class="form-control" placeholder="Ilość składnika" [(ngModel)]="supply.quantity">
             </td>
             <td>
-              <select class="form-select" [(ngModel)]="supply.unit">
-                <option *ngFor="let unit of units" [ngValue]="unit">{{unit}}</option>
+              <select class="form-select" [(ngModel)]="supply.unit.id">
+                <option *ngFor="let unit of units" [ngValue]="unit.id">{{unit.name}}</option>
               </select>
-            </td>
-            <td>
-              <fa-icon style="cursor: pointer;" class="text-danger" ngbTooltip="Usuń składnik"
-                       (click)="removeSupply(supply, i)"
-                       [icon]="faXmark"></fa-icon>
             </td>
           </tr>
           </tbody>
@@ -64,7 +58,7 @@
   </div>
 </div>
 
-<ng-template #ingredientFormModal let-modal>
+<ng-template #supplyFormModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Dodaj nowy składnik</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -101,7 +95,7 @@
                   [ngClass]="{ 'is-invalid': form.submitted && f['unit'].errors ||
                     (errors.has('unit') && f['unit'].pristine)  }">
             <option hidden disabled [ngValue]="null">Wybierz jednostkę miary</option>
-            <option *ngFor="let unit of units" [ngValue]="unit">{{unit}}</option>
+            <option *ngFor="let unit of units" [ngValue]="unit.id">{{unit.name}}</option>
           </select>
         </div>
         <div *ngIf="form.submitted && f['quantity'].errors" class="invalid-feedback d-block">

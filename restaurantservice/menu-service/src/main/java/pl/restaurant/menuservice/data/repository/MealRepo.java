@@ -2,12 +2,14 @@ package pl.restaurant.menuservice.data.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.restaurant.menuservice.api.response.MealShortInfo;
 import pl.restaurant.menuservice.data.entity.MealEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MealRepo extends JpaRepository<MealEntity, Integer> {
@@ -23,4 +25,7 @@ public interface MealRepo extends JpaRepository<MealEntity, Integer> {
     boolean existsByName(String name);
 
     Optional<MealEntity> findByName(String name);
+
+    @EntityGraph(attributePaths = {"type", "ingredients", "ingredients.ingredient"})
+    List<MealEntity> findAllByIsBest(boolean isBest, Pageable pageable);
 }

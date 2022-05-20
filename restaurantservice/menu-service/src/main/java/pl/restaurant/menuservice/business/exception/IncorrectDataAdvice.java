@@ -1,5 +1,6 @@
 package pl.restaurant.menuservice.business.exception;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ import pl.restaurant.menuservice.business.exception.image.InvalidImageSizeExcept
 import pl.restaurant.menuservice.business.exception.ingredient.IngredientAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.ingredient.IngredientNotFoundException;
 import pl.restaurant.menuservice.business.exception.meal.CannotDeserializeIngredientsException;
+import pl.restaurant.menuservice.business.exception.meal.MealAlreadyAddedToMenuException;
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
 import pl.restaurant.menuservice.business.exception.menu.MenuNotFoundException;
@@ -27,6 +29,15 @@ import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(MealAlreadyAddedToMenuException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> mealAlreadyAddedToMenuHandler(MealAlreadyAddedToMenuException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("meal", ex.getMessage());
+        return errors;
+    }
+
     @ResponseBody
     @ExceptionHandler(CannotDeserializeIngredientsException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -70,8 +81,12 @@ public class IncorrectDataAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> ingredientAlreadyExistsHandler(IngredientAlreadyExistsException ex) {
         Map<String, String> errors = new HashMap<>();
-        int i = Integer.parseInt(ex.getMessage().split(" ")[0]);
-        errors.put("ingredient[" + i + "].name", ex.getMessage());
+        String number = ex.getMessage().split(" ")[0];
+        if (NumberUtils.isParsable(number)) {
+            int i = Integer.parseInt(number);
+            errors.put("ingredient[" + i + "].name", ex.getMessage());
+        } else
+            errors.put("ingredientName", ex.getMessage());
         return errors;
     }
 

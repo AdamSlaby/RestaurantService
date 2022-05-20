@@ -2,9 +2,8 @@
   <div class="col-xl-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center mb-4">Filtrowanie</h4>
-      <div class="input-group mb-3">
+      <div class="form-group mb-3">
         <input type="text" class="form-control" [(ngModel)]="chosenInvoice" placeholder="Numer faktury"/>
-        <button class="btn btn-outline-grey" type="button" (click)="getInvoiceByNr()">Szukaj</button>
       </div>
       <div class="input-group mb-3">
         <input type="text" placeholder="Data wystawienia faktury" ngbDatepicker #d="ngbDatepicker"
@@ -12,12 +11,12 @@
                class="form-control">
         <button type="button" class="btn btn-outline-grey calendar" (click)="d.toggle()"></button>
       </div>
-      <div class="input-group mb-3">
+      <div class="form-group mb-3">
         <input type="text" class="form-control" placeholder="Nazwa sprzedawcy" [(ngModel)]="sellerName">
-        <button type="button" class="btn btn-outline-grey" (click)="getInvoiceBySellerName()">Szukaj</button>
       </div>
-      <div class="d-flex justify-content-center align-items-center">
-        <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
+      <div class="d-grid">
+        <button class="btn btn-outline-grey mb-2" type="button" (click)="filterInvoices()">Szukaj</button>
+        <button type="button" (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
       </div>
     </div>
 
@@ -46,7 +45,7 @@
             <th scope="col">Opcje</th>
           </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="invoiceList">
           <tr *ngFor="let invoice of invoiceList.invoices">
             <th scope="row">{{invoice.nr}}</th>
             <td>{{invoice.date | date:'longDate':'+0000':'pl-PL'}}</td>
@@ -64,7 +63,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="d-flex justify-content-center align-items-center">
+        <div *ngIf="invoiceList" class="d-flex justify-content-center align-items-center">
           <ngb-pagination [collectionSize]="invoiceList.totalElements"
                           [(page)]="pageNr"
                           [maxSize]="5"

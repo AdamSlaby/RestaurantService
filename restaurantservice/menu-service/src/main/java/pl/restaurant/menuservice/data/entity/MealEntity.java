@@ -32,14 +32,14 @@ public class MealEntity implements Serializable {
     @Column(nullable = false)
     private boolean isBest;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "type_id", nullable = false)
     private TypeEntity type;
 
     @ManyToMany(mappedBy = "meals", fetch = FetchType.LAZY)
     private Set<MenuEntity> menus;
 
-    @OneToMany(mappedBy = "meal", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "meal", fetch = FetchType.LAZY)
     Set<MealIngredientEntity> ingredients;
 
     @Override

@@ -2,12 +2,12 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {faFileInvoice, faXmark, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, NgForm, Validators} from "@angular/forms";
 import {RegexPattern} from "../../../model/regex-pattern";
-import {Invoice} from "../../../model/invoice/invoice";
+import {InvoiceView} from "../../../model/invoice/invoice";
 import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateToDateAdapter} from "../../../adapter/datepicker-date-adapter";
 import {Unit} from "../../../model/meal/unit";
 import {TaxType} from "../../../model/invoice/tax-type";
-import {Good} from "../../../model/invoice/good";
+import {GoodView} from "../../../model/invoice/good";
 
 @Component({
   selector: 'app-invoice-form',
@@ -117,7 +117,7 @@ export class InvoiceFormComponent implements OnInit {
   faFileInvoice = faFileInvoice;
   faPlus = faPlus;
   _invoiceNr!: string;
-  invoiceInfo!: Invoice;
+  invoiceInfo!: InvoiceView;
   units!: Unit[];
   taxTypes = Object.values(TaxType);
   errors: Map<string, string> = new Map<string, string>();
@@ -160,7 +160,7 @@ export class InvoiceFormComponent implements OnInit {
 
   onInvoiceFormSubmit() {
     //todo
-    let invoice: Invoice = {
+    let invoice: InvoiceView = {
       nr: this.invoiceForm.get('nr')?.value,
       restaurantId: localStorage.getItem('restaurantId'),
       restaurantInfo: null,
@@ -223,14 +223,14 @@ export class InvoiceFormComponent implements OnInit {
       taxPrice: 0,
       netPrice: 0,
       discount: 0,
-    } as Good);
+    } as GoodView);
     this.invoiceForm.get('goods')?.setValue(goods);
   }
 
   calculateTaxPrice(index: number) {
     let goods = this.invoiceForm.get('goods')?.value;
     if (goods) {
-      let good = goods[index] as Good;
+      let good = goods[index] as GoodView;
       if (good && good.netPrice > 0) {
         switch (good.taxType) {
           case TaxType.A:

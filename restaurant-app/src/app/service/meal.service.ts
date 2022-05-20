@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Dish } from '../model/dish/dish';
 import { MealFilters } from '../model/meal/meal-filters';
 import { MealInfo } from '../model/meal/meal-info';
 import { MealListView } from '../model/meal/meal-list-view';
@@ -13,6 +14,7 @@ export class MealService {
   private COMMON_URL = `${GeneralService.BASE_URL}/menu/meal`;
   private GET_MEAL_INFO = `${this.COMMON_URL}/info/`;
   private GET_MEALS = `${this.COMMON_URL}/list`;
+  private GET_BEST_MEALS = `${this.COMMON_URL}/best`;
   private ADD_MEAL = `${this.COMMON_URL}/`;
   private UPDATE_MEAL = `${this.COMMON_URL}/`;
   private DELETE_MEAL = `${this.COMMON_URL}/`;
@@ -27,6 +29,10 @@ export class MealService {
   getMeals(filters: MealFilters): Observable<MealListView> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
     return this.http.post<MealListView>(this.GET_MEALS, filters, {headers});
+  }
+
+  getBestMeals(): Observable<Dish[]> {
+    return this.http.get<Dish[]>(this.GET_BEST_MEALS);
   }
 
   addMeal(meal: FormData): Observable<any> {

@@ -20,8 +20,6 @@ export class OrderListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     let element = document.getElementById('dish-' + (this.dishes.length - 1));
-    console.log('dish-' + (this.dishes.length - 1));
-    console.log(element);
     if (element)
       element.classList.remove('border-bottom');
   }

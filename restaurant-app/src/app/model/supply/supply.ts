@@ -1,8 +1,6 @@
-import {Unit} from "../meal/unit";
-
 export interface Supply {
-  restaurantId: any;
-  ingredientName: string;
-  quantity: number;
-  unit: Unit;
+    restaurantId: number;
+    ingredientId: number;
+    quantity: number;
+    unitId: number;
 }

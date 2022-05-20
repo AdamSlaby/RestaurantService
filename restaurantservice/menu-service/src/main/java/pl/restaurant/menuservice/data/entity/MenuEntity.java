@@ -23,7 +23,7 @@ public class MenuEntity implements Serializable {
     @Column(length = 8, nullable = false)
     private String season;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "Menu_Meal",
             joinColumns = {@JoinColumn(name = "menu_id")},
             inverseJoinColumns = {@JoinColumn(name = "meal_id")})

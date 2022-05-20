@@ -4,20 +4,22 @@ import lombok.experimental.UtilityClass;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.response.*;
 import pl.restaurant.menuservice.data.entity.MealEntity;
+import pl.restaurant.menuservice.data.entity.MealIngredientEntity;
 import pl.restaurant.menuservice.data.entity.TypeEntity;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class MealMapper {
-    public static MealInfo mapDataToInfo(MealEntity mealEntity) {
+    public static MealInfo mapDataToInfo(MealEntity mealEntity, List<MealIngredientEntity> ingredients) {
         return new MealInfo().builder()
                 .id(mealEntity.getMealId())
                 .name(mealEntity.getName())
                 .typeId(mealEntity.getType().getTypeId())
                 .price(mealEntity.getPrice())
                 .imageUrl(mealEntity.getImageUrl())
-                .ingredients(mealEntity.getIngredients().stream()
+                .ingredients(ingredients.stream()
                         .map(el -> new IngredientView(el.getIngredient().getIngredientId(),
                                 el.getIngredient().getName(), el.getQuantity(),
                                 new Unit(el.getUnit().getUnitId(), el.getUnit().getName())))
@@ -68,7 +70,6 @@ public class MealMapper {
                 builder.append(el.getIngredient().getName()).append(", "));
         if (meal.getIngredients().size() > 1) {
             builder.deleteCharAt(builder.length() - 1);
-            builder.deleteCharAt(builder.length() - 2);
         }
         return builder.toString();
     }

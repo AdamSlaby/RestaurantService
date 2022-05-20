@@ -15,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Type")
-public class TypeEntity implements Serializable {
+public class TypeEntity implements Serializable, Comparable<TypeEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer typeId;
@@ -28,5 +28,10 @@ public class TypeEntity implements Serializable {
 
     public TypeEntity(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int compareTo(TypeEntity type) {
+        return String.CASE_INSENSITIVE_ORDER.compare(type.getName(), this.getName());
     }
 }

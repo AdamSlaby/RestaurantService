@@ -44,15 +44,11 @@ export class InvoicesComponent implements OnInit {
     this.previousPage = 1;
   }
 
-  getInvoiceByNr() {
+  filterInvoices() {
     //todo
   }
 
   resetFilters() {
-    //todo
-  }
-
-  getInvoiceBySellerName() {
     //todo
   }
 

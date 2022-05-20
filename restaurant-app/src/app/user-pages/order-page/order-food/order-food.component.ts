@@ -14,24 +14,18 @@ export class OrderFoodComponent implements OnInit {
   searchPhrase: string = '';
   faMagnifyingGlass = faMagnifyingGlass;
   faXmark = faXmark;
+  activeId: any = 0;
   searchedDishes: DishOrderView[] = [];
   dishes: DishOrderView[] = [];
 
   constructor(private modalService: NgbModal, private basketService: BasketService) {
     this.basketService.dishes$.subscribe(dishes => {
       this.dishes = [...dishes];
+      this.getDishesByType('Zupy');
     })
   }
 
   ngOnInit(): void {
-    for (let i = 0; i < 6; i++) {
-      let orderView = this.dishes[i];
-      for (let j = 1; j <= 7; j++) {
-        let dishCopy = {...orderView};
-        this.dishes.push(dishCopy);
-      }
-    }
-    this.getDishesByType('Zupy');
   }
 
   onSearchClick() {
@@ -40,6 +34,7 @@ export class OrderFoodComponent implements OnInit {
 
   onCloseClick() {
     this.showSearchInput = false;
+    this.activeId = 0;
     this.getDishesByType('Zupy');
   }
 

@@ -9,17 +9,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
-import pl.restaurant.menuservice.api.mapper.MealIngredientMapper;
 import pl.restaurant.menuservice.api.mapper.MealMapper;
 import pl.restaurant.menuservice.api.request.Ingredient;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.request.MealFilters;
 import pl.restaurant.menuservice.api.request.SortDirection;
+import pl.restaurant.menuservice.api.response.Dish;
 import pl.restaurant.menuservice.api.response.MealInfo;
 import pl.restaurant.menuservice.api.response.MealListView;
 import pl.restaurant.menuservice.api.response.MealShortInfo;
@@ -30,22 +28,23 @@ import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
 import pl.restaurant.menuservice.business.exception.type.TypeNotFoundException;
 import pl.restaurant.menuservice.business.utility.FileUtility;
 import pl.restaurant.menuservice.business.utility.ImageValidator;
-import pl.restaurant.menuservice.data.entity.*;
+import pl.restaurant.menuservice.data.entity.MealEntity;
+import pl.restaurant.menuservice.data.entity.MealIngredientEntity;
+import pl.restaurant.menuservice.data.entity.TypeEntity;
 import pl.restaurant.menuservice.data.repository.MealIngredientRepo;
 import pl.restaurant.menuservice.data.repository.MealRepo;
 import pl.restaurant.menuservice.data.repository.TypeRepo;
-import pl.restaurant.menuservice.data.repository.UnitRepo;
 
-import javax.persistence.PreRemove;
-import javax.transaction.Transactional;
-import javax.validation.*;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
 public class MealServiceImpl implements MealService {
     private final static int AMOUNT = 10;
+    private final static int BEST_MEALS_AMOUNT = 7;
     private static final String IMAGE_URL = "http://localhost:9000/menu/image/";
 
     @Value("${app.file.path}")
@@ -70,7 +69,8 @@ public class MealServiceImpl implements MealService {
     public MealInfo getMealInfo(Integer mealId) {
         MealEntity mealEntity = mealRepo.findById(mealId)
                 .orElseThrow(MealNotFoundException::new);
-        return MealMapper.mapDataToInfo(mealEntity);
+        List<MealIngredientEntity> ingredients = mealIngredientRepo.findByMeal(mealEntity);
+        return MealMapper.mapDataToInfo(mealEntity, ingredients);
     }
 
     @Override
@@ -90,6 +90,15 @@ public class MealServiceImpl implements MealService {
         Pageable pageable = mapSortEventToPageable(filters);
         Page<MealShortInfo> page = mealRepo.getMeals(filters.getMealName(), filters.getTypeId(), pageable);
         return new MealListView(page.getTotalElements(), page.getContent());
+    }
+
+    @Override
+    public List<Dish> getBestMeals() {
+        Pageable pageable = PageRequest.of(0, BEST_MEALS_AMOUNT);
+        List<MealEntity> meals = mealRepo.findAllByIsBest(true, pageable);
+        return meals.stream()
+                .map(MealMapper::mapDataToDish)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -116,11 +125,11 @@ public class MealServiceImpl implements MealService {
                 .orElseThrow(MealNotFoundException::new);
         if (mealRepo.existsByName(meal.getName()) && !mealEntity.getName().equals(meal.getName()))
             throw new MealAlreadyExistsException();
-        getSpringProxy().removeIngredientsFromMeal(mealEntity);
+        getMealServiceProxy().removeIngredientsFromMeal(mealEntity);
         updateMeal(mealEntity, meal, ingredients);
     }
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateMeal(MealEntity mealEntity, Meal meal, List<Ingredient> ingredients) {
         TypeEntity type = typeRepo.findById(meal.getTypeId())
                 .orElseThrow(TypeNotFoundException::new);
@@ -132,6 +141,11 @@ public class MealServiceImpl implements MealService {
         if (meal.getImage() != null)
             updateMealImage(meal, mealEntity);
         mealRepo.save(mealEntity);
+    }
+
+    @Transactional
+    public void removeIngredientsFromMeal(MealEntity mealEntity) {
+        mealIngredientRepo.deleteAllByMeal(mealEntity);
     }
 
     @Override
@@ -153,6 +167,8 @@ public class MealServiceImpl implements MealService {
             try {
                 String column = filters.getSortEvent().getColumn();
                 MealEntity.class.getDeclaredField(column);
+                if (column.equals("type"))
+                    column = column + ".name";
                 if (filters.getSortEvent().getDirection().equals(SortDirection.ASC))
                     return PageRequest.of(filters.getPageNr(), AMOUNT, Sort.by(Sort.Direction.ASC, column));
                 else if (filters.getSortEvent().getDirection().equals(SortDirection.DESC)) {
@@ -165,12 +181,7 @@ public class MealServiceImpl implements MealService {
         }
     }
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void removeIngredientsFromMeal(MealEntity mealEntity) {
-        mealIngredientRepo.deleteAllByMeal(mealEntity);
-    }
-
-    private MealServiceImpl getSpringProxy() {
+    private MealServiceImpl getMealServiceProxy() {
         return applicationContext.getBean(this.getClass());
     }
 

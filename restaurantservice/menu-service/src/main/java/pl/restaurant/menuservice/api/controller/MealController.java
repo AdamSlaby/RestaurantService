@@ -5,11 +5,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.request.MealFilters;
+import pl.restaurant.menuservice.api.response.Dish;
 import pl.restaurant.menuservice.api.response.MealInfo;
 import pl.restaurant.menuservice.api.response.MealListView;
 import pl.restaurant.menuservice.business.service.MealService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -26,6 +28,11 @@ public class MealController {
     @PostMapping("/list")
     public MealListView getMeals(@RequestBody @Valid MealFilters filters) {
         return mealService.getMeals(filters);
+    }
+
+    @GetMapping("/best")
+    public List<Dish> getBestMeals() {
+        return mealService.getBestMeals();
     }
 
     @PostMapping("/")

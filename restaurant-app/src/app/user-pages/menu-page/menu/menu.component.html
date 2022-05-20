@@ -56,27 +56,27 @@
   </div>
   <ng-container *ngIf="innerWidth >= 800">
     <a (window:scroll)="onScroll()" id="soupLink" class="btn btn-outline-grey p-2 position-fixed"
-       [class.active]="isSectionActive('soup')" (click)="scrollToSection('soup')"
+       [class.active]="activeFragment === 'soup'" (click)="scrollToSection('soup')"
        style="top: 41vh; right: 30px">
     </a>
     <a id="mainDishLink" class="btn p-2 position-fixed"
-       [class.active]="isSectionActive('main-dish')" (click)="scrollToSection('main-dish')"
+       [class.active]="activeFragment === 'main-dish'" (click)="scrollToSection('main-dish')"
        style="top: 44vh; right: 30px">
     </a>
     <a id="fishLink" class="btn p-2 position-fixed"
-       [class.active]="isSectionActive('fish')" (click)="scrollToSection('fish')"
+       [class.active]="activeFragment === 'fish'" (click)="scrollToSection('fish')"
        style="top: 47vh; right: 30px">
     </a>
     <a id="saladLink" class="btn p-2 position-fixed"
-       [class.active]="isSectionActive('salad')" (click)="scrollToSection('salad')"
+       [class.active]="activeFragment === 'salad'" (click)="scrollToSection('salad')"
        style="top: 50vh; right: 30px">
     </a>
     <a id="dessertLink" class="btn p-2 position-fixed"
-       [class.active]="isSectionActive('dessert')" (click)="scrollToSection('dessert')"
+       [class.active]="activeFragment === 'dessert'" (click)="scrollToSection('dessert')"
        style="top: 53vh; right: 30px">
     </a>
     <a id="beverageLink" class="btn p-2 position-fixed"
-       [class.active]="isSectionActive('beverage')" (click)="scrollToSection('beverage')"
+       [class.active]="activeFragment === 'beverage'" (click)="scrollToSection('beverage')"
        style="top: 56vh; right: 30px">
     </a>
   </ng-container>

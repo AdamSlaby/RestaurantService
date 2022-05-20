@@ -4,7 +4,7 @@ import {SupplyInfo} from "../../model/supply/supply-info";
 import {Unit} from "../../model/meal/unit";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {FormBuilder, Validators} from "@angular/forms";
-import {Supply} from "../../model/supply/supply";
+import {NewSupply} from "../../model/supply/new-supply";
 
 @Component({
   selector: 'app-supply-page',
@@ -78,11 +78,11 @@ export class SupplyPageComponent implements OnInit {
 
   onIngredientFormSubmit(modal: any) {
     //todo
-    let supply: Supply = {
+    let supply: NewSupply = {
       restaurantId: localStorage.getItem('restaurantId'),
       ingredientName: this.ingredientForm.get('ingredientName')?.value,
       quantity: this.ingredientForm.get('quantity')?.value,
-      unit: this.ingredientForm.get('unit')?.value,
+      unitId: this.ingredientForm.get('unit')?.value,
     };
     console.log(supply);
     modal.close();
