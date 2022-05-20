@@ -33,7 +33,7 @@ public class FileUtility {
     }
 
     public boolean deleteFile(String filename, String path) {
-        File fileToDelete = new File(path + "/" + filename);
+        File fileToDelete = new File(path + filename);
         return fileToDelete.delete();
     }
 

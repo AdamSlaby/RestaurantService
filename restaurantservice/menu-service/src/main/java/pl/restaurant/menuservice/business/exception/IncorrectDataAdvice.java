@@ -14,6 +14,7 @@ import pl.restaurant.menuservice.business.exception.image.IncorrectImageExtensio
 import pl.restaurant.menuservice.business.exception.image.InvalidImageSizeException;
 import pl.restaurant.menuservice.business.exception.ingredient.IngredientAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.ingredient.IngredientNotFoundException;
+import pl.restaurant.menuservice.business.exception.meal.CannotDeserializeIngredientsException;
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
 import pl.restaurant.menuservice.business.exception.menu.MenuNotFoundException;
@@ -26,6 +27,15 @@ import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(CannotDeserializeIngredientsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> cannotDeserializeIngredientsHandler(CannotDeserializeIngredientsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ingredients[0].name", ex.getMessage());
+        return errors;
+    }
+
     @ResponseBody
     @ExceptionHandler(MenuNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -178,7 +188,16 @@ public class IncorrectDataAdvice {
     public Map<String, String> handleValidationExceptions(ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getConstraintViolations().forEach((error) -> {
-            String fieldName = "Name";
+            String[] parts = error.getPropertyPath().toString().split("\\.");
+            String fieldName;
+            StringBuilder builder = new StringBuilder();
+            if (parts.length > 1) {
+                for (int i = 1; i < parts.length; i++)
+                    builder.append(parts[i]).append(".");
+                builder.deleteCharAt(builder.length() - 1);
+                fieldName = builder.toString();
+            } else
+                fieldName = error.getPropertyPath().toString();
             String errorMessage = error.getMessage();
             errors.put(fieldName, errorMessage);
         });

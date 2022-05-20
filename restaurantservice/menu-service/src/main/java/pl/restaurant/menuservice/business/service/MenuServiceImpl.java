@@ -15,6 +15,7 @@ import pl.restaurant.menuservice.data.entity.MealEntity;
 import pl.restaurant.menuservice.data.entity.MenuEntity;
 import pl.restaurant.menuservice.data.repository.MenuRepo;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,6 +1,7 @@
 package pl.restaurant.menuservice.api.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.request.MealFilters;

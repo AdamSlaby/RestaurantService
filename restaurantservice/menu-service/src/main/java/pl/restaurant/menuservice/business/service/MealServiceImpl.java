@@ -1,12 +1,18 @@
 package pl.restaurant.menuservice.business.service;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 import pl.restaurant.menuservice.api.mapper.MealIngredientMapper;
 import pl.restaurant.menuservice.api.mapper.MealMapper;
@@ -18,7 +24,7 @@ import pl.restaurant.menuservice.api.response.MealInfo;
 import pl.restaurant.menuservice.api.response.MealListView;
 import pl.restaurant.menuservice.api.response.MealShortInfo;
 import pl.restaurant.menuservice.business.exception.ColumnNotFoundException;
-import pl.restaurant.menuservice.business.exception.UnitNotFoundException;
+import pl.restaurant.menuservice.business.exception.meal.CannotDeserializeIngredientsException;
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
 import pl.restaurant.menuservice.business.exception.type.TypeNotFoundException;
@@ -30,10 +36,14 @@ import pl.restaurant.menuservice.data.repository.MealRepo;
 import pl.restaurant.menuservice.data.repository.TypeRepo;
 import pl.restaurant.menuservice.data.repository.UnitRepo;
 
+import javax.persistence.PreRemove;
 import javax.transaction.Transactional;
-import java.util.Optional;
+import javax.validation.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
+@Validated
 public class MealServiceImpl implements MealService {
     private final static int AMOUNT = 10;
     private static final String IMAGE_URL = "http://localhost:9000/menu/image/";
@@ -44,18 +54,16 @@ public class MealServiceImpl implements MealService {
     private MealIngredientRepo mealIngredientRepo;
     private IngredientService ingredientService;
     private TypeRepo typeRepo;
-    private UnitRepo unitRepo;
-    private UnitService unitService;
+    private ApplicationContext applicationContext;
 
     public MealServiceImpl(MealRepo mealRepo, MealIngredientRepo mealIngredientRepo,
                            IngredientService ingredientService, TypeRepo typeRepo,
-                           UnitRepo unitRepo, UnitService unitService) {
+                           ApplicationContext applicationContext) {
         this.mealRepo = mealRepo;
         this.mealIngredientRepo = mealIngredientRepo;
         this.ingredientService = ingredientService;
         this.typeRepo = typeRepo;
-        this.unitRepo = unitRepo;
-        this.unitService = unitService;
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -87,31 +95,43 @@ public class MealServiceImpl implements MealService {
     @Override
     @Transactional
     public void addMeal(Meal meal) {
+        List<Ingredient> ingredients = deserializeStringToList(meal.getIngredients());
         if (mealRepo.existsByName(meal.getName()))
             throw new MealAlreadyExistsException();
         validateImage(meal.getImage());
         TypeEntity type = typeRepo.findById(meal.getTypeId())
                 .orElseThrow(TypeNotFoundException::new);
+        MealEntity mealEntity = mealRepo.save(MealMapper.mapObjectToData(meal, type, IMAGE_URL));
+        for (int i = 0; i < ingredients.size(); i++)
+            ingredientService.addIngredientsForMeal(ingredients, mealEntity, i);
         String filename = FileUtility.fileUpload(meal.getImage(), path);
-        MealEntity mealEntity = mealRepo.save(MealMapper.mapObjectToData(meal, type, IMAGE_URL + filename));
-        for (int i = 0; i < meal.getIngredients().size(); i++) {
-            addIngredientsForMeal(meal, mealEntity, i);
-        }
+        mealEntity.setImageUrl(IMAGE_URL + filename);
+        mealRepo.save(mealEntity);
     }
 
     @Override
-    @Transactional
     public void updateMeal(Integer mealId, Meal meal) {
+        List<Ingredient> ingredients = deserializeStringToList(meal.getIngredients());
         MealEntity mealEntity = mealRepo.findById(mealId)
                 .orElseThrow(MealNotFoundException::new);
         if (mealRepo.existsByName(meal.getName()) && !mealEntity.getName().equals(meal.getName()))
             throw new MealAlreadyExistsException();
+        getSpringProxy().removeIngredientsFromMeal(mealEntity);
+        updateMeal(mealEntity, meal, ingredients);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void updateMeal(MealEntity mealEntity, Meal meal, List<Ingredient> ingredients) {
+        TypeEntity type = typeRepo.findById(meal.getTypeId())
+                .orElseThrow(TypeNotFoundException::new);
+        mealEntity.setName(meal.getName());
+        mealEntity.setPrice(meal.getPrice());
+        mealEntity.setType(type);
+        for (int i = 0; i < ingredients.size(); i++)
+            ingredientService.addIngredientsForMeal(ingredients, mealEntity, i);
         if (meal.getImage() != null)
             updateMealImage(meal, mealEntity);
-        mealIngredientRepo.deleteByMeal(mealEntity);
-        for (int i = 0; i < meal.getIngredients().size(); i++) {
-            addIngredientsForMeal(meal, mealEntity, i);
-        }
+        mealRepo.save(mealEntity);
     }
 
     @Override
@@ -119,7 +139,9 @@ public class MealServiceImpl implements MealService {
     public void deleteMeal(Integer mealId) {
         MealEntity mealEntity = mealRepo.findById(mealId)
                 .orElseThrow(MealNotFoundException::new);
-        mealIngredientRepo.deleteByMeal(mealEntity);
+        String[] parts = mealEntity.getImageUrl().split("/");
+        FileUtility.deleteFile(parts[parts.length - 1], path);
+        mealIngredientRepo.deleteAllByMeal(mealEntity);
         mealRepo.delete(mealEntity);
     }
 
@@ -143,6 +165,15 @@ public class MealServiceImpl implements MealService {
         }
     }
 
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void removeIngredientsFromMeal(MealEntity mealEntity) {
+        mealIngredientRepo.deleteAllByMeal(mealEntity);
+    }
+
+    private MealServiceImpl getSpringProxy() {
+        return applicationContext.getBean(this.getClass());
+    }
+
     private void updateMealImage(Meal meal, MealEntity mealEntity) {
         validateImage(meal.getImage());
         String filename = FileUtility.fileUpload(meal.getImage(), path);
@@ -151,21 +182,19 @@ public class MealServiceImpl implements MealService {
         mealEntity.setImageUrl(IMAGE_URL + filename);
     }
 
-    private void addIngredientsForMeal(Meal meal, MealEntity mealEntity, int i) {
-        IngredientEntity ingredientEntity;
-        Ingredient ingredient = meal.getIngredients().get(i);
-        if (ingredient.getId() == -1)
-            ingredientEntity = ingredientService.addIngredient(ingredient, i);
-        else
-            ingredientEntity = ingredientService.getIngredient(ingredient.getId(), i);
-        UnitEntity unit = unitService.getUnit(ingredient.getUnitId(), i);
-        mealIngredientRepo.save(MealIngredientMapper.mapToData(mealEntity, ingredientEntity, unit,
-                ingredient.getAmount()));
-    }
-
     private void validateImage(MultipartFile image) {
         ImageValidator.validateImageNull(image);
         ImageValidator.validateImageExtension(image);
         ImageValidator.validateImageSize(image);
+    }
+
+    private List<Ingredient> deserializeStringToList(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            List<Ingredient> ingredients = Arrays.asList(mapper.readValue(json, Ingredient[].class));
+            return ingredients;
+        } catch (JsonProcessingException e) {
+            throw new CannotDeserializeIngredientsException();
+        }
     }
 }

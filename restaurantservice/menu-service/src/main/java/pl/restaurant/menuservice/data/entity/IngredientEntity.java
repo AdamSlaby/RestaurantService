@@ -23,7 +23,7 @@ public class IngredientEntity implements Serializable {
     @Column(length = 31, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     Set<MealIngredientEntity> mealIngredients;
 
     public IngredientEntity(String name) {

@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -35,9 +36,23 @@ public class MealEntity implements Serializable {
     @JoinColumn(name = "type_id", nullable = false)
     private TypeEntity type;
 
-    @ManyToMany(mappedBy = "meals", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "meals", fetch = FetchType.LAZY)
     private Set<MenuEntity> menus;
 
-    @OneToMany(mappedBy = "meal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "meal", fetch = FetchType.EAGER)
     Set<MealIngredientEntity> ingredients;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MealEntity that = (MealEntity) o;
+        return isBest == that.isBest && Objects.equals(mealId, that.mealId) &&
+                Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mealId, name, price, imageUrl, isBest);
+    }
 }

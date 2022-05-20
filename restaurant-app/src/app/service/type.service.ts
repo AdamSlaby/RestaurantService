@@ -11,7 +11,7 @@ export class TypeService {
   private COMMON_URL = `${GeneralService.BASE_URL}/menu/type`;
   private GET_ALL_TYPES = `${this.COMMON_URL}/`;
   private ADD_TYPE = `${this.COMMON_URL}/`;
-  private UPDATE_TYPE = `${this.COMMON_URL}/{id}`;
+  private UPDATE_TYPE = `${this.COMMON_URL}/`;
 
   constructor(private http: HttpClient) { }
 
@@ -22,11 +22,11 @@ export class TypeService {
 
   addType(type: string): Observable<Type> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.post<Type>(this.ADD_TYPE + '?name=' + type, {headers});
+    return this.http.post<Type>(this.ADD_TYPE, type, {headers});
   }
 
   updateType(type: string, typeId: number): Observable<Type> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.put<Type>(this.UPDATE_TYPE + typeId + '?name=' + type, {headers});
+    return this.http.put<Type>(this.UPDATE_TYPE + typeId, type, {headers});
   }
 }

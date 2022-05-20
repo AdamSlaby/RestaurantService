@@ -4,5 +4,5 @@ export interface IngredientView {
   id: number;
   name: string;
   amount: number;
-  unit: Unit | any;
+  unit: Unit;
 }

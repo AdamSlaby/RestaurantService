@@ -14,7 +14,7 @@
                   [ngValue]="type.id">{{type.name.toString()}}</option>
         </select>
       </div>
-      <div class="d-flex justify-content-center align-items-center">
+      <div class="d-grid">
         <button class="btn btn-outline-grey mb-2" type="button" (click)="filterMeals()">Szukaj</button>
         <button (click)="resetFilters()" class="btn btn-outline-grey">Reset</button>
       </div>
@@ -49,7 +49,7 @@
             <th scope="col">Opcje</th>
           </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="mealList">
           <tr *ngFor="let meal of mealList.meals">
             <th scope="row">{{meal.id}}</th>
             <td>{{meal.type.toString()}}</td>
@@ -69,7 +69,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="d-flex justify-content-center align-items-center">
+        <div *ngIf="mealList" class="d-flex justify-content-center align-items-center">
           <ngb-pagination [collectionSize]="mealList.totalElements"
                           [(page)]="pageNr"
                           [maxSize]="5"
@@ -84,7 +84,7 @@
   <div class="col-xl-3 col-lg-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center">Menu zimowe</h4>
-      <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ngb-accordion *ngIf="menus && types" #acc="ngbAccordion" activeIds="ngb-panel-0">
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.WINTER.toString()).mealMap.get(type.name)" class="pb-2">
@@ -110,7 +110,7 @@
   <div class="col-xl-3 col-lg-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center">Menu wiosenne</h4>
-      <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ngb-accordion *ngIf="menus && types" #acc="ngbAccordion" activeIds="ngb-panel-0">
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.SPRING.toString()).mealMap.get(type.name)" class="pb-2">
@@ -136,7 +136,7 @@
   <div class="col-xl-3 col-lg-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center">Menu letnie</h4>
-      <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ngb-accordion *ngIf="menus && types" #acc="ngbAccordion" activeIds="ngb-panel-0">
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.SUMMER.toString()).mealMap.get(type.name)" class="pb-2">
@@ -162,7 +162,7 @@
   <div class="col-xl-3 col-lg-6 pb-3">
     <div class="bg-white p-2" style="border-radius: 10px;">
       <h4 class="text-center">Menu jesienne</h4>
-      <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ngb-accordion *ngIf="menus && types" #acc="ngbAccordion" activeIds="ngb-panel-0">
         <ngb-panel *ngFor="let type of types" [title]="type.name">
           <ng-template ngbPanelContent>
             <div *ngFor="let dish of getMenuBySeason(season.AUTUMN.toString()).mealMap.get(type.name)" class="pb-2">
@@ -334,37 +334,37 @@
               <fa-icon [icon]="faMinus"></fa-icon>
             </button>
             <input class="form-control" type="text" [(ngModel)]="ingredient.name" [ngModelOptions]="{standalone: true}"
-                   [ngClass]="{ 'is-invalid': errors.has('ingredient[' + i + '].name')}"
+                   [ngClass]="{ 'is-invalid': errors.has('ingredients[' + i + '].name')}"
                    placeholder="Wpisz nazwę składnika"
                    list="ingredients"/>
             <datalist id="ingredients">
               <option *ngFor="let ingredientInfo of ingredients">{{ingredientInfo.name}}</option>
             </datalist>
-            <div *ngIf="errors.has('ingredient[' + i + '].name')"
+            <div *ngIf="errors.has('ingredients[' + i + '].name')"
                class="invalid-feedback d-block">
-              {{errors.get('ingredient[' + i + '].name')}}
+              {{errors.get('ingredients[' + i + '].name')}}
             </div>
           </div>
 
           <div class="input-group mt-2">
             <input class="form-control" type="number" [(ngModel)]="ingredient.amount"
-                   [ngClass]="{ 'is-invalid': errors.has('ingredient[' + i + '].amount')}"
+                   [ngClass]="{ 'is-invalid': errors.has('ingredients[' + i + '].amount')}"
                    [ngModelOptions]="{standalone: true}"
                    placeholder="Wpisz ilość składnika"/>
-            <select class="form-select" [(ngModel)]="ingredient.unit" [ngModelOptions]="{standalone: true}"
-                    [ngClass]="{ 'is-invalid': errors.has('ingredient[' + i + '].unit')}"
+            <select class="form-select" [(ngModel)]="ingredient.unit.id" [ngModelOptions]="{standalone: true}"
+                    [ngClass]="{ 'is-invalid': errors.has('ingredients[' + i + '].unit')}"
                     aria-label="MealInfo type select">
               <option disabled hidden [selected]="ingredient.unit === null" [ngValue]="null">
                 Wybierz miarę
               </option>
               <option *ngFor="let unit of units"
-                      [ngValue]="unit">{{unit.name}}</option>
+                      [ngValue]="unit.id">{{unit.name}}</option>
             </select>
           </div>
-          <div *ngIf="errors.has('ingredient[' + i + '].unit') || errors.has('ingredient[' + i + '].amount')"
+          <div *ngIf="errors.has('ingredients[' + i + '].unit') || errors.has('ingredients[' + i + '].amount')"
                class="invalid-feedback d-block">
-            {{errors.get('ingredient[' + i + '].unit')}} <br>
-            {{errors.get('ingredient[' + i + '].amount')}}
+            {{errors.get('ingredients[' + i + '].unit')}} <br>
+            {{errors.get('ingredients[' + i + '].amount')}}
           </div>
         </div>
       </ng-container>
@@ -376,24 +376,24 @@
           </button>
           <input class="form-control" type="text" [(ngModel)]="ingredient.name" [ngModelOptions]="{standalone: true}"
                  placeholder="Wpisz nazwę składnika" [size]="ingredients.length" autocomplete="off"
-                 [ngClass]="{ 'is-invalid': errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')}"
+                 [ngClass]="{ 'is-invalid': errors.has('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')}"
                  list="newIngredients"/>
           <datalist id="newIngredients">
             <option *ngFor="let ingredientInfo of ingredients">{{ingredientInfo.name}}</option>
           </datalist>
-          <div *ngIf="errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')"
+          <div *ngIf="errors.has('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')"
              class="invalid-feedback d-block">
-            {{errors.get('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')}}
+            {{errors.get('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].name')}}
           </div>
         </div>
 
         <div class="input-group mt-2">
           <input class="form-control" type="number" [(ngModel)]="ingredient.amount"
                  [ngModelOptions]="{standalone: true}"
-                 [ngClass]="{ 'is-invalid': errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount')}"
+                 [ngClass]="{ 'is-invalid': errors.has('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount')}"
                  placeholder="Wpisz ilość składnika"/>
           <select class="form-select" [(ngModel)]="ingredient.unit" [ngModelOptions]="{standalone: true}"
-                  [ngClass]="{ 'is-invalid': errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')}"
+                  [ngClass]="{ 'is-invalid': errors.has('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')}"
                   aria-label="MealInfo type select">
             <option disabled hidden [selected]="ingredient.unit === null" [ngValue]="null">
               Wybierz miarę
@@ -402,11 +402,11 @@
                     [ngValue]="unit">{{unit.name}}</option>
           </select>
         </div>
-        <div *ngIf="errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount') || 
-                    errors.has('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')"
+        <div *ngIf="errors.has('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount') || 
+                    errors.has('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')"
              class="invalid-feedback d-block">
-          {{errors.get('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount')}} <br>
-          {{errors.get('ingredient[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')}}
+          {{errors.get('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].amount')}} <br>
+          {{errors.get('ingredients[' + (i + (meal?.ingredients?.length ? meal.ingredients.length : 0)) + '].unit')}}
         </div>
       </div>
 

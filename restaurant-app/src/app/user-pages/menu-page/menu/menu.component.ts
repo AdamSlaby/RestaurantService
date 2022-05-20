@@ -51,11 +51,14 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   getDishes(type: string, colNr: number) {
-    let dishes = this.menu.filter(el => el.type === type);
-    let amountInCol = Math.ceil(dishes.length / 2.0);
-    let firstIndex = colNr * amountInCol;
-    let secondIndex = firstIndex + amountInCol;
-    return dishes.slice(firstIndex, secondIndex);
+    if (this.menu) {
+      let dishes = this.menu.filter(el => el.type === type);
+      let amountInCol = Math.ceil(dishes.length / 2.0);
+      let firstIndex = colNr * amountInCol;
+      let secondIndex = firstIndex + amountInCol;
+      return dishes.slice(firstIndex, secondIndex);
+    }
+    return [];
   }
 
   isSectionActive(fragment: string) {

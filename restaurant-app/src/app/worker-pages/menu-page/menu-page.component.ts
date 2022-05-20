@@ -19,6 +19,7 @@ import { MealFilters } from 'src/app/model/meal/meal-filters';
 import { MenuService } from 'src/app/service/menu.service';
 import { TypeService } from 'src/app/service/type.service';
 import { UnitService } from 'src/app/service/unit.service';
+import { MealShortView } from 'src/app/model/meal/meal-short-view';
 
 @Component({
   selector: 'app-menu-page',
@@ -45,7 +46,7 @@ export class MenuPageComponent implements OnInit {
   meal!: MealInfo;
   newIngredients: IngredientView[] = [];
   chosenMealId!: number;
-  fd: FormData = new FormData();
+  mealData: FormData = new FormData();
   units!: Unit[];
   loading: boolean = false;
   ingredients!: IngredientInfo[];
@@ -66,16 +67,15 @@ export class MenuPageComponent implements OnInit {
               private typeService: TypeService, private unitService: UnitService) { }
 
   ngOnInit(): void {
-    this.ingredientService.getAllIngredients().subscribe(data => {
-      this.ingredients = data
-    }, error => {
-      console.error(error);
-    });
+    this.getAllIngredients();
 
     this.getMealList(this.filters);
 
     this.menuService.getAllMenus().subscribe(data => {
       this.menus = data;
+      this.menus.forEach(el => {
+        el.mealMap =  new Map<string, MealShortView[]>(Object.entries(el.mealMap))
+      });
     }, error => {
       console.error(error);
     });
@@ -103,6 +103,14 @@ export class MenuPageComponent implements OnInit {
     this.modalService.open(content, {}).result.then(() => {}).catch(() => {});
   }
 
+  getAllIngredients() {
+    this.ingredientService.getAllIngredients().subscribe(data => {
+      this.ingredients = data
+    }, error => {
+      console.error(error);
+    });
+  }
+
   filterMeals() {
     this.getMealList(this.filters);
   }
@@ -116,7 +124,6 @@ export class MenuPageComponent implements OnInit {
   getMealList(filters: MealFilters) {
     this.mealService.getMeals(filters).subscribe(data => {
       this.mealList = data;
-      console.log(data);
     }, error => {
       console.error(error);
     });
@@ -234,6 +241,7 @@ export class MenuPageComponent implements OnInit {
   }
 
   editType(type: Type) {
+    this.errors.clear();
     this.typeService.updateType(type.name, type.id).subscribe(data => {
     }, error => {
       this.errors = new Map(Object.entries(error.error));
@@ -253,10 +261,11 @@ export class MenuPageComponent implements OnInit {
   onMealFormSubmit(modal: any) {
     this.errors.clear();
     let resultArr: IngredientView[];
-    this.fd.set('name', this.mealForm.get('name')?.value);
-    this.fd.set('typeId', this.mealForm.get('type')?.value);
-    this.fd.set('price', this.mealForm.get('price')?.value);
-    this.fd.set('image', this.mealForm.get('image')?.value);
+    this.mealData.set('name', this.mealForm.get('name')?.value);
+    this.mealData.set('typeId', this.mealForm.get('type')?.value);
+    this.mealData.set('price', this.mealForm.get('price')?.value);
+    if (this.mealForm.get('image')?.value) 
+      this.mealData.set('image', this.mealForm.get('image')?.value);
     let value = this.mealForm.get('ingredients')?.value;
     for (let ingredient of this.newIngredients) {
       let ingredientInfo = this.ingredients.filter(el => el.name === ingredient.name);
@@ -275,11 +284,15 @@ export class MenuPageComponent implements OnInit {
         unitId: el.unit.id
       } as Ingredient 
     });
-    this.fd.set('ingredients', JSON.stringify(ingredients));
+    this.mealData.set('ingredients', JSON.stringify(ingredients));
     this.loading = true;
     if (this.chosenMealId === -1) {
-      this.mealService.addMeal(this.fd).subscribe(data => {
+      this.mealService.addMeal(this.mealData).subscribe(data => {
         this.loading = false;
+        this.imageUrl = null;
+        this.mealForm.reset();
+        this.newIngredients = [];
+        this.getAllIngredients();
         modal.close();
       }, error => {
         this.errors = new Map(Object.entries(error.error));
@@ -288,8 +301,12 @@ export class MenuPageComponent implements OnInit {
         console.error(error);
       });
     } else {
-      this.mealService.updateMeal(this.fd, this.chosenMealId).subscribe(data => {
+      this.mealService.updateMeal(this.mealData, this.chosenMealId).subscribe(data => {
         this.loading = false;
+        this.imageUrl = null;
+        this.getAllIngredients();
+        this.mealForm.reset();
+        this.newIngredients = [];
         modal.close();
       }, error => {
         this.errors = new Map(Object.entries(error.error));

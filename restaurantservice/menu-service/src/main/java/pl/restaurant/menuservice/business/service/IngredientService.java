@@ -3,7 +3,9 @@ package pl.restaurant.menuservice.business.service;
 import pl.restaurant.menuservice.api.request.Ingredient;
 import pl.restaurant.menuservice.api.response.IngredientInfo;
 import pl.restaurant.menuservice.data.entity.IngredientEntity;
+import pl.restaurant.menuservice.data.entity.MealEntity;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public interface IngredientService {
@@ -11,4 +13,6 @@ public interface IngredientService {
     List<IngredientInfo> getAllIngredients();
 
     IngredientEntity addIngredient(Ingredient ingredient, int index);
+
+    void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int i);
 }

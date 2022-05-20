@@ -66,8 +66,10 @@ public class MealMapper {
         StringBuilder builder = new StringBuilder();
         meal.getIngredients().forEach(el ->
                 builder.append(el.getIngredient().getName()).append(", "));
-        builder.deleteCharAt(builder.length() - 1);
-        builder.deleteCharAt(builder.length() - 2);
+        if (meal.getIngredients().size() > 1) {
+            builder.deleteCharAt(builder.length() - 1);
+            builder.deleteCharAt(builder.length() - 2);
+        }
         return builder.toString();
     }
 }

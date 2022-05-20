@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Ingredient {
     @NotNull(message = "Identyfikator składnika nie może być pusty")
     private Integer id;

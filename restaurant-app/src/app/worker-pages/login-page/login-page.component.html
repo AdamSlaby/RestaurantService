@@ -12,9 +12,9 @@
               <input type="text" placeholder="Nazwa użytkownika" formControlName="username"
                      class="form-control text-center"
                      id="username" maxlength="30"
-                     [ngClass]="{ 'is-invalid': form.submitted && f['firstName'].errors }" />
-              <div *ngIf="form.submitted && f['firstName'].errors" class="invalid-feedback">
-                <div *ngIf="f['firstName'].errors['required']">
+                     [ngClass]="{ 'is-invalid': form.submitted && f['username'].errors }" />
+              <div *ngIf="form.submitted && f['username'].errors" class="invalid-feedback">
+                <div *ngIf="f['username'].errors['required']">
                   Nazwa użytkownika jest wymagana
                 </div>
               </div>
@@ -22,9 +22,9 @@
             <div class="form-group mb-4">
               <input type="password" placeholder="Hasło" formControlName="password" class="form-control text-center"
                      id="password" maxlength="30"
-                     [ngClass]="{ 'is-invalid': form.submitted && f['firstName'].errors }" />
-              <div *ngIf="form.submitted && f['firstName'].errors" class="invalid-feedback">
-                <div *ngIf="f['firstName'].errors['required']">
+                     [ngClass]="{ 'is-invalid': form.submitted && f['password'].errors }" />
+              <div *ngIf="form.submitted && f['password'].errors" class="invalid-feedback">
+                <div *ngIf="f['password'].errors['required']">
                   Hasło jest wymagane
                 </div>
               </div>

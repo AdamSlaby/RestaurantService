@@ -1,6 +1,7 @@
 package pl.restaurant.menuservice.business.service;
 
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.request.MealFilters;
 import pl.restaurant.menuservice.api.response.MealInfo;

@@ -1,6 +1,7 @@
 package pl.restaurant.menuservice.api.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.menuservice.api.response.Type;
 import pl.restaurant.menuservice.business.service.TypeService;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/type")
+@Validated
 @AllArgsConstructor
 public class TypeController {
     private TypeService typeService;
@@ -22,13 +24,13 @@ public class TypeController {
     }
 
     @PostMapping("/")
-    public Type addType(@RequestParam("name") @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
+    public Type addType(@RequestBody @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
                             String type) {
         return typeService.addType(type);
     }
 
     @PutMapping("/{id}")
-    public void updateType(@RequestParam("name") @Valid @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
+    public void updateType(@RequestBody @Size(max = 15, message = "Nazwa typu posiłku jest za długa")
                            String type, @PathVariable("id") Integer typeId) {
         typeService.updateType(typeId, type);
     }
