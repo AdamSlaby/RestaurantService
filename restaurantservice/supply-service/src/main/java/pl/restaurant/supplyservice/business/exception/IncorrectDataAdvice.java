@@ -15,6 +15,85 @@ import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(IngredientNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> ingredientNotFoundHandler(IngredientNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ingredientId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UnitMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> unitMismatchHandler(UnitMismatchException ex) {
+        return constructMapForPartError(ex);
+    }
+    @ResponseBody
+    @ExceptionHandler(SupplyNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> supplyNotFoundHandler(SupplyNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("supplyId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UnitNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> unitNotFoundHandler(UnitNotFoundException ex) {
+        return constructMapForPartError(ex);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> restaurantNotFoundHandler(RestaurantNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("restaurantId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvoiceAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invoiceAlreadyExistsHandler(InvoiceAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("nr", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidNipException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invalidNipHandler(InvalidNipException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String[] errorParts = ex.getMessage().split("\\.");
+        if (errorParts.length > 1)
+            errors.put(errorParts[0], errorParts[1]);
+        else
+            errors.put("nip", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ColumnNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> columnNotFoundHandler(ColumnNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("column", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvoiceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> invoiceNotFoundHandler(InvoiceNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("invoiceNr", ex.getMessage());
+        return errors;
+    }
 
     @ResponseBody
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -61,6 +140,16 @@ public class IncorrectDataAdvice {
             String errorMessage = error.getMessage();
             errors.put(fieldName, errorMessage);
         });
+        return errors;
+    }
+
+    private Map<String, String> constructMapForPartError(RuntimeException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String[] errorParts = ex.getMessage().split("\\.");
+        if (errorParts.length > 1)
+            errors.put(errorParts[0], errorParts[1]);
+        else
+            errors.put("unitId", ex.getMessage());
         return errors;
     }
 }

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvoiceFilters {
+    private Long restaurantId;
     private String nr;
     private LocalDate date;
     private String sellerName;

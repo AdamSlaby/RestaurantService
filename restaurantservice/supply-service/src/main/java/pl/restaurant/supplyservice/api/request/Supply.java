@@ -24,7 +24,7 @@ public class Supply {
     private Integer ingredientId;
 
     @NotNull(message = "Ilość składnika nie może być pusta")
-    @Digits(integer = 6, fraction = 2, message = "Ilość składnika jest nieprawidłowa")
+    @Digits(integer = 6, fraction = 3, message = "Ilość składnika jest nieprawidłowa")
     private BigDecimal quantity;
 
     @NotNull(message = "Identyfikator jednostki miary jest nieprawidłowy")

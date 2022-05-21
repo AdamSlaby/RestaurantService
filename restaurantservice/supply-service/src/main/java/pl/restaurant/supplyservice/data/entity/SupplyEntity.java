@@ -19,7 +19,7 @@ public class SupplyEntity implements Serializable {
     @EmbeddedId
     private RestaurantIngredientId restaurantIngredientId;
 
-    @Column(precision = 8, scale = 2, nullable = false)
+    @Column(precision = 8, scale = 3, nullable = false)
     private BigDecimal quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

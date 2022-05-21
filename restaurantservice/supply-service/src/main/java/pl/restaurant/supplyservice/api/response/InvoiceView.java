@@ -1,9 +1,6 @@
 package pl.restaurant.supplyservice.api.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pl.restaurant.supplyservice.api.request.Address;
 
 import java.math.BigDecimal;
@@ -12,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvoiceView {

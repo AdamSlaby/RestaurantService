@@ -1,9 +1,6 @@
 package pl.restaurant.supplyservice.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pl.restaurant.supplyservice.api.request.TaxType;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Good")

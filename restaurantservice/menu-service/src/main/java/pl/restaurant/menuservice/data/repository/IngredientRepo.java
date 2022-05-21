@@ -14,4 +14,6 @@ public interface IngredientRepo extends JpaRepository<IngredientEntity, Integer>
     List<IngredientInfo> getAllIngredients();
 
     boolean existsByName(String name);
+
+    boolean existsAllByIngredientIdIn(List<Integer> ingredientIds);
 }

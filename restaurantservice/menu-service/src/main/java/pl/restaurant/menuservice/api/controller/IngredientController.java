@@ -7,6 +7,7 @@ import pl.restaurant.menuservice.business.service.IngredientService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -27,5 +28,10 @@ public class IngredientController {
                                      @Size(max = 30, message = "Nazwa składnika jest za długa")
                                      String ingredient) {
         return ingredientService.addIngredient(ingredient);
+    }
+
+    @PostMapping("/exists")
+    public boolean isIngredientsExists(@RequestBody List<@NotNull Integer> ingredientIds) {
+        return ingredientService.isIngredientsExists(ingredientIds);
     }
 }

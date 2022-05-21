@@ -63,4 +63,9 @@ public class IngredientServiceImpl implements IngredientService {
         mealIngredientRepo.save(MealIngredientMapper.mapToData(mealEntity, ingredientEntity, unit,
                 ingredient.getAmount()));
     }
+
+    @Override
+    public boolean isIngredientsExists(List<Integer> ingredientIds) {
+        return ingredientRepo.existsAllByIngredientIdIn(ingredientIds);
+    }
 }

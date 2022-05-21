@@ -10,4 +10,6 @@ import pl.restaurant.supplyservice.business.service.SupplyService;
 @AllArgsConstructor
 public class SupplyController {
     private SupplyService supplyService;
+
+
 }

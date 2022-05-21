@@ -2,12 +2,14 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {faFileInvoice, faXmark, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FormBuilder, NgForm, Validators} from "@angular/forms";
 import {RegexPattern} from "../../../model/regex-pattern";
-import {InvoiceView} from "../../../model/invoice/invoice";
+import {InvoiceView} from "../../../model/invoice/invoice-view";
 import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateToDateAdapter} from "../../../adapter/datepicker-date-adapter";
 import {Unit} from "../../../model/meal/unit";
 import {TaxType} from "../../../model/invoice/tax-type";
-import {GoodView} from "../../../model/invoice/good";
+import {GoodView} from "../../../model/invoice/good-view";
+import { Invoice } from 'src/app/model/invoice/invoice';
+import { IngredientInfo } from 'src/app/model/meal/ingredient-info';
 
 @Component({
   selector: 'app-invoice-form',
@@ -60,12 +62,8 @@ export class InvoiceFormComponent implements OnInit {
           {
             id: 1,
             ingredientId: 1,
-            ingredient: 'Pomidor',
             quantity: 10,
-            unit: {
-              id: 1,
-              name: 'kg'
-            },
+            unitId: 2,
             discount: 0.00,
             unitNetPrice: 5.00,
             netPrice: 50.00,
@@ -75,12 +73,8 @@ export class InvoiceFormComponent implements OnInit {
           {
             id: 2,
             ingredientId: 2,
-            ingredient: 'Ogórek',
             quantity: 5,
-            unit: {
-              id: 1,
-              name: 'kg'
-            },
+            unitId: 1,
             discount: 1.00,
             unitNetPrice: 6.00,
             netPrice: 30.00,
@@ -119,6 +113,7 @@ export class InvoiceFormComponent implements OnInit {
   _invoiceNr!: string;
   invoiceInfo!: InvoiceView;
   units!: Unit[];
+  ingredients!: IngredientInfo[];
   taxTypes = Object.values(TaxType);
   errors: Map<string, string> = new Map<string, string>();
   invoiceForm = this.fb.group({
@@ -160,10 +155,9 @@ export class InvoiceFormComponent implements OnInit {
 
   onInvoiceFormSubmit() {
     //todo
-    let invoice: InvoiceView = {
+    let invoice: Invoice = {
       nr: this.invoiceForm.get('nr')?.value,
       restaurantId: localStorage.getItem('restaurantId'),
-      restaurantInfo: null,
       date: this.invoiceForm.get('date')?.value,
       buyerName: this.invoiceForm.get('buyerName')?.value,
       sellerName: this.invoiceForm.get('sellerName')?.value,

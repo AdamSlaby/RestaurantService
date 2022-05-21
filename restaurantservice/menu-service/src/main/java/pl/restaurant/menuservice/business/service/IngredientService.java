@@ -17,4 +17,6 @@ public interface IngredientService {
     Integer addIngredient(String ingredient);
 
     void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int i);
+
+    boolean isIngredientsExists(List<Integer> ingredientIds);
 }
