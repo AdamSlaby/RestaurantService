@@ -18,6 +18,9 @@ import java.util.Set;
 @Table(name = "Invoice")
 public class InvoiceEntity implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long invoiceId;
+
     @Column(length = 20)
     private String invoiceNr;
 

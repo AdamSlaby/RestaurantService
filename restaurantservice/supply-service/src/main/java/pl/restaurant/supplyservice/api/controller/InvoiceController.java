@@ -17,8 +17,8 @@ import javax.validation.Valid;
 public class InvoiceController {
     private InvoiceService invoiceService;
 
-    @GetMapping("/{nr}")
-    public InvoiceView getInvoice(@PathVariable("nr") String invoiceNr) {
+    @GetMapping("/")
+    public InvoiceView getInvoice(@RequestParam("nr") String invoiceNr) {
         return invoiceService.getInvoice(invoiceNr);
     }
 
@@ -32,8 +32,8 @@ public class InvoiceController {
         invoiceService.addInvoice(invoice);
     }
 
-    @PutMapping("/{nr}")
-    public void updateInvoice(@RequestBody @Valid Invoice invoice, @PathVariable("nr") String invoiceNr) {
+    @PutMapping("/")
+    public void updateInvoice(@RequestBody @Valid Invoice invoice, @RequestParam("nr") String invoiceNr) {
         invoiceService.updateInvoice(invoiceNr, invoice);
     }
 }

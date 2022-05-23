@@ -43,7 +43,8 @@ export class NewsPageComponent implements OnInit {
   }
 
   filterNews() {
-    let filters = this.filters
+    let filters = this.filters;
+    filters.pageNr = 0;
     this.getNewsList(filters);
   }
 
@@ -67,6 +68,7 @@ export class NewsPageComponent implements OnInit {
     if (this.previousPage !== this.pageNr) {
       this.newsService.getNewsList(filters).subscribe(data => {
         this.previousPage = this.pageNr;
+        this.pageNr = page;
         this.newsList = data;
         this.newsList.news.forEach(el => el.date = new Date(el.date));
       }, error => {
@@ -126,7 +128,7 @@ export class NewsPageComponent implements OnInit {
       title: this.chosenTitle,
       date: this.chosenDate,
       sortEvent: null,
-      pageNr: 0
+      pageNr: this.pageNr - 1
     } as NewsFilters;
   }
 }

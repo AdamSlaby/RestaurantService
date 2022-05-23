@@ -485,7 +485,7 @@
                             [ngModelOptions]="{standalone: true}"
                             class="form-select"
                             [ngClass]="{ 'is-invalid': errors.has('goods[' + i + '].unitId')}">
-                      <option disabled hidden [ngValue]="null">Wybierz jednostkę</option>
+                      <option disabled hidden [ngValue]="-1">Wybierz jednostkę</option>
                       <option *ngFor="let unit of units" [ngValue]="unit.id">{{unit.name}}</option>
                     </select>
                   </div>

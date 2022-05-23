@@ -17,7 +17,7 @@ public class Address {
     private String city;
 
     @NotBlank(message = "Nazwa ulicy jest wymagana")
-    @Pattern(regexp = "^[a-zA-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż -.]{3,57}$", message = "Nazwa ulicy jest nieprawidłowa")
+    @Pattern(regexp = "^[1-9a-zA-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż -.]{3,57}$", message = "Nazwa ulicy jest nieprawidłowa")
     private String street;
 
     @NotBlank(message = "Numer domu jest wymagany")

@@ -21,7 +21,7 @@ export class InvoiceService {
 
   getInvoice(invoiceNr: string): Observable<InvoiceView> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.get<InvoiceView>(this.GET_INVOICE + invoiceNr, {headers});
+    return this.http.get<InvoiceView>(this.GET_INVOICE + "?nr=" + invoiceNr, {headers});
   }
 
   getInvoiceList(filters: InvoiceFilters): Observable<InvoiceListView> {
@@ -36,6 +36,6 @@ export class InvoiceService {
 
   updateInvoice(invoice: Invoice, invoiceNr: string): Observable<any> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.put<any>(this.UPDATE_INVOICE + invoiceNr, invoice, {headers});
+    return this.http.put<any>(this.UPDATE_INVOICE + "?nr=" + invoiceNr, invoice, {headers});
   }
 }

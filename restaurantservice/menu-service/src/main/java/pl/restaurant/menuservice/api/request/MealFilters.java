@@ -13,5 +13,5 @@ public class MealFilters {
     private Integer typeId;
     private String mealName;
     private SortEvent sortEvent;
-    private Integer pageNr;
+    private int pageNr;
 }

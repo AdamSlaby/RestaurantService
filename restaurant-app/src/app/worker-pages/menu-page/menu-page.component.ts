@@ -43,6 +43,7 @@ export class MenuPageComponent implements OnInit {
   typeName!: string;
   errors: Map<string, string> = new Map<string, string>();
   imageUrl: any;
+  correctType!: number;
   meal!: MealInfo;
   newIngredients: IngredientView[] = [];
   chosenMealId!: number;
@@ -112,7 +113,9 @@ export class MenuPageComponent implements OnInit {
   }
 
   filterMeals() {
-    this.getMealList(this.filters);
+    let filters = this.filters;
+    filters.pageNr = 0;
+    this.getMealList(filters);
   }
 
   resetFilters() {
@@ -152,6 +155,7 @@ export class MenuPageComponent implements OnInit {
     if (this.previousPage !== this.pageNr) {
       this.mealService.getMeals(filters).subscribe(data => {
         this.previousPage = this.pageNr;
+        this.pageNr = page;
         this.mealList = data;
       }, error => {
         console.error(error);
@@ -240,12 +244,19 @@ export class MenuPageComponent implements OnInit {
     });
   }
 
-  editType(type: Type) {
+  editType(type: Type, index: number) {
     this.errors.clear();
+    this.correctType = -1;
     this.typeService.updateType(type.name, type.id).subscribe(data => {
+      this.correctType = index;
     }, error => {
       this.errors = new Map(Object.entries(error.error));
       console.error(error);
+      let copy = new Map<string, string>(this.errors);
+      copy.forEach((v, k) => {
+        this.errors.set(k + index, v);
+        this.errors.delete(k);
+      });
     });
   }
 
@@ -359,7 +370,7 @@ export class MenuPageComponent implements OnInit {
       mealName: this.chosenMeal,
       typeId: this.chosenType,
       sortEvent: null,
-      pageNr: 0
+      pageNr: this.pageNr - 1
     } as MealFilters;
   }
 }

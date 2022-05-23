@@ -57,7 +57,16 @@ public class MailIncorrectDataAdvice {
     public Map<String, String> handleValidationExceptions(ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getConstraintViolations().forEach((error) -> {
-            String fieldName = "Name";
+            String[] parts = error.getPropertyPath().toString().split("\\.");
+            String fieldName;
+            StringBuilder builder = new StringBuilder();
+            if (parts.length > 1) {
+                for (int i = 1; i < parts.length; i++)
+                    builder.append(parts[i]).append(".");
+                builder.deleteCharAt(builder.length() - 1);
+                fieldName = builder.toString();
+            } else
+                fieldName = error.getPropertyPath().toString();
             String errorMessage = error.getMessage();
             errors.put(fieldName, errorMessage);
         });

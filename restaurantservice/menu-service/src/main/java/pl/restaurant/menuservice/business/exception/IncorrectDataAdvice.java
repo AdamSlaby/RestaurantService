@@ -81,10 +81,10 @@ public class IncorrectDataAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> ingredientAlreadyExistsHandler(IngredientAlreadyExistsException ex) {
         Map<String, String> errors = new HashMap<>();
-        String number = ex.getMessage().split(" ")[0];
-        if (NumberUtils.isParsable(number)) {
-            int i = Integer.parseInt(number);
-            errors.put("ingredient[" + i + "].name", ex.getMessage());
+        String[] errorParts = ex.getMessage().split("_");
+        if (NumberUtils.isParsable(errorParts[0])) {
+            int i = Integer.parseInt(errorParts[0]);
+            errors.put("ingredient[" + i + "].name", errorParts[1]);
         } else
             errors.put("ingredientName", ex.getMessage());
         return errors;

@@ -18,9 +18,9 @@ export class InvoicesComponent implements OnInit {
   faPlus = faPlus;
   faEye = faEye;
   faPenToSquare = faPenToSquare;
-  chosenInvoice!: any;
+  chosenInvoice: any = '';
   chosenInvoiceDate!: any;
-  chosenSellerName!: any;
+  chosenSellerName: any = '';
   pageNr!: number;
   showInvoiceDetails: boolean = false;
   previousPage!: number;
@@ -39,7 +39,6 @@ export class InvoicesComponent implements OnInit {
   getInvoiceList(filters: InvoiceFilters) {
     this.invoiceService.getInvoiceList(filters).subscribe(data => {
       this.invoiceList = data;
-      console.log(data);
       this.invoiceList.invoices.forEach(el => el.date = new Date(el.date));
     }, error => {
       console.error(error);
@@ -48,7 +47,7 @@ export class InvoicesComponent implements OnInit {
 
   filterInvoices() {
     let filters = this.filters
-    console.log(filters);
+    filters.pageNr = 0;
     this.getInvoiceList(filters);
   }
 
@@ -108,7 +107,7 @@ export class InvoicesComponent implements OnInit {
       date: this.chosenInvoiceDate,
       sellerName: this.chosenSellerName,
       sortEvent: null,
-      pageNr: 0
+      pageNr: this.pageNr - 1
     } as InvoiceFilters;
   }
 }

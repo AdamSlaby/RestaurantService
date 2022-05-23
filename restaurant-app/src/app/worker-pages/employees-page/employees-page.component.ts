@@ -81,6 +81,7 @@ export class EmployeesPageComponent implements OnInit {
     if (this.previousPage !== this.pageNr) {
       this.employeeService.getEmployees(filters).subscribe(data => {
         this.previousPage = this.pageNr;
+        this.pageNr = page;
         this.employeesList = data;
       }, error => {
         console.error(error);
@@ -104,6 +105,7 @@ export class EmployeesPageComponent implements OnInit {
 
   filterEmployees() {
     let filters = this.filters
+    filters.pageNr = 0;
     this.employeeService.getEmployees(filters).subscribe(data => {
       this.employeesList = data;
     }, error => {
@@ -156,7 +158,7 @@ export class EmployeesPageComponent implements OnInit {
       workstationId: this.chosenWorkstation,
       active: this.chosenActive,
       sortEvent: null,
-      pageNr: 0
+      pageNr: this.pageNr - 1
     } as EmployeeFilters;
   }
 }

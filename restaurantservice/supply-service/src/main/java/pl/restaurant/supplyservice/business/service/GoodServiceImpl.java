@@ -27,6 +27,6 @@ public class GoodServiceImpl implements GoodService {
     @Override
     @Transactional
     public void deleteAllByInvoice(InvoiceEntity invoice) {
-        goodRepo.deleteAllByInvoice(invoice.getInvoiceNr());
+        goodRepo.deleteAllByInvoice(invoice.getInvoiceId());
     }
 }

@@ -87,7 +87,8 @@ export class InvoiceFormComponent implements OnInit {
   isSuccessful: boolean = false;
   units!: Unit[];
   ingredients!: Map<number, string>;
-  taxTypes = Object.values(TaxType);
+  taxType = TaxType;
+  taxTypes = this.keys();
   errors: Map<string, string> = new Map<string, string>();
   invoiceForm = this.fb.group({
     nr: [null, [Validators.required, Validators.maxLength(20)]],
@@ -111,7 +112,6 @@ export class InvoiceFormComponent implements OnInit {
     goods: [null, [Validators.required]],
   });
 
-
   constructor(private fb: FormBuilder, private invoiceService: InvoiceService,
               private ingredientService: IngredientService, private unitService: UnitService) {
   }
@@ -126,6 +126,11 @@ export class InvoiceFormComponent implements OnInit {
 
   get f() {
     return this.invoiceForm.controls;
+  }
+
+  keys() : Array<string> {
+    var keys = Object.keys(this.taxType);
+    return keys.slice(keys.length / 2);
   }
 
   closeComponent() {
@@ -246,7 +251,8 @@ export class InvoiceFormComponent implements OnInit {
     if (goods) {
       let good = goods[index] as GoodView;
       if (good && good.netPrice > 0) {
-        switch (good.taxType) {
+        let value = Object.entries(this.taxType).filter((v, k) => v[0] === good.taxType)[0][1];
+        switch (value) {
           case TaxType.A:
             good.taxPrice = good.netPrice * 0.23;
             break;

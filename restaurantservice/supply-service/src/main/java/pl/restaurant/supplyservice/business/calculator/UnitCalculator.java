@@ -12,7 +12,7 @@ public abstract class UnitCalculator {
     Map<String, BigDecimal> converter;
 
     public Result calculateUnits(SupplyEntity supply, BigDecimal quantity, UnitEntity unit, Operation operation) {
-        BigDecimal result = getResult(supply, quantity, unit, operation);
+        BigDecimal result = getResult(supply, quantity, unit, operation).setScale(3, RoundingMode.UNNECESSARY);
         for (Map.Entry<String, BigDecimal> entry: converter.entrySet()) {
             BigDecimal divide = result.divide(entry.getValue(), RoundingMode.UNNECESSARY);
             if (divide.compareTo(BigDecimal.ONE) >= 0)

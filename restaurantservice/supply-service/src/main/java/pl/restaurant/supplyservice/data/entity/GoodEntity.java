@@ -46,6 +46,6 @@ public class GoodEntity implements Serializable {
     private UnitEntity unit;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "invoice_nr", nullable = false)
+    @JoinColumn(name = "invoice_id", nullable = false)
     private InvoiceEntity invoice;
 }

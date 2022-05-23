@@ -205,16 +205,18 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
-    <ng-container *ngFor="let type of types">
+    <ng-container *ngFor="let type of types; index as i">
       <div class="input-group mb-2">
-        <input [(ngModel)]="type.name" type="text" class="form-control" placeholder="Wpisz nazwę typu">
-        <button (click)="editType(type)" class="btn btn-outline-grey" type="button">
+        <input [(ngModel)]="type.name" type="text" 
+               [ngClass]="{'is-valid': correctType === i}"
+                class="form-control" placeholder="Wpisz nazwę typu">
+        <button (click)="editType(type, i)" class="btn btn-outline-grey" type="button">
           <fa-icon [icon]="faPenToSquare"></fa-icon>
         </button>
       </div>
-      <div *ngIf="errors.has('type')" class="invalid-feedback d-block">
+      <div *ngIf="errors.has('type' + i)" class="invalid-feedback d-block">
         <div class="d-flex justify-content-center align-items-center">
-          {{errors.get('type')}}
+          {{errors.get('type' + i)}}
         </div>
       </div>
     </ng-container>

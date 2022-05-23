@@ -39,9 +39,9 @@
           <thead>
           <tr>
             <th scope="col">Nr</th>
-            <th scope="col" sortable="invoiceDate" (sort)="onSort($event)">Data wystawienia</th>
+            <th scope="col" sortable="date" (sort)="onSort($event)">Data wystawienia</th>
             <th scope="col">Nazwa sprzedawcy</th>
-            <th scope="col">Cena</th>
+            <th scope="col" sortable="price" (sort)="onSort($event)" >Cena</th>
             <th scope="col">Opcje</th>
           </tr>
           </thead>

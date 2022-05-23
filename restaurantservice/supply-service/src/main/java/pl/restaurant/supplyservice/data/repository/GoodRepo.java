@@ -9,6 +9,6 @@ import pl.restaurant.supplyservice.data.entity.InvoiceEntity;
 
 public interface GoodRepo extends JpaRepository<GoodEntity, Long> {
     @Modifying
-    @Query("delete from GoodEntity g where g.invoice.invoiceNr = :nr")
-    void deleteAllByInvoice(@Param("nr") String invoiceNr);
+    @Query("delete from GoodEntity g where g.invoice.invoiceId = :iId")
+    void deleteAllByInvoice(@Param("iId") Long invoiceId);
 }
