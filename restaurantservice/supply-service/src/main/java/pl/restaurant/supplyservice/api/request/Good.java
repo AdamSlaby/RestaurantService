@@ -20,6 +20,7 @@ public class Good {
     private Integer ingredientId;
 
     @NotNull(message = "Ilość składnika nie może być pusta")
+    @Min(value = 0, message = "Ilość składnika nie może być liczbą ujemną")
     @Digits(integer = 5, fraction = 2, message = "Ilość składnika jest nieprawidłowa")
     private BigDecimal quantity;
 
@@ -28,14 +29,17 @@ public class Good {
     private Integer unitId;
 
     @NotNull(message = "Cena jednostkowa towaru netto nie może być pusta")
+    @Min(value = 0, message = "Cena jednostkowa towaru netto nie może być liczbą ujemną")
     @Digits(integer = 3, fraction = 2, message = "Cena jednostkowa towaru netto jest nieprawidłowa")
     private BigDecimal unitNetPrice;
 
     @NotNull(message = "Wartość zniżki nie może być pusta")
+    @Min(value = 0, message = "Wartość zniżki nie może być liczbą ujemną")
     @Digits(integer = 4, fraction = 2, message = "Wartość zniżki jest nieprawidłowa")
     private BigDecimal discount;
 
     @NotNull(message = "Cena netto towaru nie może być pusta")
+    @Min(value = 0, message = "Cena netto towaru nie może być liczbą ujemną")
     @Digits(integer = 5, fraction = 2, message = "Cena netto towaru jest nieprawidłowa")
     private BigDecimal netPrice;
 

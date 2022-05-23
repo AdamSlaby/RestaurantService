@@ -46,6 +46,12 @@ spring:
             - Path=/menu/**
           filters:
             - RewritePath=/menu/(?<path>.*), /$\{path}
+        - id: SUPPLY-SERVICE
+          uri: lb://SUPPLY-SERVICE
+          predicates:
+            - Path=/supply/**
+          filters:
+            - RewritePath=/supply/(?<path>.*), /$\{path}
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -77,3 +83,5 @@ springdoc:
         url: /v3/api-docs/news
       - name: menu
         url: /v3/api-docs/menu
+      - name: supply
+        url: /v3/api-docs/supply

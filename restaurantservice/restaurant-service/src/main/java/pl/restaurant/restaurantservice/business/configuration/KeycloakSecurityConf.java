@@ -52,7 +52,6 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/table").hasAnyRole(Role.ADMIN.toString())
                 .antMatchers("/details/{id}").hasAnyRole(Role.ADMIN.toString())
                 .antMatchers("/short/{id}").permitAll()
-                .antMatchers("/short/{id}").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/new").hasAnyRole(Role.ADMIN.toString())
                 .antMatchers("/{id}").hasAnyRole(Role.ADMIN.toString())

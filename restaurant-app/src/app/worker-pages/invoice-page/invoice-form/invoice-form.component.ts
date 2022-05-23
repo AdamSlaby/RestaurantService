@@ -10,6 +10,10 @@ import {TaxType} from "../../../model/invoice/tax-type";
 import {GoodView} from "../../../model/invoice/good-view";
 import { Invoice } from 'src/app/model/invoice/invoice';
 import { IngredientInfo } from 'src/app/model/meal/ingredient-info';
+import { InvoiceService } from 'src/app/service/invoice.service';
+import { Good } from 'src/app/model/invoice/good';
+import { IngredientService } from 'src/app/service/ingredient.service';
+import { UnitService } from 'src/app/service/unit.service';
 
 @Component({
   selector: 'app-invoice-form',
@@ -24,85 +28,52 @@ export class InvoiceFormComponent implements OnInit {
   @Input() set invoiceNr(value: string) {
     this._invoiceNr = value;
     if (value === '') {
+      this.ingredientService.getAllIngredientsMap().subscribe(data => {
+        this.ingredients = new Map<number, string>();
+        Object.entries(data).forEach(value => this.ingredients.set(Number.parseInt(value[0]), value[1]));
+      }, error => {
+        console.error(error);
+      });
       setTimeout(() => {
         this.form.resetForm();
         this.invoiceForm.patchValue({goods: []});
       }, 100);
     } else {
-      this.invoiceInfo = {
-        nr: '7/03-2018',
-        restaurantId: 1,
-        restaurantInfo: {
-          restaurantId: 1,
-          city: 'Kielce',
-          street: 'Warszawska',
-        },
-        date: new Date(),
-        buyerName: 'Restaurant',
-        sellerName: 'Avivia',
-        buyerAddress: {
-          city: 'Kielce',
-          street: 'Warszawska',
-          houseNr: '102',
-          flatNr: '20',
-          postcode: '25-703',
-        },
-        sellerAddress: {
-          city: 'Warszawa',
-          street: 'Krakowska',
-          houseNr: '110',
-          flatNr: '20',
-          postcode: '30-703',
-        },
-        buyerNip: '9999999999',
-        sellerNip: '1111111111',
-        completionDate: new Date(),
-        price: 4000.50,
-        goods: [
-          {
-            id: 1,
-            ingredientId: 1,
-            quantity: 10,
-            unitId: 2,
-            discount: 0.00,
-            unitNetPrice: 5.00,
-            netPrice: 50.00,
-            taxType: TaxType.C,
-            taxPrice: 2.5,
-          },
-          {
-            id: 2,
-            ingredientId: 2,
-            quantity: 5,
-            unitId: 1,
-            discount: 1.00,
-            unitNetPrice: 6.00,
-            netPrice: 30.00,
-            taxType: TaxType.C,
-            taxPrice: 1.5,
-          },
-        ],
-      }
-      this.invoiceForm.patchValue({
-        nr: this.invoiceInfo.nr,
-        date: this.invoiceInfo.date,
-        sellerName: this.invoiceInfo.sellerName,
-        buyerName: this.invoiceInfo.buyerName,
-        sellerCity: this.invoiceInfo.sellerAddress.city,
-        sellerStreet: this.invoiceInfo.sellerAddress.street,
-        sellerHouseNr: this.invoiceInfo.sellerAddress.houseNr,
-        sellerFlatNr: this.invoiceInfo.sellerAddress.flatNr,
-        sellerPostcode: this.invoiceInfo.sellerAddress.postcode,
-        buyerCity: this.invoiceInfo.buyerAddress.city,
-        buyerStreet: this.invoiceInfo.buyerAddress.street,
-        buyerHouseNr: this.invoiceInfo.buyerAddress.houseNr,
-        buyerFlatNr: this.invoiceInfo.buyerAddress.flatNr,
-        buyerPostcode: this.invoiceInfo.buyerAddress.postcode,
-        sellerNip: this.invoiceInfo.sellerNip,
-        buyerNip: this.invoiceInfo.buyerNip,
-        completionDate: this.invoiceInfo.completionDate,
-        price: this.invoiceInfo.price,
-        goods: this.invoiceInfo.goods,
+      this.invoiceService.getInvoice(this._invoiceNr).subscribe(data => {
+        this.invoiceInfo = data;
+        this.invoiceInfo.date = new Date(this.invoiceInfo.date);
+        this.invoiceInfo.completionDate = new Date(this.invoiceInfo.completionDate);
+        this.ingredientService.getAllIngredientsMap().subscribe(data => {
+          this.ingredients = new Map<number, string>();
+          Object.entries(data).forEach(value => this.ingredients.set(Number.parseInt(value[0]), value[1]));
+          this.invoiceInfo.goods.forEach(el => el.ingredient = this.ingredients.get(el.ingredientId));
+        }, error => {
+          console.error(error);
+        });
+
+        this.invoiceForm.patchValue({
+          nr: this.invoiceInfo.nr,
+          date: this.invoiceInfo.date,
+          sellerName: this.invoiceInfo.sellerName,
+          buyerName: this.invoiceInfo.buyerName,
+          sellerCity: this.invoiceInfo.sellerAddress.city,
+          sellerStreet: this.invoiceInfo.sellerAddress.street,
+          sellerHouseNr: this.invoiceInfo.sellerAddress.houseNr,
+          sellerFlatNr: this.invoiceInfo.sellerAddress.flatNr,
+          sellerPostcode: this.invoiceInfo.sellerAddress.postcode,
+          buyerCity: this.invoiceInfo.buyerAddress.city,
+          buyerStreet: this.invoiceInfo.buyerAddress.street,
+          buyerHouseNr: this.invoiceInfo.buyerAddress.houseNr,
+          buyerFlatNr: this.invoiceInfo.buyerAddress.flatNr,
+          buyerPostcode: this.invoiceInfo.buyerAddress.postcode,
+          sellerNip: this.invoiceInfo.sellerNip,
+          buyerNip: this.invoiceInfo.buyerNip,
+          completionDate: this.invoiceInfo.completionDate,
+          price: this.invoiceInfo.price,
+          goods: this.invoiceInfo.goods,
+        });
+      }, error => {
+        console.error(error);
       });
     }
   }
@@ -112,8 +83,10 @@ export class InvoiceFormComponent implements OnInit {
   faPlus = faPlus;
   _invoiceNr!: string;
   invoiceInfo!: InvoiceView;
+  loading: boolean = false;
+  isSuccessful: boolean = false;
   units!: Unit[];
-  ingredients!: IngredientInfo[];
+  ingredients!: Map<number, string>;
   taxTypes = Object.values(TaxType);
   errors: Map<string, string> = new Map<string, string>();
   invoiceForm = this.fb.group({
@@ -139,10 +112,16 @@ export class InvoiceFormComponent implements OnInit {
   });
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private invoiceService: InvoiceService,
+              private ingredientService: IngredientService, private unitService: UnitService) {
   }
 
   ngOnInit(): void {
+    this.unitService.getAllInvoiceUnits().subscribe(data => {
+      this.units = data;
+    }, error => {
+      console.error(error);
+    })
   }
 
   get f() {
@@ -154,7 +133,8 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   onInvoiceFormSubmit() {
-    //todo
+    this.errors.clear();
+
     let invoice: Invoice = {
       nr: this.invoiceForm.get('nr')?.value,
       restaurantId: localStorage.getItem('restaurantId'),
@@ -179,14 +159,53 @@ export class InvoiceFormComponent implements OnInit {
       sellerNip: this.invoiceForm.get('sellerNip')?.value,
       completionDate: this.invoiceForm.get('completionDate')?.value,
       price: this.invoiceForm.get('price')?.value,
-      goods: this.invoiceForm.get('goods')?.value
+      goods: this.mapGoodViewToGood()
     };
-    console.log(invoice);
+    this.loading = true;
     if (this._invoiceNr !== '') {
-
+      this.invoiceService.updateInvoice(invoice, this._invoiceNr).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.invoiceForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
     } else {
-
+      this.invoiceService.addInvoice(invoice).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.invoiceForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
     }
+  }
+
+  mapGoodViewToGood() {
+    let goods = this.invoiceForm.get('goods')?.value as Array<GoodView>;
+    return goods.map(el => {
+      for (let entry of this.ingredients) {
+        if (entry[1] === el.ingredient) {
+          el.ingredientId = entry[0];
+        }
+      }
+      return {
+        ingredientId: el.ingredientId,
+        quantity: el.quantity,
+        unitId: el.unitId,
+        unitNetPrice: el.unitNetPrice,
+        discount: el.discount,
+        netPrice: el.netPrice,
+        taxType: el.taxType,
+        taxPrice: el.taxPrice
+      } as Good
+    });
   }
 
   getInvalidControl() {
@@ -211,6 +230,7 @@ export class InvoiceFormComponent implements OnInit {
       ingredientId: -1,
       ingredient: '',
       quantity: 0,
+      unitId: -1,
       unit: null,
       unitNetPrice: 0,
       taxType: null,

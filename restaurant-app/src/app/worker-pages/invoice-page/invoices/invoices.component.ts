@@ -1,55 +1,62 @@
 import {Component, OnInit} from '@angular/core';
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateAdapter, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {faPlus, faEye, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 import {InvoiceListView} from "../../../model/invoice/invoice-list-view";
 import {SortEvent} from "../../../model/sort-event";
 import {HtmlUtility} from "../../../utility/html-utility";
+import { InvoiceService } from 'src/app/service/invoice.service';
+import { InvoiceFilters } from 'src/app/model/invoice/invoice-filters';
+import { NgbDateToDateAdapter } from 'src/app/adapter/datepicker-date-adapter';
 
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.component.html',
-  styleUrls: ['./invoices.component.scss']
+  styleUrls: ['./invoices.component.scss'],
+  providers: [{provide: NgbDateAdapter, useClass: NgbDateToDateAdapter}]
 })
 export class InvoicesComponent implements OnInit {
   faPlus = faPlus;
   faEye = faEye;
   faPenToSquare = faPenToSquare;
-  chosenInvoice!: string;
-  invoiceDate!: NgbDateStruct;
+  chosenInvoice!: any;
+  chosenInvoiceDate!: any;
+  chosenSellerName!: any;
   pageNr!: number;
   showInvoiceDetails: boolean = false;
   previousPage!: number;
-  sellerName!: string;
   selectedInvoiceNr!: string;
-  invoiceList: InvoiceListView = {
-    totalElements: 110,
-    invoices: [
-      {
-        nr: '7/03-2018',
-        date: new Date(),
-        sellerName: 'Avani',
-        price: 4000.00
-      },
-    ]
-  }
+  invoiceList!: InvoiceListView;
 
-  constructor() {
+  constructor(private invoiceService: InvoiceService) {
   }
 
   ngOnInit(): void {
-    for (let i = 1; i < 9; i++) {
-      this.invoiceList.invoices.push(Object.assign({}, this.invoiceList.invoices[0]));
-    }
+    this.getInvoiceList(this.filters)
     this.pageNr = 1;
     this.previousPage = 1;
   }
 
+  getInvoiceList(filters: InvoiceFilters) {
+    this.invoiceService.getInvoiceList(filters).subscribe(data => {
+      this.invoiceList = data;
+      console.log(data);
+      this.invoiceList.invoices.forEach(el => el.date = new Date(el.date));
+    }, error => {
+      console.error(error);
+    })
+  }
+
   filterInvoices() {
-    //todo
+    let filters = this.filters
+    console.log(filters);
+    this.getInvoiceList(filters);
   }
 
   resetFilters() {
-    //todo
+    this.chosenInvoice = "";
+    this.chosenInvoiceDate = null;
+    this.chosenSellerName = "";
+    this.getInvoiceList(this.filters);
   }
 
   addNewInvoice() {
@@ -61,7 +68,9 @@ export class InvoicesComponent implements OnInit {
   }
 
   onSort($event: SortEvent) {
-    //todo
+    let filters = this.filters
+    filters.sortEvent = $event;
+    this.getInvoiceList(filters);
   }
 
 
@@ -73,14 +82,33 @@ export class InvoicesComponent implements OnInit {
     }, 50);
   }
 
-  loadPage($event: number) {
+  loadPage(page: number) {
+    let filters = this.filters;
+    filters.pageNr = page - 1;
     if (this.previousPage !== this.pageNr) {
-      this.previousPage = this.pageNr;
+      this.invoiceService.getInvoiceList(filters).subscribe(data => {
+        this.previousPage = this.pageNr;
+        this.pageNr = page;
+        this.invoiceList = data;
+        this.invoiceList.invoices.forEach(el => el.date = new Date(el.date));
+      }, error => {
+        console.error(error);
+      })
     }
-    this.pageNr = $event;
   }
 
   closeInvoiceDetails() {
     this.showInvoiceDetails = false;
+  }
+
+  get filters() {
+    return {
+      restaurantId: localStorage.getItem('restaurantId'),
+      nr: this.chosenInvoice,
+      date: this.chosenInvoiceDate,
+      sellerName: this.chosenSellerName,
+      sortEvent: null,
+      pageNr: 0
+    } as InvoiceFilters;
   }
 }

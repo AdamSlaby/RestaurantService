@@ -19,15 +19,15 @@ public interface InvoiceRepo extends JpaRepository<InvoiceEntity, String> {
     @Query("select new pl.restaurant.supplyservice.api.response." +
             "InvoiceShortInfo(i.invoiceNr, i.date, i.sellerName, i.price) " +
             "from InvoiceEntity i " +
-            "where (:nr is null or i.invoiceNr = :nr) and " +
+            "where (:rId is null or i.restaurantId = :rId) and " +
             "(:date is null or i.date = :date) and " +
-            "(:name is null or i.sellerName like %:name%) and " +
-            "(:rId is null or i.restaurantId = :rId)")
-    Page<InvoiceShortInfo> getMeals(@Param("nr") String nr,
-                                    @Param("date") LocalDate date,
-                                    @Param("name") String sellerName,
-                                    @Param("rId") Long restaurantId,
-                                    Pageable pageable);
+            "(:nr is null or i.invoiceNr like %:nr%) and " +
+            "(:name is null or i.sellerName like %:name%)")
+    Page<InvoiceShortInfo> getInvoiceList(@Param("nr") String nr,
+                                          @Param("date") LocalDate date,
+                                          @Param("name") String sellerName,
+                                          @Param("rId") Long restaurantId,
+                                          Pageable pageable);
 
     boolean existsByInvoiceNr(String nr);
 }

@@ -16,6 +16,15 @@ import java.util.Map;
 @ControllerAdvice
 public class IncorrectDataAdvice {
     @ResponseBody
+    @ExceptionHandler(SupplyAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> supplyAlreadyExistsHandler(SupplyAlreadyExistsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("ingredientName", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
     @ExceptionHandler(IngredientNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> ingredientNotFoundHandler(IngredientNotFoundException ex) {
@@ -145,7 +154,7 @@ public class IncorrectDataAdvice {
 
     private Map<String, String> constructMapForPartError(RuntimeException ex) {
         Map<String, String> errors = new HashMap<>();
-        String[] errorParts = ex.getMessage().split("\\.");
+        String[] errorParts = ex.getMessage().split("_");
         if (errorParts.length > 1)
             errors.put(errorParts[0], errorParts[1]);
         else

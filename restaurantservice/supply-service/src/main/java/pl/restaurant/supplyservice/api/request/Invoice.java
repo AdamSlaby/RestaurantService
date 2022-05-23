@@ -53,6 +53,7 @@ public class Invoice {
     private LocalDate completionDate;
 
     @NotNull(message = "Cena na fakturze nie może być pusta")
+    @Min(value = 0, message = "Cena na fakturze nie może być liczbą ujemną")
     @Digits(integer = 5, fraction = 2, message = "Cena na fakturze nie nieprawidłowa")
     private BigDecimal price;
 

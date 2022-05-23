@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.supplyservice.api.mapper.AddressMapper;
 import pl.restaurant.supplyservice.api.mapper.InvoiceMapper;
 import pl.restaurant.supplyservice.api.request.Good;
@@ -23,17 +24,16 @@ import pl.restaurant.supplyservice.data.entity.InvoiceEntity;
 import pl.restaurant.supplyservice.data.repository.AddressRepo;
 import pl.restaurant.supplyservice.data.repository.InvoiceRepo;
 
-import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService {
     private final static int AMOUNT = 10;
+    private RestaurantServiceClient restaurantClient;
+    private MenuServiceClient menuClientService;
     private InvoiceRepo invoiceRepo;
     private AddressRepo addressRepo;
-    private RestaurantServiceClient restaurantClient;
-    private MenuClientService menuClientService;
     private GoodService goodService;
 
 
@@ -50,7 +50,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceListView getInvoiceList(InvoiceFilters filters) {
         Pageable pageable = mapSortEventToPageable(filters);
         Page<InvoiceShortInfo> page = invoiceRepo.
-                getMeals(filters.getNr(), filters.getDate(), filters.getSellerName(),
+                getInvoiceList(filters.getNr(), filters.getDate(), filters.getSellerName(),
                         filters.getRestaurantId(), pageable);
         return new InvoiceListView().builder()
                 .totalElements(page.getTotalElements())
@@ -117,9 +117,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     private void validateInvoice(Invoice invoice) {
         Validator.validateNip(invoice.getBuyerNip(), "buyerNip");
         Validator.validateNip(invoice.getSellerNip(), "sellerNip");
-        if (restaurantClient.isRestaurantExist(invoice.getRestaurantId()))
+        if (!restaurantClient.isRestaurantExist(invoice.getRestaurantId()))
             throw new RestaurantNotFoundException();
-        if (menuClientService.isIngredientsExists(invoice.getGoods().stream()
+        if (!menuClientService.isIngredientsExists(invoice.getGoods().stream()
                 .map(Good::getIngredientId).collect(Collectors.toList())))
             throw new IngredientNotFoundException();
     }

@@ -57,7 +57,7 @@ export class NewsPageComponent implements OnInit {
 
   onSort($event: SortEvent) {
     let filters = this.filters
-    filters.sortEvent = event;
+    filters.sortEvent = $event;
     this.getNewsList(filters);
   }
 

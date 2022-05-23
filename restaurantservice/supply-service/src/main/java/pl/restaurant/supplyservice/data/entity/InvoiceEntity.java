@@ -55,21 +55,4 @@ public class InvoiceEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_address_id", nullable = false)
     private AddressEntity buyerAddress;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InvoiceEntity that = (InvoiceEntity) o;
-        return Objects.equals(invoiceNr, that.invoiceNr) && Objects.equals(restaurantId, that.restaurantId) &&
-                Objects.equals(date, that.date) && Objects.equals(sellerName, that.sellerName) &&
-                Objects.equals(buyerName, that.buyerName) && Objects.equals(sellerNip, that.sellerNip) &&
-                Objects.equals(buyerNip, that.buyerNip) && Objects.equals(completionDate, that.completionDate) &&
-                Objects.equals(price, that.price);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(invoiceNr, restaurantId, date, sellerName, buyerName, sellerNip, buyerNip, completionDate, price);
-    }
 }

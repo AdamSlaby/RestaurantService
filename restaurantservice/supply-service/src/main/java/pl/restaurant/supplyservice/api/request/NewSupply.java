@@ -22,6 +22,7 @@ public class NewSupply {
     private String ingredientName;
 
     @NotNull(message = "Ilość składnika nie może być pusta")
+    @Min(value = 0, message = "Ilość składnika  nie może być liczbą ujemną")
     @Digits(integer = 6, fraction = 2, message = "Ilość składnika jest nieprawidłowa")
     private BigDecimal quantity;
 

@@ -3,6 +3,7 @@ import {TaxType} from "./tax-type";
 export interface GoodView {
   id: number;
   ingredientId: number;
+  ingredient: string | any;
   quantity: number;
   unitId: number | any;
   unitNetPrice: number;

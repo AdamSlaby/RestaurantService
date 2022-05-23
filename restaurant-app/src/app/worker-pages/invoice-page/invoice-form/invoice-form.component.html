@@ -458,8 +458,13 @@
                     </button>
                     <input type="text" placeholder="Nazwa składnika" [(ngModel)]="good.ingredient"
                            [ngModelOptions]="{standalone: true}"
-                           class="form-control" id="ingredient"
+                           class="form-control" id="ingredient" list="ingredients"
                            [ngClass]="{ 'is-invalid': errors.has('goods[' + i + '].ingredient')}"/>
+                    <datalist id="ingredients">
+                          <option *ngFor="let ingredientInfo of ingredients | keyvalue" [value]="ingredientInfo.value">
+                            {{ingredientInfo.value}}
+                          </option>
+                    </datalist>
                   </div>
                   <div *ngIf="errors.has('goods[' + i + '].ingredient')"
                        class="invalid-feedback d-block">
@@ -594,12 +599,17 @@
             </div>
           </div>
 
-
           <div class="form-group">
             <div class="d-flex justify-content-center align-items-center">
               <button class="btn btn-outline-grey">
                 Zapisz
               </button>
+            </div>
+          </div>
+
+          <div *ngIf="isSuccessful" class="d-block alert-success mt-2">
+            <div class="d-grid text-center" style="font-size: 1.5rem;">
+              Dane zostały zaktualizowane
             </div>
           </div>
 

@@ -2,6 +2,7 @@ package pl.restaurant.supplyservice.business.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.restaurant.supplyservice.api.response.Unit;
 import pl.restaurant.supplyservice.business.exception.UnitNotFoundException;
 import pl.restaurant.supplyservice.data.entity.UnitEntity;
 import pl.restaurant.supplyservice.data.repository.UnitRepo;
@@ -28,5 +29,10 @@ public class UnitServiceImpl implements UnitService {
     public UnitEntity getUnit(String unit) {
         return unitRepo.findByName(unit)
                 .orElseThrow(UnitNotFoundException::new);
+    }
+
+    @Override
+    public List<Unit> getAllUnits() {
+        return unitRepo.getAllUnits();
     }
 }

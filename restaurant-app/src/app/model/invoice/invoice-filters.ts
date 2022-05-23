@@ -5,6 +5,6 @@ export interface InvoiceFilters {
     nr: any;
     date: any;
     sellerName: any;
-    sortEvent: SortEvent;
+    sortEvent: SortEvent | null;
     pageNr: number;
 }

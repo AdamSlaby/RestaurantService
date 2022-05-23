@@ -3,7 +3,7 @@ import {Unit} from "../meal/unit";
 export interface SupplyInfo {
   restaurantId: any;
   ingredientId: number;
-  ingredientName: string;
+  ingredientName: string | any;
   quantity: number;
-  unit: Unit;
+  unitId: number;
 }

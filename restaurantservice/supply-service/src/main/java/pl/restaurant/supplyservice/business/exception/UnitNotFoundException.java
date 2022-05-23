@@ -2,7 +2,7 @@ package pl.restaurant.supplyservice.business.exception;
 
 public class UnitNotFoundException extends RuntimeException {
     public UnitNotFoundException(String fieldName) {
-        super(fieldName + ".Jednostka o podanym identyfikatorze nie istnieje");
+        super(fieldName + "_Jednostka o podanym identyfikatorze nie istnieje");
     }
 
     public UnitNotFoundException() {

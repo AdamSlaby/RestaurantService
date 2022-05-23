@@ -1,9 +1,6 @@
 package pl.restaurant.supplyservice.api.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -12,9 +9,10 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Supply {
+public class SupplyInfo {
     @NotNull(message = "Identyfikator restauracji nie może być pusty")
     @Min(value = 0, message = "Identyfikator restauracji nie może być liczbą ujemną")
     private Long restaurantId;
@@ -24,6 +22,7 @@ public class Supply {
     private Integer ingredientId;
 
     @NotNull(message = "Ilość składnika nie może być pusta")
+    @Min(value = 0, message = "Ilość składnika  nie może być liczbą ujemną")
     @Digits(integer = 6, fraction = 3, message = "Ilość składnika jest nieprawidłowa")
     private BigDecimal quantity;
 

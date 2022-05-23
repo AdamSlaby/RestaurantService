@@ -47,7 +47,12 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .authorizeRequests()
                 //invoice
-                .antMatchers("/info/{id}").permitAll()
+                .antMatchers("/invoice/{nr}").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
+                .antMatchers("/invoice/list").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
+                .antMatchers("/invoice/").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
+                //supply
+                .antMatchers("/list").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
+                .antMatchers("/").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
                 .anyRequest().permitAll();
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);

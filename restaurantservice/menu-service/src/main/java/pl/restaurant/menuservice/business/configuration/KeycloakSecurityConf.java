@@ -47,7 +47,9 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .authorizeRequests()
                 //ingredient
-                .antMatchers("/ingredient/").hasAnyRole(Role.ADMIN.toString())
+                .antMatchers("/ingredient/").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/ingredient/map").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/ingredient/name").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 //meal
                 .antMatchers("/meal/info/{id}").hasAnyRole(Role.ADMIN.toString())
                 .antMatchers("/meal/list").hasAnyRole(Role.ADMIN.toString())

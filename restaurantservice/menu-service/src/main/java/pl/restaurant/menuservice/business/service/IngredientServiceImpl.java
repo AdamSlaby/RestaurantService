@@ -16,6 +16,9 @@ import pl.restaurant.menuservice.data.repository.MealIngredientRepo;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -44,10 +47,9 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Integer addIngredient(String ingredient) {
-        if (ingredientRepo.existsByName(ingredient))
-            throw new IngredientAlreadyExistsException();
-        return ingredientRepo.save(new IngredientEntity(ingredient)).getIngredientId();
+    public Integer getIngredient(String ingredient) {
+        Optional<Integer> ingredientId = ingredientRepo.getIngredientByName(ingredient);
+        return ingredientId.orElseGet(() -> ingredientRepo.save(new IngredientEntity(ingredient)).getIngredientId());
     }
 
     @Validated
@@ -67,5 +69,11 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public boolean isIngredientsExists(List<Integer> ingredientIds) {
         return ingredientRepo.existsAllByIngredientIdIn(ingredientIds);
+    }
+
+    @Override
+    public Map<Integer, String> getAllIngredientsMap() {
+        return ingredientRepo.getAllIngredients().stream()
+                .collect(Collectors.toMap(IngredientInfo::getId, IngredientInfo::getName));
     }
 }
