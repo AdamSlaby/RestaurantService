@@ -4,6 +4,6 @@ import {OrderType} from "../order-type";
 export interface ActiveOrder {
   id: number;
   dishInfo: DishShortInfo[];
-  orderType: OrderType;
+  orderType: String;
   orderDate: Date;
 }

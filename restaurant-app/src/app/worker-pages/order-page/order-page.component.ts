@@ -24,7 +24,6 @@ export class OrderPageComponent implements OnInit {
   selectedOrder!: OrderShortInfo | any;
   showOrderDetails: boolean = false;
   orderList: OrderListView = {
-    maxPage: 10,
     totalElements: 110,
     orders: [
       {

@@ -4,4 +4,5 @@ export interface RestaurantOrder {
   restaurantId: any;
   tableId: number;
   orders: Order[];
+  price: number;
 }

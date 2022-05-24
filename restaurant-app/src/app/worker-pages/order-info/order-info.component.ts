@@ -256,12 +256,15 @@ export class OrderInfoComponent implements OnInit {
 
   onRestaurantOrderFormSubmit() {
     //todo
+    let price: number = 0;
     let orderArr: Order[] = [];
     this.restaurantOrderForm.get('orders')?.value.forEach((el: OrderInfo) => orderArr.push(MapperUtility.mapOrderInfoToOrder(el)));
+    orderArr.forEach(el => price += el.price);
     let order: RestaurantOrder = {
      tableId: this.restaurantOrderForm.get('tableId')?.value,
      restaurantId: localStorage.getItem('restaurantId'),
      orders: orderArr,
+     price: price,
     }
     console.log(order);
     if (this.newOrder) {

@@ -52,6 +52,12 @@ spring:
             - Path=/supply/**
           filters:
             - RewritePath=/supply/(?<path>.*), /$\{path}
+        - id: ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+          filters:
+            - RewritePath=/order/(?<path>.*), /$\{path}
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -85,3 +91,5 @@ springdoc:
         url: /v3/api-docs/menu
       - name: supply
         url: /v3/api-docs/supply
+      - name: order
+        url: /v3/api-docs/order
