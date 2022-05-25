@@ -1,4 +1,4 @@
-package pl.restaurant.orderservice.api.response;
+package pl.restaurant.orderservice.api.response.chart;
 
 import java.util.List;
 

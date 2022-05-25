@@ -16,6 +16,23 @@ import java.util.Map;
 @ControllerAdvice
 public class IncorrectDataAdvice {
 
+    @ResponseBody
+    @ExceptionHandler(ColumnNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> columnNotFoundHandler(ColumnNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("column", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(PaypalErrorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> paypalErrorHandler(PaypalErrorException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("paypal", ex.getMessage());
+        return errors;
+    }
 
     @ResponseBody
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)

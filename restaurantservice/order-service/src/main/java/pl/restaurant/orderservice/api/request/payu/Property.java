@@ -1,4 +1,4 @@
-package pl.restaurant.orderservice.api.response;
+package pl.restaurant.orderservice.api.request.payu;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChartData {
+public class Property {
     private String name;
-    private Long value;
+    private String value;
 }

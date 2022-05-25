@@ -31,5 +31,5 @@ public class OnlineOrderMealEntity implements Serializable {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private Integer amount;
+    private Integer quantity;
 }

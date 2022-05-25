@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChartGenerateData {
-    private PeriodType periodType;
-    private String period;
-    private Long placeId;
-    private ChartType chartType; //think about it
-    private OrderType orderType;
+public class OrdersInfo {
+    private RestaurantOrderInfo restaurantOrder;
+    private OnlineOrderInfo onlineOrder;
 }

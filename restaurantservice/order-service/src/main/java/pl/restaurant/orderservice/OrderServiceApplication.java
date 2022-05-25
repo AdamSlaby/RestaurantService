@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Bean;
     @Info(title = "Order API", version = "1.0", description = "Documentation Order API v1.0")
 )
 public class OrderServiceApplication {
+    public static final String FRONT_SITE = "http://localhost:4200/order";
+    public static final String MAIN_SITE = "http://localhost:9992";
 
     public static void main(String[] args) {
         SpringApplication.run(OrderServiceApplication.class, args);

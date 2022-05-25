@@ -1,25 +1,27 @@
 import {Component, OnInit} from '@angular/core';
 import {faPlus, faEye, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
-import {NgbCalendar, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDateAdapter, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {SortEvent} from "../../model/sort-event";
 import {OrderListView} from "../../model/order/order-list-view";
 import {OrderShortInfo} from "../../model/order/order-short-info";
 import {HtmlUtility} from "../../utility/html-utility";
+import { NgbDateToDateAdapter } from 'src/app/adapter/datepicker-date-adapter';
 
 @Component({
   selector: 'app-order-page',
   templateUrl: './order-page.component.html',
-  styleUrls: ['./order-page.component.scss']
+  styleUrls: ['./order-page.component.scss'],
+  providers: [{provide: NgbDateAdapter, useClass: NgbDateToDateAdapter}]
 })
 export class OrderPageComponent implements OnInit {
   faPlus = faPlus;
   faEye = faEye;
   faPenToSquare = faPenToSquare;
-  chosenOrder!: number;
   pageNr!: number;
   previousPage!: number;
   now!: Date;
-  chosenDate!: NgbDateStruct;
+  chosenOrder!: number;
+  chosenDate!: Date;
   isCompleted: any = null;
   selectedOrder!: OrderShortInfo | any;
   showOrderDetails: boolean = false;
@@ -51,15 +53,7 @@ export class OrderPageComponent implements OnInit {
     this.previousPage = 1;
   }
 
-  getOrderById() {
-    //todo
-  }
-
-  getOrderByDate() {
-    //todo
-  }
-
-  getOrderByCompletion() {
+  filterOrders() {
     //todo
   }
 
