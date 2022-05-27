@@ -1,9 +1,7 @@
-package pl.restaurant.orderservice.business.service;
+package pl.restaurant.orderservice.business.service.payment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.restaurant.orderservice.OrderServiceApplication;
@@ -11,15 +9,14 @@ import pl.restaurant.orderservice.api.mapper.PayuMapper;
 import pl.restaurant.orderservice.api.request.payu.PayuAuthResponse;
 import pl.restaurant.orderservice.api.request.payu.PayuResponse;
 import pl.restaurant.orderservice.api.response.payu.Payload;
+import pl.restaurant.orderservice.business.service.order.OnlineOrderService;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @Service
 public class PayuServiceImpl implements PayuService {

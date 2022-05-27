@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnInit} from '@angular/core';
-import {ChartGenerateData} from "../../model/chart/chart-generate-data";
+import {ChartGenerateDataOptions} from "../../model/chart/chart-generate-data-options";
 import {Chart} from "../../model/chart/chart";
 import {RestaurantShortInfo} from "../../model/restaurant/restaurant-short-info";
 import {PeriodType} from "../../model/period-type";
@@ -10,6 +10,7 @@ import {NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateToStringAdapter} from "../../adapter/datepicker-string-adapter";
 import {ChartName} from "../../model/chart/chart-name";
 import {RestaurantService} from "../../service/restaurant.service";
+import { GenerateChartOptions } from 'src/app/model/chart/generate-chart-options';
 
 @Component({
   selector: 'app-statistic',
@@ -35,7 +36,7 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     }
   }
 
-  chartOptionsValues: ChartGenerateData = {
+  chartOptionsValues: ChartGenerateDataOptions = {
     periodType: PeriodType.DAY,
     period: new Date().toUTCString(),
     placeId: localStorage.getItem('restaurantId'),
@@ -92,134 +93,7 @@ export class StatisticComponent implements OnInit, AfterViewInit {
   }
 
   getChartData(chartName: ChartName) {
-    switch (chartName) {
-      case ChartName.COMPARE_ORDERS_AMOUNT:
-        this.getCompareOrdersAmountData();
-        break;
-      case ChartName.COMPARE_ORDERS_INCOME:
-        this.getCompareOrdersIncomeData();
-        break;
-      case ChartName.ORDERS_AMOUNT_USING_DIFFERENT_PAYMENT_METHODS:
-        this.getPaymentMethodData();
-        break;
-      case ChartName.ORDERS_AMOUNT_IN_DIFFERENT_HOURS:
-        this.getHoursData();
-        break;
-      case ChartName.SOLD_DISH_AMOUNT:
-        this.getSoldDishAmountData();
-        break;
-      case ChartName.SOLD_DISH_INCOME:
-        this.getSoldDishIncomeData();
-        break;
-      case ChartName.AVERAGE_COMPLETION_ORDER_TIME_DEPENDS_ON_DISHES_AMOUNT:
-        this.getCompletionTimeData();
-        break;
-      case ChartName.ORDERS_AMOUNT_CONSIDERING_DISHES_AMOUNT_IN_EACH:
-        this.getOrdersAmountData();
-        break;
-    }
-  }
-
-  getCompareOrdersAmountData(): void {
-    this.chartData = {
-      name: 'Liczba zamówień online w stosunku do liczby zamówień na miejscu',
-      Xlabel: 'Typ zamówienia',
-      Ylabel: 'Liczba zamówień',
-      series: [
-        {
-          name: 'Online',
-          value: 20000
-        },
-        {
-          name: 'W restauracji',
-          value: 40000,
-        },
-      ],
-    } as Chart;
-  }
-
-  getCompareOrdersIncomeData(): void {
-    this.chartData = {
-      name: 'Przychód z zamówień online w stosunku do liczby zamówień na miejscu',
-      Xlabel: 'Typ zamówienia',
-      Ylabel: 'Dochód z zamówień',
-      series: [
-        {
-          name: 'Online',
-          value: 50000,
-        },
-        {
-          name: 'W restauracji',
-          value: 30000,
-        },
-      ],
-    } as Chart;
-  }
-
-  getPaymentMethodData(): void {
-    this.chartData = {
-      name: 'Liczba zamówień z użyciem różnych metod płatności',
-      Xlabel: 'Typ płatności',
-      Ylabel: 'Liczba zamówień',
-      series: [
-        {
-          name: 'Gotówka',
-          value: 10000
-        },
-        {
-          name: 'Karta',
-          value: 50000,
-        },
-        {
-          name: 'PayPal',
-          value: 25000,
-        },
-        {
-          name: 'PayU',
-          value: 100000,
-        },
-      ],
-    } as Chart;
-  }
-
-  getHoursData(): void {
-    this.chartData = {
-      name: 'Liczba zamówień w zależności od godziny',
-      Xlabel: 'Godzina',
-      Ylabel: 'Liczba zamówień',
-      series: [
-        {
-          name: '10:00',
-          value: 100
-        },
-        {
-          name: '11:00',
-          value: 200,
-        },
-        {
-          name: '12:00',
-          value: 300,
-        },
-      ],
-    } as Chart;
-  }
-
-  getSoldDishAmountData(): void {
-    this.chartData = {
-      name: 'Liczba sprzedanych poszczególnych potraw',
-      Xlabel: 'Potrawa',
-      Ylabel: 'Liczba sprzedanych potraw',
-      series: [
-        {
-          name: 'Pomidorowa',
-          value: 10,
-        },
-        {
-          name: 'Ogórkowa',
-          value: 20,
-        },
-      ],
-    } as Chart;
+    this.generateChart(chartName);
   }
 
   getSoldDishIncomeData(): void {
@@ -238,9 +112,16 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     this.chartOptionsValues.period = null;
   }
 
-  generateChart() {
+  generateChart(chartName: ChartName) {
     //todo
     this.selectedChartType = this.chartOptionsValues.chartType;
+    let options: GenerateChartOptions = {
+      periodType: this.chartOptionsValues.periodType,
+      period: this.chartOptionsValues.period,
+      placeId: this.chartOptionsValues.placeId,
+      chartName: chartName,
+      orderType: this.chartOptionsValues.orderType
+    };
   }
 
   mapDataToBarOrPieChartData(data: Chart) {

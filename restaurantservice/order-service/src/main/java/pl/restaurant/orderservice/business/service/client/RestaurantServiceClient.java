@@ -1,4 +1,4 @@
-package pl.restaurant.orderservice.business.service;
+package pl.restaurant.orderservice.business.service.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

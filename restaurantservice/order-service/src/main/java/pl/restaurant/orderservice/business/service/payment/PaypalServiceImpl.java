@@ -1,4 +1,4 @@
-package pl.restaurant.orderservice.business.service;
+package pl.restaurant.orderservice.business.service.payment;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -6,9 +6,9 @@ import com.paypal.base.rest.PayPalRESTException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.restaurant.orderservice.OrderServiceApplication;
+import pl.restaurant.orderservice.business.service.order.OnlineOrderService;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

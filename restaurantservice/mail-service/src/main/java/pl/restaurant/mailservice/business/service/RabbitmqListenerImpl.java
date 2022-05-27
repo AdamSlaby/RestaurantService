@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Level;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import pl.restaurant.mailservice.api.request.OrderEmailInfo;
 import pl.restaurant.mailservice.api.request.ReservationEmailInfo;
 
 import javax.mail.MessagingException;
@@ -21,12 +22,25 @@ public class RabbitmqListenerImpl implements RabbitmqListener{
 
     @RabbitListener(queues = "reservation")
     @Override
-    public void receiveReservationMessages(ReservationEmailInfo info) {
+    public void receiveReservationMessage(ReservationEmailInfo info) {
         log.log(Level.INFO, info);
         try {
             InputStream stream = new ClassPathResource("static/restaurantIcon.jpg").getInputStream();
             mailSender.sendMail(info.getEmail(), MailSenderImpl.RESERVATION_CONFIRMATION,
                     MailSenderImpl.getContentForReservationConfirmation(info), true, stream.readAllBytes());
+        } catch (MessagingException | IOException ex) {
+            log.log(Level.ERROR, ex.getMessage());
+        }
+    }
+
+    @RabbitListener(queues = "order")
+    @Override
+    public void receiveOrderMessage(OrderEmailInfo info) {
+        log.log(Level.INFO, info);
+        try {
+            InputStream stream = new ClassPathResource("static/restaurantIcon.jpg").getInputStream();
+            mailSender.sendMail(info.getEmail(), MailSenderImpl.ORDER_CONFIRMATION,
+                    MailSenderImpl.getContentForOrderConfirmation(info), true, stream.readAllBytes());
         } catch (MessagingException | IOException ex) {
             log.log(Level.ERROR, ex.getMessage());
         }

@@ -10,11 +10,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolationException;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+
+    @ResponseBody
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> numberFormatHandler(NumberFormatException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("period", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> dateTimeParserHandler(DateTimeParseException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("period", ex.getMessage());
+        return errors;
+    }
+
     @ResponseBody
     @ExceptionHandler(CannotCompleteOrderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

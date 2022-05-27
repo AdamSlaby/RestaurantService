@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import pl.restaurant.orderservice.OrderServiceApplication;
 import pl.restaurant.orderservice.api.request.payu.Notification;
 import pl.restaurant.orderservice.business.exception.PaypalErrorException;
-import pl.restaurant.orderservice.business.service.OnlineOrderService;
-import pl.restaurant.orderservice.business.service.PaypalService;
-import pl.restaurant.orderservice.business.service.PayuService;
+import pl.restaurant.orderservice.business.service.order.OnlineOrderService;
+import pl.restaurant.orderservice.business.service.payment.PaypalService;
+import pl.restaurant.orderservice.business.service.payment.PayuService;
 
 import javax.servlet.http.HttpServletResponse;
 

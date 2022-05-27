@@ -2,7 +2,7 @@ import {ChartType} from "./chart-type";
 import {OrderType} from "../order-type";
 import {PeriodType} from "../period-type";
 
-export interface ChartGenerateData {
+export interface ChartGenerateDataOptions {
   periodType: PeriodType;
   period: any;
   placeId: any;

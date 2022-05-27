@@ -14,7 +14,7 @@ import pl.restaurant.orderservice.data.entity.RestaurantOrderMealEntity;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import static pl.restaurant.orderservice.business.service.RestaurantOrderServiceImpl.RESTAURANT_TYPE;
+import static pl.restaurant.orderservice.business.service.order.RestaurantOrderServiceImpl.RESTAURANT_TYPE;
 
 @UtilityClass
 public class RestaurantOrderMapper {

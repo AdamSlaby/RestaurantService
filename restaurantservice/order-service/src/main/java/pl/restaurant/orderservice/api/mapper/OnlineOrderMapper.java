@@ -3,10 +3,7 @@ package pl.restaurant.orderservice.api.mapper;
 import lombok.experimental.UtilityClass;
 import pl.restaurant.orderservice.api.request.OnlineOrder;
 import pl.restaurant.orderservice.api.request.Order;
-import pl.restaurant.orderservice.api.response.ActiveOrder;
-import pl.restaurant.orderservice.api.response.DishShortInfo;
-import pl.restaurant.orderservice.api.response.OnlineOrderInfo;
-import pl.restaurant.orderservice.api.response.RestaurantShortInfo;
+import pl.restaurant.orderservice.api.response.*;
 import pl.restaurant.orderservice.data.entity.AddressEntity;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 import pl.restaurant.orderservice.data.entity.OnlineOrderMealEntity;
@@ -16,8 +13,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import static pl.restaurant.orderservice.business.service.OnlineOrderServiceImpl.ONLINE_TYPE;
-import static pl.restaurant.orderservice.business.service.OnlineOrderServiceImpl.TIME_TO_PAID;
+import static pl.restaurant.orderservice.business.service.order.OnlineOrderServiceImpl.ONLINE_TYPE;
+import static pl.restaurant.orderservice.business.service.order.OnlineOrderServiceImpl.TIME_TO_PAID;
 
 @UtilityClass
 public class OnlineOrderMapper {
@@ -88,6 +85,24 @@ public class OnlineOrderMapper {
                 .name(null)
                 .amount(order.getQuantity())
                 .price(null)
+                .build();
+    }
+
+    public static OrderEmailInfo mapDataToEmailInfo(OnlineOrderEntity order, RestaurantShortInfo restaurant) {
+        return new OrderEmailInfo().builder()
+                .id(order.getOrderId())
+                .restaurantInfo(restaurant)
+                .name(order.getName())
+                .surname(order.getSurname())
+                .email(order.getEmail())
+                .phoneNr(order.getPhoneNr())
+                .address(AddressMapper.mapDataToObject(order.getAddress()))
+                .floor(order.getFloor())
+                .paymentMethod(order.getPaymentMethod().toString())
+                .orders(order.getMeals().stream()
+                        .map(OrderMapper::mapDataToObject)
+                        .collect(Collectors.toList()))
+                .price(order.getPrice())
                 .build();
     }
 }

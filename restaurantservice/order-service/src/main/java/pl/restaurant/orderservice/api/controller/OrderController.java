@@ -8,9 +8,9 @@ import pl.restaurant.orderservice.api.request.RestaurantOrder;
 import pl.restaurant.orderservice.api.response.ActiveOrder;
 import pl.restaurant.orderservice.api.response.OrderListView;
 import pl.restaurant.orderservice.api.response.OrdersInfo;
-import pl.restaurant.orderservice.business.service.OnlineOrderService;
-import pl.restaurant.orderservice.business.service.OrderService;
-import pl.restaurant.orderservice.business.service.RestaurantOrderService;
+import pl.restaurant.orderservice.business.service.order.OnlineOrderService;
+import pl.restaurant.orderservice.business.service.order.OrderService;
+import pl.restaurant.orderservice.business.service.order.RestaurantOrderService;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,4 +1,4 @@
-package pl.restaurant.orderservice.business.service;
+package pl.restaurant.orderservice.business.service.order;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.orderservice.api.mapper.RestaurantOrderMapper;
+import pl.restaurant.orderservice.api.request.GenerateChartOptions;
 import pl.restaurant.orderservice.api.request.Order;
 import pl.restaurant.orderservice.api.request.OrderFilters;
 import pl.restaurant.orderservice.api.request.RestaurantOrder;
@@ -13,17 +14,20 @@ import pl.restaurant.orderservice.api.response.ActiveOrder;
 import pl.restaurant.orderservice.api.response.OrderShortInfo;
 import pl.restaurant.orderservice.api.response.RestaurantOrderInfo;
 import pl.restaurant.orderservice.api.response.RestaurantShortInfo;
+import pl.restaurant.orderservice.api.response.chart.ChartData;
 import pl.restaurant.orderservice.business.exception.CannotUpdateOrderException;
 import pl.restaurant.orderservice.business.exception.InvalidOrderException;
 import pl.restaurant.orderservice.business.exception.OrderNotFoundException;
 import pl.restaurant.orderservice.business.exception.TableNotFoundException;
+import pl.restaurant.orderservice.business.service.client.MenuServiceClient;
+import pl.restaurant.orderservice.business.service.client.RestaurantServiceClient;
+import pl.restaurant.orderservice.business.service.statistic.Time;
 import pl.restaurant.orderservice.data.entity.RestaurantOrderEntity;
-import pl.restaurant.orderservice.data.entity.RestaurantOrderMealEntity;
 import pl.restaurant.orderservice.data.repository.RestaurantOrderMealRepo;
 import pl.restaurant.orderservice.data.repository.RestaurantOrderRepo;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,6 +104,61 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
                 .orElseThrow(OrderNotFoundException::new);
         order.setDeliveryDate(LocalDateTime.now());
         orderRepo.save(order);
+    }
+
+    @Override
+    public BigDecimal getTodayIncome(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getTodayIncome(restaurantId, from, to);
+    }
+
+    @Override
+    public Integer getTodayDeliveredOrders(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getTodayDeliveredOrders(restaurantId, from, to);
+    }
+
+    @Override
+    public Integer getTodayDeliveredMealsAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getTodayDeliveredMealsAmount(restaurantId, from, to);
+    }
+
+    @Override
+    public Integer getActiveOrdersAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getActiveOrdersAmount(restaurantId, from, to);
+    }
+
+    @Override
+    public List<LocalDateTime> getOrderAmountFromHours(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getOrderAmountFromHours(restaurantId, from, to);
+    }
+
+    @Override
+    public Long getCompareOrderChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getCompareOrderChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public BigDecimal getCompareOrderIncomeChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getCompareOrderIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getDishAmountChart(Time time, GenerateChartOptions data) {
+        return mealRepo.getDishAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getDishIncomeChart(Time time, GenerateChartOptions data) {
+        return mealRepo.getDishIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getOrdersAmountWithDishesAmountChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getOrdersAmountWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getAvgCompletionTimeWithDishesAmountChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getAvgCompletionTimeWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
     }
 
     @Transactional

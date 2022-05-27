@@ -142,18 +142,18 @@
           </thead>
           <tbody>
           <ng-container *ngFor="let dish of dishes">
-            <tr *ngFor="let info of dish.dishInfo; index as i">
+            <tr *ngFor="let info of dish.dishesInfo; index as i">
 
-              <th *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishInfo.length" scope="rowgroup">{{dish.id}}</th>
+              <th *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishesInfo.length" scope="rowgroup">{{dish.id}}</th>
               <td>{{info.name}}</td>
               <td>{{info.amount}}</td>
-              <td *ngIf="i === 0" [rowSpan]="dish.dishInfo.length" style="vertical-align: middle">
+              <td *ngIf="i === 0" [rowSpan]="dish.dishesInfo.length" style="vertical-align: middle">
                 {{dish.orderType}}
               </td>
-              <td *ngIf="i === 0" [rowSpan]="dish.dishInfo.length" style="vertical-align: middle">
+              <td *ngIf="i === 0" [rowSpan]="dish.dishesInfo.length" style="vertical-align: middle">
                 {{dish.orderDate | date:'HH:mm':'+0000':'pl-PL'}}
               </td>
-              <td *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishInfo.length">
+              <td *ngIf="i === 0" style="vertical-align: middle" [rowSpan]="dish.dishesInfo.length">
                 <fa-icon placement="top" ngbTooltip="Zrealizuj" (click)="open(content, dish)"
                          style="color: green;cursor: pointer" [icon]="faCheck"></fa-icon>
               </td>

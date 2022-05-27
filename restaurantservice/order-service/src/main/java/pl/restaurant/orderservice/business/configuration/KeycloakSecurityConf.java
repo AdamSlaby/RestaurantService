@@ -46,9 +46,27 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                //online-order
-                .antMatchers("/info/{id}").permitAll()
-                //restaurant-order
+                //order
+                .antMatchers("/list").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/active").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/restaurant").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/reserve").permitAll()
+                .antMatchers("/restaurant/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/online/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                //payment
+                .antMatchers("/pay/paypal/{id}").permitAll()
+                .antMatchers("/pay/cancel").permitAll()
+                .antMatchers("/pay/success").permitAll()
+                .antMatchers("/pay/payu/{id}").permitAll()
+                .antMatchers("/pay/payu/notify").permitAll()
+                //statistics
+                .antMatchers("/statistic/income").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/statistic/orders").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/statistic/meals").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/statistic/active").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/statistic/hours").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/statistic/").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .anyRequest().permitAll();
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);

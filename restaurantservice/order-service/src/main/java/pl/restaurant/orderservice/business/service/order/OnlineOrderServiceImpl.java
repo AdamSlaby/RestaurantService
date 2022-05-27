@@ -1,6 +1,7 @@
-package pl.restaurant.orderservice.business.service;
+package pl.restaurant.orderservice.business.service.order;
 
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.orderservice.api.mapper.AddressMapper;
 import pl.restaurant.orderservice.api.mapper.OnlineOrderMapper;
+import pl.restaurant.orderservice.api.request.GenerateChartOptions;
 import pl.restaurant.orderservice.api.request.OnlineOrder;
 import pl.restaurant.orderservice.api.request.Order;
 import pl.restaurant.orderservice.api.request.OrderFilters;
@@ -15,12 +17,17 @@ import pl.restaurant.orderservice.api.response.ActiveOrder;
 import pl.restaurant.orderservice.api.response.OnlineOrderInfo;
 import pl.restaurant.orderservice.api.response.OrderShortInfo;
 import pl.restaurant.orderservice.api.response.RestaurantShortInfo;
+import pl.restaurant.orderservice.api.response.chart.ChartData;
 import pl.restaurant.orderservice.business.exception.CannotCompleteOrderException;
 import pl.restaurant.orderservice.business.exception.InvalidOrderException;
 import pl.restaurant.orderservice.business.exception.OrderNotFoundException;
 import pl.restaurant.orderservice.business.exception.RestaurantNotFoundException;
+import pl.restaurant.orderservice.business.service.client.MenuServiceClient;
+import pl.restaurant.orderservice.business.service.client.RestaurantServiceClient;
+import pl.restaurant.orderservice.business.service.statistic.Time;
 import pl.restaurant.orderservice.data.entity.AddressEntity;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
+import pl.restaurant.orderservice.data.entity.PaymentMethod;
 import pl.restaurant.orderservice.data.repository.AddressRepo;
 import pl.restaurant.orderservice.data.repository.OnlineOrderMealRepo;
 import pl.restaurant.orderservice.data.repository.OnlineOrderRepo;
@@ -40,6 +47,7 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
     private OnlineOrderMealRepo mealRepo;
     private MenuServiceClient menuClient;
     private RestaurantServiceClient restaurantClient;
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public OnlineOrderEntity getOrder(Long orderId) {
@@ -130,18 +138,83 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
 
     @Override
     public void changePaymentStatus(Long orderId) {
-        OnlineOrderEntity order = orderRepo.findById(orderId).orElseThrow(OrderNotFoundException::new);
+        OnlineOrderEntity order = orderRepo.getByOrderId(orderId).orElseThrow(OrderNotFoundException::new);
         order.setPaid(true);
         orderRepo.save(order);
+        RestaurantShortInfo restaurant = restaurantClient.getRestaurantShortInfo(order.getRestaurantId());
+        rabbitTemplate.convertAndSend("order", OnlineOrderMapper.mapDataToEmailInfo(order, restaurant));
     }
 
     @Override
     public void completeOrder(Long orderId) {
         OnlineOrderEntity order = orderRepo.findById(orderId).orElseThrow(OrderNotFoundException::new);
-        if (!order.isPaid())
+        if (!order.isPaid() && (order.getPaymentMethod() == PaymentMethod.PAYPAL ||
+                order.getPaymentMethod() == PaymentMethod.PAYU))
             throw new CannotCompleteOrderException();
+        else
+            order.setPaid(true);
         order.setDeliveryDate(LocalDateTime.now());
         orderRepo.save(order);
+    }
+
+    @Override
+    public BigDecimal getTodayIncome(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getTodayIncome(restaurantId, from, to);
+    }
+
+    @Override
+    public Integer getTodayDeliveredOrders(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getTodayDeliveredOrders(restaurantId, from, to);
+    }
+
+    @Override
+    public Integer getTodayDeliveredMealsAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getTodayDeliveredMealsAmount(restaurantId, from, to);
+    }
+
+    @Override
+    public Integer getActiveOrdersAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getActiveOrdersAmount(restaurantId, from, to);
+    }
+
+    @Override
+    public List<LocalDateTime> getOrderAmountFromHours(Long restaurantId, LocalDateTime from, LocalDateTime to) {
+        return orderRepo.getOrderAmountFromHours(restaurantId, from, to);
+    }
+
+    @Override
+    public Long getCompareOrderChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getCompareOrderChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public BigDecimal getCompareOrderIncomeChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getCompareOrderIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getPaymentMethodAmountChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getPaymentMethodAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getDishAmountChart(Time time, GenerateChartOptions data) {
+        return mealRepo.getDishAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getDishIncomeChart(Time time, GenerateChartOptions data) {
+        return mealRepo.getDishIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getOrdersAmountWithDishesAmountChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getOrdersAmountWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public List<ChartData> getAvgCompletionTimeWithDishesAmountChart(Time time, GenerateChartOptions data) {
+        return orderRepo.getAvgCompletionTimeWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
     }
 
     //method will be invoked every 30 minutes (1000 milis * 60 sec * 30 min = 1800000 milis)
