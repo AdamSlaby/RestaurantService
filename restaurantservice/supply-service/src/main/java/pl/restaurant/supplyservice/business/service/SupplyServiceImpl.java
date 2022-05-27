@@ -3,25 +3,23 @@ package pl.restaurant.supplyservice.business.service;
 import lombok.AllArgsConstructor;
 import org.springframework.expression.Operation;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.supplyservice.api.mapper.SupplyMapper;
-import pl.restaurant.supplyservice.api.request.Good;
-import pl.restaurant.supplyservice.api.request.NewSupply;
-import pl.restaurant.supplyservice.api.request.SupplyInfo;
+import pl.restaurant.supplyservice.api.mapper.UnitMapper;
+import pl.restaurant.supplyservice.api.request.*;
 import pl.restaurant.supplyservice.business.calculator.CalculateUnitCreator;
 import pl.restaurant.supplyservice.business.calculator.Creator;
 import pl.restaurant.supplyservice.business.calculator.Result;
 import pl.restaurant.supplyservice.business.calculator.UnitCalculator;
-import pl.restaurant.supplyservice.business.exception.RestaurantNotFoundException;
-import pl.restaurant.supplyservice.business.exception.SupplyAlreadyExistsException;
-import pl.restaurant.supplyservice.business.exception.SupplyNotFoundException;
-import pl.restaurant.supplyservice.business.exception.UnitMismatchException;
+import pl.restaurant.supplyservice.business.exception.*;
 import pl.restaurant.supplyservice.data.entity.RestaurantIngredientId;
 import pl.restaurant.supplyservice.data.entity.SupplyEntity;
 import pl.restaurant.supplyservice.data.entity.UnitEntity;
 import pl.restaurant.supplyservice.data.repository.SupplyRepo;
 
-import javax.transaction.Transactional;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -76,5 +74,78 @@ public class SupplyServiceImpl implements SupplyService {
             throw new SupplyAlreadyExistsException();
         UnitEntity unit = unitService.getUnit(supply.getUnitId(), "unitId");
         return SupplyMapper.mapDataToInfo(supplyRepo.save(SupplyMapper.mapObjectToData(supply, unit, ingredientId)), unit);
+    }
+
+    @Override
+    @Transactional
+    public void updateSupplies(Long restaurantId, List<OrderValidation> orders) {
+        Map<Integer, SupplyEntity> supplies = getSuppliesMapIn(restaurantId, orders);
+        for (OrderValidation order : orders) {
+            checkSupplies(supplies, order, true);
+        }
+    }
+
+    @Override
+    public void checkSupplies(Long restaurantId, OrderValidation order) {
+        List<RestaurantIngredientId> ids = order.getIngredients().stream()
+                .map(ingredient -> new RestaurantIngredientId(restaurantId, ingredient.getId()))
+                .collect(Collectors.toList());
+        Map<Integer, SupplyEntity> supplies = supplyRepo.getAllByRestaurantIngredientIdIn(ids).stream()
+                .collect(Collectors.toMap(k -> k.getRestaurantIngredientId().getIngredientId(), v -> v));
+        checkSupplies(supplies, order, false);
+    }
+
+    @Override
+    @Transactional
+    public void rollbackOrderSupplies(Long restaurantId, List<OrderValidation> orders) {
+        Map<Integer, SupplyEntity> supplies = getSuppliesMapIn(restaurantId, orders);
+        for (OrderValidation order : orders) {
+            for (IngredientView ingredient : order.getIngredients()) {
+                SupplyEntity supply = supplies.get(ingredient.getId());
+                Creator<UnitCalculator, UnitEntity> creator = new CalculateUnitCreator();
+                UnitEntity unit = UnitMapper.mapObjectToData(ingredient.getUnit());
+                BigDecimal quantity = ingredient.getAmount().multiply(BigDecimal.valueOf(order.getAmount()));
+                try {
+                    UnitCalculator unitCalculator = creator.create(supply.getUnit(), unit);
+                    Result result = unitCalculator.calculateUnits(supply, quantity, unit, Operation.ADD);
+                    supply.setQuantity(result.getResult());
+                    supply.setUnit(unitService.getUnit(result.getUnit()));
+                    supplyRepo.save(supply);
+                } catch (RuntimeException ex) {
+                    throw new SupplyErrorException(ex.getMessage());
+                }
+            }
+        }
+    }
+
+    public void checkSupplies(Map<Integer, SupplyEntity> supplies, OrderValidation order, boolean update) {
+        for (IngredientView ingredient : order.getIngredients()) {
+            SupplyEntity supply = supplies.get(ingredient.getId());
+            Creator<UnitCalculator, UnitEntity> creator = new CalculateUnitCreator();
+            UnitEntity unit = UnitMapper.mapObjectToData(ingredient.getUnit());
+            BigDecimal quantity = ingredient.getAmount().multiply(BigDecimal.valueOf(order.getAmount()));
+            try {
+                UnitCalculator unitCalculator = creator.create(supply.getUnit(), unit);
+                Result result = unitCalculator.calculateUnits(supply, quantity, unit, Operation.SUBTRACT);
+                if (result.getResult().compareTo(BigDecimal.ZERO) < 0)
+                    throw new RuntimeException(order.getName() + " skończył się. Proszę wybrać inny posiłek");
+                if (update) {
+                    supply.setQuantity(result.getResult());
+                    supply.setUnit(unitService.getUnit(result.getUnit()));
+                    supplyRepo.save(supply);
+                }
+            } catch (RuntimeException ex) {
+                throw new SupplyErrorException(ex.getMessage());
+            }
+        }
+    }
+
+    private Map<Integer, SupplyEntity> getSuppliesMapIn(Long restaurantId, List<OrderValidation> orders) {
+        List<RestaurantIngredientId> ids = new ArrayList<>();
+        orders.forEach(order -> ids.addAll(order.getIngredients().stream()
+                .map(ingredient -> new RestaurantIngredientId(restaurantId, ingredient.getId()))
+                .collect(Collectors.toList())));
+        return supplyRepo.getAllByRestaurantIngredientIdIn(ids).stream()
+                .collect(Collectors.toMap(k -> k.getRestaurantIngredientId().getIngredientId(), v -> v));
     }
 }

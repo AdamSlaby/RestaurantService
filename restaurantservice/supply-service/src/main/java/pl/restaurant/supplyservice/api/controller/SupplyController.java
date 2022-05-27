@@ -3,6 +3,7 @@ package pl.restaurant.supplyservice.api.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.supplyservice.api.request.NewSupply;
+import pl.restaurant.supplyservice.api.request.OrderValidation;
 import pl.restaurant.supplyservice.api.request.SupplyInfo;
 import pl.restaurant.supplyservice.business.service.SupplyService;
 
@@ -25,6 +26,24 @@ public class SupplyController {
     public SupplyInfo addSupply(@RequestBody @Valid NewSupply newSupply, HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         return supplyService.addSupply(newSupply, authorization);
+    }
+
+    @PostMapping("/{id}")
+    public void checkSupplies(@PathVariable("id") Long restaurantId,
+                               @RequestBody @Valid OrderValidation order) {
+        supplyService.checkSupplies(restaurantId, order);
+    }
+
+    @PutMapping("/{id}")
+    public void updateSupplies(@PathVariable("id") Long restaurantId,
+                                 @RequestBody @Valid List<OrderValidation> orders) {
+        supplyService.updateSupplies(restaurantId, orders);
+    }
+
+    @PutMapping("/rollback/{id}")
+    public void rollbackOrderSupplies(@PathVariable("id") Long restaurantId,
+                                      @RequestBody @Valid List<OrderValidation> orders) {
+        supplyService.rollbackOrderSupplies(restaurantId, orders);
     }
 
     @PutMapping("/")

@@ -20,9 +20,7 @@ public class MealMapper {
                 .price(mealEntity.getPrice())
                 .imageUrl(mealEntity.getImageUrl())
                 .ingredients(ingredients.stream()
-                        .map(el -> new IngredientView(el.getIngredient().getIngredientId(),
-                                el.getIngredient().getName(), el.getQuantity(),
-                                new Unit(el.getUnit().getUnitId(), el.getUnit().getName())))
+                        .map(MealIngredientMapper::mapDataToView)
                         .collect(Collectors.toList()))
                 .build();
     }

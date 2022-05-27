@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
+import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,8 +16,12 @@ import java.time.LocalDate;
 public class OrderFilters {
     private Long restaurantId;
     private Long orderId;
-    private LocalDate orderDate;
+
+    @NotEmpty(message = "Typ zamównienia nie może być pusty")
+    private String type;
+    private LocalDateTime orderDate;
     private Boolean isCompleted;
+
     @Valid
     private SortEvent sortEvent;
     private int pageNr;

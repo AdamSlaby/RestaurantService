@@ -16,6 +16,13 @@ import java.util.Map;
 @ControllerAdvice
 public class IncorrectDataAdvice {
     @ResponseBody
+    @ExceptionHandler(SupplyErrorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String supplyAlreadyExistsHandler(SupplyErrorException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
     @ExceptionHandler(SupplyAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> supplyAlreadyExistsHandler(SupplyAlreadyExistsException ex) {

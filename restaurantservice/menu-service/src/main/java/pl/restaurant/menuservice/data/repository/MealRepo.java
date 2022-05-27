@@ -28,4 +28,10 @@ public interface MealRepo extends JpaRepository<MealEntity, Integer> {
 
     @EntityGraph(attributePaths = {"type", "ingredients", "ingredients.ingredient"})
     List<MealEntity> findAllByIsBest(boolean isBest, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"ingredients", "ingredients.ingredient", "ingredients.unit"})
+    List<MealEntity> getAllByMealIdIn(List<Integer> ids);
+
+    @EntityGraph(attributePaths = {"ingredients", "ingredients.ingredient", "ingredients.unit"})
+    Optional<MealEntity> getByMealId(Integer id);
 }

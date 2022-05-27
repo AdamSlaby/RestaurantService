@@ -40,21 +40,26 @@ public class OrderController {
 
     @PostMapping("/restaurant")
     public void addRestaurantOrder(@RequestBody @Valid RestaurantOrder order) {
-        restaurantOrderService.addRestaurantOrder();
+        restaurantOrderService.addRestaurantOrder(order);
     }
 
     @PostMapping("/reserve")
     public Long reserveOrder(@RequestBody @Valid OnlineOrder onlineOrder) {
-        onlineOrderService.reserveOrder(onlineOrder);
+        return onlineOrderService.reserveOrder(onlineOrder);
     }
 
-    @PutMapping("/{id}")
-    public void updateOnlineOrder(@PathVariable("id") Long orderId, @RequestBody @Valid OnlineOrder order) {
-        onlineOrderService.updateOrder(orderId, order);
-    }
-
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public void updateRestaurantOrder(@PathVariable("id") Long orderId, @RequestBody @Valid RestaurantOrder order) {
         restaurantOrderService.updateOrder(orderId, order);
+    }
+
+    @PatchMapping("/restaurant/{id}")
+    public void completeRestaurantOrder(@PathVariable("id") Long orderId) {
+        restaurantOrderService.completeOrder(orderId);
+    }
+
+    @PatchMapping("/online/{id}")
+    public void completeOnlineOrder(@PathVariable("id") Long orderId) {
+        onlineOrderService.completeOrder(orderId);
     }
 }

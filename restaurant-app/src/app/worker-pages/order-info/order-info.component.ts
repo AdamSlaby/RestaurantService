@@ -43,6 +43,8 @@ export class OrderInfoComponent implements OnInit {
       }, 100);
     } else {
       this.showOnlineForm = value.type === 'Online';
+      if (value.type === 'Online')
+        this.disabled = true;
       if (value.isCompleted) {
         this.disabled = true;
         if (value.type === 'Online')
@@ -151,8 +153,6 @@ export class OrderInfoComponent implements OnInit {
     console.log(order);
     if (this.newOrder) {
 
-    } else {
-
     }
   }
 
@@ -247,7 +247,8 @@ export class OrderInfoComponent implements OnInit {
         name: dish.name,
         amount: this.selectedDishAmount,
         price: dish.price * this.selectedDishAmount,
-      } as OrderInfo)
+        isNew: true
+      } as OrderInfo);
       controls['orders'].setValue(controls['orders'].value);
     }
     this.selectedDishId = '';
@@ -258,7 +259,10 @@ export class OrderInfoComponent implements OnInit {
     //todo
     let price: number = 0;
     let orderArr: Order[] = [];
-    this.restaurantOrderForm.get('orders')?.value.forEach((el: OrderInfo) => orderArr.push(MapperUtility.mapOrderInfoToOrder(el)));
+    this.restaurantOrderForm.get('orders')?.value.forEach((el: OrderInfo) => {
+      if (el.isNew && el.isNew === true)
+        orderArr.push(MapperUtility.mapOrderInfoToOrder(el));
+    });
     orderArr.forEach(el => price += el.price);
     let order: RestaurantOrder = {
      tableId: this.restaurantOrderForm.get('tableId')?.value,

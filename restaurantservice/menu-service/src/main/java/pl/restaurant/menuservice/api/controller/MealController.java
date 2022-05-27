@@ -5,6 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.request.MealFilters;
+import pl.restaurant.menuservice.api.request.Order;
 import pl.restaurant.menuservice.api.response.Dish;
 import pl.restaurant.menuservice.api.response.MealInfo;
 import pl.restaurant.menuservice.api.response.MealListView;
@@ -33,6 +34,22 @@ public class MealController {
     @GetMapping("/best")
     public List<Dish> getBestMeals() {
         return mealService.getBestMeals();
+    }
+
+    @PostMapping("/rollback/{id}")
+    public void rollbackOrderSupplies(@PathVariable("id") Long restaurantId,
+                                      @RequestBody @Valid List<Order> orders) {
+        mealService.rollbackOrderSupplies(restaurantId, orders);
+    }
+
+    @PostMapping("/valid/{id}")
+    public void validateOrder(@PathVariable("id") Long restaurantId, @RequestBody @Valid Order order) {
+        mealService.validateOrder(restaurantId, order);
+    }
+
+    @PostMapping("/meals/{id}")
+    public String validateOrders(@PathVariable("id") Long restaurantId, @RequestBody @Valid List<Order> orders) {
+        return mealService.validateOrders(restaurantId, orders);
     }
 
     @PostMapping("/")

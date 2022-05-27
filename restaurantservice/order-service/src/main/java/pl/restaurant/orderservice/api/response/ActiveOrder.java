@@ -1,20 +1,18 @@
 package pl.restaurant.orderservice.api.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActiveOrder {
     private Long id;
-    private List<DishShortInfo> dishInfo;
+    private List<DishShortInfo> dishesInfo;
     private String orderType;
     private LocalDateTime orderDate;
 }

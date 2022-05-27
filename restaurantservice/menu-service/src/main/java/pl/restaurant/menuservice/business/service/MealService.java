@@ -1,9 +1,9 @@
 package pl.restaurant.menuservice.business.service;
 
 
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import pl.restaurant.menuservice.api.request.Meal;
 import pl.restaurant.menuservice.api.request.MealFilters;
+import pl.restaurant.menuservice.api.request.Order;
 import pl.restaurant.menuservice.api.response.Dish;
 import pl.restaurant.menuservice.api.response.MealInfo;
 import pl.restaurant.menuservice.api.response.MealListView;
@@ -25,4 +25,10 @@ public interface MealService {
     void updateMeal(Integer mealId, Meal meal);
 
     void deleteMeal(Integer mealId);
+
+    String validateOrders(Long restaurantId, List<Order> orders);
+
+    void validateOrder(Long restaurantId, Order order);
+
+    void rollbackOrderSupplies(Long restaurantId, List<Order> orders);
 }

@@ -12,15 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
+import pl.restaurant.menuservice.api.mapper.MealIngredientMapper;
 import pl.restaurant.menuservice.api.mapper.MealMapper;
-import pl.restaurant.menuservice.api.request.Ingredient;
-import pl.restaurant.menuservice.api.request.Meal;
-import pl.restaurant.menuservice.api.request.MealFilters;
-import pl.restaurant.menuservice.api.request.SortDirection;
-import pl.restaurant.menuservice.api.response.Dish;
-import pl.restaurant.menuservice.api.response.MealInfo;
-import pl.restaurant.menuservice.api.response.MealListView;
-import pl.restaurant.menuservice.api.response.MealShortInfo;
+import pl.restaurant.menuservice.api.request.*;
+import pl.restaurant.menuservice.api.response.*;
 import pl.restaurant.menuservice.business.exception.ColumnNotFoundException;
 import pl.restaurant.menuservice.business.exception.meal.CannotDeserializeIngredientsException;
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyExistsException;
@@ -36,6 +31,9 @@ import pl.restaurant.menuservice.data.repository.MealRepo;
 import pl.restaurant.menuservice.data.repository.TypeRepo;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +50,7 @@ public class MealServiceImpl implements MealService {
     private MealRepo mealRepo;
     private MealIngredientRepo mealIngredientRepo;
     private IngredientService ingredientService;
+    private SupplyServiceClient supplyClient;
     private TypeRepo typeRepo;
     private ApplicationContext applicationContext;
 
@@ -157,6 +156,66 @@ public class MealServiceImpl implements MealService {
         FileUtility.deleteFile(parts[parts.length - 1], path);
         mealIngredientRepo.deleteAllByMeal(mealEntity);
         mealRepo.delete(mealEntity);
+    }
+
+    @Override
+    public String validateOrders(Long restaurantId, List<Order> orders) {
+        List<Integer> ids = orders.stream().map(Order::getDishId).collect(Collectors.toList());
+        List<MealEntity> meals = mealRepo.getAllByMealIdIn(ids);
+        List<OrderValidation> orderList = new ArrayList<>();
+        if (meals.size() != orders.size())
+            return "Posiłek o podanym identyfikatorze nie istnieje";
+        for (int i = 0; i < orders.size(); i++) {
+            Order order = orders.get(i);
+            MealEntity mealEntity = meals.get(i);
+            if (!mealEntity.getPrice().multiply(BigDecimal.valueOf(order.getAmount())).equals(order.getPrice()))
+                return "Nieprawidłowa cena posiłku";
+            orderList.add(new OrderValidation().builder()
+                    .dishId(order.getDishId())
+                    .name(mealEntity.getName())
+                    .amount(order.getAmount())
+                    .ingredients(mealEntity.getIngredients().stream()
+                            .map(MealIngredientMapper::mapDataToView)
+                            .collect(Collectors.toList()))
+                    .build());
+        }
+        supplyClient.updateSupplies(restaurantId, orderList);
+        return null;
+    }
+
+    @Override
+    public void validateOrder(Long restaurantId, Order order) {
+        MealEntity mealEntity = mealRepo.getByMealId(order.getDishId())
+                .orElseThrow(MealNotFoundException::new);
+        OrderValidation orderValidation = new OrderValidation().builder()
+                .dishId(order.getDishId())
+                .name(mealEntity.getName())
+                .amount(order.getAmount())
+                .ingredients(mealEntity.getIngredients().stream()
+                        .map(MealIngredientMapper::mapDataToView)
+                        .collect(Collectors.toList()))
+                .build();
+        supplyClient.checkSupplies(restaurantId, orderValidation);
+    }
+
+    @Override
+    public void rollbackOrderSupplies(Long restaurantId, List<Order> orders) {
+        List<Integer> ids = orders.stream().map(Order::getDishId).collect(Collectors.toList());
+        List<MealEntity> meals = mealRepo.getAllByMealIdIn(ids);
+        List<OrderValidation> orderList = new ArrayList<>();
+        for (int i = 0; i < orders.size(); i++) {
+            Order order = orders.get(i);
+            MealEntity mealEntity = meals.get(i);
+            orderList.add(new OrderValidation().builder()
+                    .dishId(order.getDishId())
+                    .name(mealEntity.getName())
+                    .amount(order.getAmount())
+                    .ingredients(mealEntity.getIngredients().stream()
+                            .map(MealIngredientMapper::mapDataToView)
+                            .collect(Collectors.toList()))
+                    .build());
+        }
+        supplyClient.rollbackOrderSupplies(restaurantId, orderList);
     }
 
 

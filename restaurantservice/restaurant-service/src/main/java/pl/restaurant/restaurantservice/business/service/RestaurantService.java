@@ -25,4 +25,6 @@ public interface RestaurantService {
     void updateRestaurant(Long id, Restaurant restaurant);
 
     void removeTableFromRestaurant(long tableId, long restaurantId);
+
+    boolean isRestaurantTableExist(Long restaurantId, Long tableId);
 }

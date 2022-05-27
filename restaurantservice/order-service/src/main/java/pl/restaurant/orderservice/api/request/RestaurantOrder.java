@@ -23,7 +23,7 @@ public class RestaurantOrder {
 
     @NotNull(message = "Numer stolika nie może być pusty")
     @Min(value = 1, message = "Numer stolika musi być liczbą dodatnią")
-    private Integer tableId;
+    private Long tableId;
 
     @Valid
     private List<Order> orders;

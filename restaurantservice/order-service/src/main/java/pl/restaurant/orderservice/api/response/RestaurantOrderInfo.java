@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RestaurantOrderInfo {
     private Long id;
-    private Integer tableId;
+    private Long tableId;
     private RestaurantShortInfo restaurantInfo;
     private LocalDateTime orderDate;
     private LocalDateTime deliveryDate;

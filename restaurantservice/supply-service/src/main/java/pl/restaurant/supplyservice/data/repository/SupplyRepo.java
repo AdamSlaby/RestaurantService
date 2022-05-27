@@ -21,4 +21,6 @@ public interface SupplyRepo extends JpaRepository<SupplyEntity, RestaurantIngred
             "where s.restaurantIngredientId.restaurantId = :rId")
     List<SupplyInfo> getAllSupplies(@Param("rId") Long restaurantId);
 
+    @EntityGraph(attributePaths = {"unit"})
+    List<SupplyEntity> getAllByRestaurantIngredientIdIn(List<RestaurantIngredientId> ids);
 }

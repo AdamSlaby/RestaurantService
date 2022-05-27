@@ -20,6 +20,7 @@ export class OrderPageComponent implements OnInit {
   pageNr!: number;
   previousPage!: number;
   now!: Date;
+  chosenType: string = 'Online';
   chosenOrder!: number;
   chosenDate!: Date;
   isCompleted: any = null;

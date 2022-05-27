@@ -3,7 +3,7 @@ import {OrderType} from "../order-type";
 
 export interface ActiveOrder {
   id: number;
-  dishInfo: DishShortInfo[];
+  dishesInfo: DishShortInfo[];
   orderType: String;
   orderDate: Date;
 }

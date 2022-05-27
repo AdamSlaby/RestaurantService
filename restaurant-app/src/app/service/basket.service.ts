@@ -45,6 +45,7 @@ export class BasketService {
     } else {
       this._basket.set(dish.id, {
         dishId: dish.id,
+        name: dish.name,
         amount: dish.amount,
         price: (dish.price * dish.amount),
       });

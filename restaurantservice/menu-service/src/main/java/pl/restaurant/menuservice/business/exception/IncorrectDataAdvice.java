@@ -30,6 +30,12 @@ import java.util.Map;
 @ControllerAdvice
 public class IncorrectDataAdvice {
     @ResponseBody
+    @ExceptionHandler(SupplyErrorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String mealAlreadyAddedToMenuHandler(SupplyErrorException ex) {
+        return ex.getMessage();
+    }
+    @ResponseBody
     @ExceptionHandler(MealAlreadyAddedToMenuException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> mealAlreadyAddedToMenuHandler(MealAlreadyAddedToMenuException ex) {

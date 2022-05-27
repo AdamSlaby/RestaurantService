@@ -6,6 +6,12 @@
         <input type="number" class="form-control" [(ngModel)]="chosenOrder" placeholder="Identyfikator zamówienia"/>
       </div>
       <div class="mb-3">
+        <select class="form-select" [(ngModel)]="chosenType" >
+          <option [ngValue]="'Online'">Online</option>
+          <option [ngValue]="'Restaurant'">Na miejscu</option>
+        </select>
+      </div>
+      <div class="mb-3">
         <select class="form-select" [(ngModel)]="isCompleted">
           <option disabled hidden [selected]="isCompleted === null" [ngValue]="null">
             Wybierz zamówienia ze względu na ich stan realizacji

@@ -5,6 +5,7 @@ export class MapperUtility {
   public static mapOrderInfoToOrder(info: OrderInfo) {
     return {
       dishId: info.dishId,
+      name: info.name,
       amount: info.amount,
       price: info.price,
     } as Order;

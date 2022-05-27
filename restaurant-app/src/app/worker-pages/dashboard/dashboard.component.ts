@@ -88,7 +88,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   dishes: ActiveOrder[] = [
     {
       id: 1,
-      dishInfo: [
+      dishesInfo: [
         {
           name: 'Śledź po węgiersku',
           amount: 1,
@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     },
     {
       id: 2,
-      dishInfo: [
+      dishesInfo: [
         {
           name: 'Śledź po węgiersku',
           amount: 1,
@@ -118,7 +118,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     },
     {
       id: 3,
-      dishInfo: [
+      dishesInfo: [
         {
           name: 'Śledź po węgiersku',
           amount: 1,

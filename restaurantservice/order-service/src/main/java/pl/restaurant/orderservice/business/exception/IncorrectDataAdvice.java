@@ -15,6 +15,50 @@ import java.util.Map;
 
 @ControllerAdvice
 public class IncorrectDataAdvice {
+    @ResponseBody
+    @ExceptionHandler(CannotCompleteOrderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> cannotCompleteOrderHandler(CannotCompleteOrderException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("orderId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(CannotUpdateOrderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> cannotUpdateOrderHandler(CannotUpdateOrderException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("orderId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> restaurantNotFoundHandler(RestaurantNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("restaurantId", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(SupplyErrorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> mealAlreadyAddedToMenuHandler(SupplyErrorException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("order", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(TableNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> tableNotFoundHandler(TableNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("tableId", ex.getMessage());
+        return errors;
+    }
 
     @ResponseBody
     @ExceptionHandler(ColumnNotFoundException.class)

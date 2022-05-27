@@ -141,4 +141,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void removeTableFromRestaurant(long tableId, long restaurantId) {
         restaurantTableRepo.deleteById(new RestaurantTableId(restaurantId, tableId));
     }
+
+    @Override
+    public boolean isRestaurantTableExist(Long restaurantId, Long tableId) {
+        return restaurantTableRepo.existsById(new RestaurantTableId(restaurantId, tableId));
+    }
 }

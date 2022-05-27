@@ -1,9 +1,6 @@
 package pl.restaurant.orderservice.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Restaurant_Order")
@@ -26,7 +24,7 @@ public class RestaurantOrderEntity implements Serializable {
     private Long restaurantId;
 
     @Column(nullable = false)
-    private Integer tableId;
+    private Long tableId;
 
     @Column(nullable = false)
     private LocalDateTime orderDate;

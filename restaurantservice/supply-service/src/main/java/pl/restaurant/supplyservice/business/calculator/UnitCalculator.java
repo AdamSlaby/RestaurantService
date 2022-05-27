@@ -18,7 +18,7 @@ public abstract class UnitCalculator {
             if (divide.compareTo(BigDecimal.ONE) >= 0)
                 return new Result(divide, entry.getKey());
         }
-        throw new RuntimeException("Exception has occurred. Implementation of calculate method is incorrect");
+        return new Result(result, null);
     }
 
     BigDecimal getResult(SupplyEntity supply, BigDecimal quantity, UnitEntity unit, Operation operation) {

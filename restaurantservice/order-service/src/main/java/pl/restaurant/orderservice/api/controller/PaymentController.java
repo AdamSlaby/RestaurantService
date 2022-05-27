@@ -31,10 +31,10 @@ public class PaymentController {
                     return link.getHref();
                 }
             }
+            return "";
         } catch (PayPalRESTException ex) {
             throw new PaypalErrorException(ex.getMessage());
         }
-        return "";
     }
 
     @CrossOrigin(origins = "https://www.sandbox.paypal.com/**")
@@ -57,7 +57,7 @@ public class PaymentController {
         try {
             Payment payment = paypalService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                orderService.changeOrderStatus(orderId);
+                orderService.changePaymentStatus(orderId);
             } else {
                 orderService.rollbackOrder(orderId);
             }
@@ -81,7 +81,7 @@ public class PaymentController {
     public void notify(@RequestBody Notification notification,
                        @RequestParam("id") Long orderId) {
         if (notification.getOrder().getStatus().equals("COMPLETED"))
-            orderService.changeOrderStatus(orderId);
+            orderService.changePaymentStatus(orderId);
         else if (notification.getOrder().getStatus().equals("CANCELED")) {
             orderService.rollbackOrder(orderId);
         }
