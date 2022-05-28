@@ -4,10 +4,7 @@ import lombok.experimental.UtilityClass;
 import pl.restaurant.orderservice.api.request.OnlineOrder;
 import pl.restaurant.orderservice.api.request.Order;
 import pl.restaurant.orderservice.api.response.*;
-import pl.restaurant.orderservice.data.entity.AddressEntity;
-import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
-import pl.restaurant.orderservice.data.entity.OnlineOrderMealEntity;
-import pl.restaurant.orderservice.data.entity.OrderMealId;
+import pl.restaurant.orderservice.data.entity.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -52,6 +49,8 @@ public class OnlineOrderMapper {
     }
 
     public static OnlineOrderEntity mapObjectToData(OnlineOrder order, BigDecimal price, AddressEntity address) {
+        LocalDateTime timeToPaid = order.getPaymentMethod() == PaymentMethod.CASH ||
+                order.getPaymentMethod() == PaymentMethod.CARD ? LocalDateTime.now().plusMinutes(TIME_TO_PAID) : null;
         return new OnlineOrderEntity().builder()
                 .restaurantId(order.getRestaurantId())
                 .name(order.getName())
@@ -60,7 +59,7 @@ public class OnlineOrderMapper {
                 .phoneNr(order.getPhoneNr())
                 .floor(order.getFloor())
                 .orderDate(LocalDateTime.now())
-                .timeToPaid(LocalDateTime.now().plusMinutes(TIME_TO_PAID))
+                .timeToPaid(timeToPaid)
                 .isPaid(false)
                 .deliveryDate(null)
                 .paymentMethod(order.getPaymentMethod())

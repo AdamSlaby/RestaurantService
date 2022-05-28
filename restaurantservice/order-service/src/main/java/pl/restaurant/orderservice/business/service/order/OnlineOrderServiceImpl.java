@@ -232,6 +232,9 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
 
     private boolean isOrderUnpaid(OnlineOrderEntity order) {
         LocalDateTime now = LocalDateTime.now();
-        return (now.compareTo(order.getTimeToPaid()) >= 0 && !order.isPaid());
+        if (order.getTimeToPaid() != null)
+            return (now.compareTo(order.getTimeToPaid()) >= 0 && !order.isPaid());
+        else
+            return false;
     }
 }
