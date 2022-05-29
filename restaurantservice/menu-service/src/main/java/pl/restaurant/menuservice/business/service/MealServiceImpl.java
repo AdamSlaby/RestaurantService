@@ -53,6 +53,7 @@ public class MealServiceImpl implements MealService {
     private SupplyServiceClient supplyClient;
     private TypeRepo typeRepo;
     private ApplicationContext applicationContext;
+    private MenuService menuService;
 
     public MealServiceImpl(MealRepo mealRepo, MealIngredientRepo mealIngredientRepo,
                            IngredientService ingredientService, TypeRepo typeRepo,
@@ -82,6 +83,11 @@ public class MealServiceImpl implements MealService {
     public MealEntity getMeal(Integer mealId) {
         return mealRepo.findById(mealId)
                 .orElseThrow(MealNotFoundException::new);
+    }
+
+    @Override
+    public List<DishListView> getAllMealsFromMenu() {
+        return menuService.getAllDishesFromMenu();
     }
 
     @Override

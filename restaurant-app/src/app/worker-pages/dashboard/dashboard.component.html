@@ -14,7 +14,7 @@
           <div class="d-block">
             <span class="d-flex fw-light" style="font-size: 16px">Dzisiejszy dochód</span>
             <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
-              {{1900 | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
+              {{income | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
             </span>
           </div>
         </div>
@@ -22,7 +22,7 @@
       </div>
       <hr class="my-2">
       <div>
-        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+        <div (click)="getDailyIncome()" class="d-inline-block" style="cursor: pointer">
           <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
           <span>Zaktualizuj</span>
         </div>
@@ -45,7 +45,7 @@
           <div class="d-block">
             <span class="d-flex fw-light" style="font-size: 16px">Obsłużone zamówienia</span>
             <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
-              {{30}}
+              {{ordersAmount}}
             </span>
           </div>
         </div>
@@ -53,7 +53,7 @@
       </div>
       <hr class="my-2">
       <div>
-        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+        <div (click)="getDailyOrdersAmount()" class="d-inline-block" style="cursor: pointer">
           <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
           <span>Zaktualizuj</span>
         </div>
@@ -76,7 +76,7 @@
           <div class="d-block">
             <span class="d-flex fw-light" style="font-size: 16px">Wydane potrawy</span>
             <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
-              {{60}}
+              {{mealsAmount}}
             </span>
           </div>
         </div>
@@ -84,7 +84,7 @@
       </div>
       <hr class="my-2">
       <div>
-        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+        <div (click)="getDailyMealsAmount()" class="d-inline-block" style="cursor: pointer">
           <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
           <span>Zaktualizuj</span>
         </div>
@@ -107,7 +107,7 @@
           <div class="d-block">
             <span class="d-flex fw-light" style="font-size: 16px">Aktywne zamówienia</span>
             <span style="font-size: 20px" class="d-flex fw-bold justify-content-center">
-              {{dishes.length}}
+              {{activeOrdersAmount}}
             </span>
           </div>
         </div>
@@ -115,7 +115,7 @@
       </div>
       <hr class="my-2">
       <div>
-        <div (click)="refreshDailyIncome()" class="d-inline-block" style="cursor: pointer">
+        <div (click)="getDailyActiveOrdersAmount()" class="d-inline-block" style="cursor: pointer">
           <fa-icon class="me-2" [icon]="faArrowsRotate"></fa-icon>
           <span>Zaktualizuj</span>
         </div>

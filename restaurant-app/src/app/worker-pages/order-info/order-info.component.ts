@@ -12,6 +12,10 @@ import {OnlineOrder} from "../../model/order/online-order";
 import {Order} from "../../model/order/order";
 import {MapperUtility} from "../../utility/mapper-utility";
 import {RestaurantOrder} from "../../model/order/restaurant-order";
+import { MealService } from 'src/app/service/meal.service';
+import { OrderService } from 'src/app/service/order.service';
+import { PaymentService } from 'src/app/service/payment.service';
+import { RestaurantService } from 'src/app/service/restaurant.service';
 
 @Component({
   selector: 'app-order-info',
@@ -59,30 +63,16 @@ export class OrderInfoComponent implements OnInit {
   _orderInfo!: any;
   showOnlineForm: boolean = false;
   newOrder: boolean = false;
+  loading: boolean = false;
+  isSuccessful: boolean = true;
   faXmark = faXmark;
   faCartShopping = faCartShopping;
   selectedDishId!: string;
   selectedDishAmount!: any;
-  availableCities: string[] = ['Kielce', 'Zagnańsk', 'Masłów', 'Bilcza', 'Morawica'];
+  availableCities: string[] = [];
   errors: Map<string, string> = new Map<string, string>();
   tables: number[] = [1, 2, 3, 4];
-  dishes: DishListView[] = [
-    {
-      id: 1,
-      name: 'Pomidorowa',
-      price: 20.50,
-    },
-    {
-      id: 2,
-      name: 'Ogórkowa',
-      price: 22.50,
-    },
-    {
-      id: 3,
-      name: 'Filet z kurczaka',
-      price: 30.50,
-    },
-  ]
+  dishes!: DishListView[];
   onlineOrderForm = this.fb.group({
     firstName: ['', [Validators.required, Validators.pattern(RegexPattern.NAME)]],
     surname: ['', [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
@@ -102,10 +92,23 @@ export class OrderInfoComponent implements OnInit {
     tableId: ['', [Validators.required, Validators.min(1)]],
   });
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private mealService: MealService, 
+              private orderService: OrderService, private restaurantService: RestaurantService) {
   }
 
   ngOnInit(): void {
+    this.mealService.getAllMeals().subscribe(data => {
+      this.dishes = data;
+    }, error => {
+      console.error(error);
+    });
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.restaurantService.getRestaurantShortInfo(restaurantId).subscribe(data => {
+      this.availableCities = [];
+      this.availableCities.push(data.city);
+    }, error => {
+      console.error(error);
+    });
   }
 
   get fo() {
@@ -130,7 +133,7 @@ export class OrderInfoComponent implements OnInit {
   }
 
   onOnlineOrderFormSubmit() {
-    //todo
+    this.errors.clear();
     let orderArr: Order[] = [];
     this.onlineOrderForm.get('orders')?.value.forEach((el: OrderInfo) => orderArr.push(MapperUtility.mapOrderInfoToOrder(el)));
     let order: OnlineOrder = {
@@ -150,85 +153,59 @@ export class OrderInfoComponent implements OnInit {
       },
       paymentMethod: this.onlineOrderForm.get('paymentMethod')?.value,
     }
-    console.log(order);
+    this.loading = true;
     if (this.newOrder) {
-
+      this.orderService.reserveOrder(order).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.onlineOrderForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
     }
   }
 
   private getOrderInfo(value: OrderShortInfo): void {
     if (value.type === 'Online') {
-      this._orderInfo = {
-        id: 1,
-        name: 'Adam',
-        surname: 'Marciniak',
-        email: 'adsa1111@interia.pl',
-        phoneNr: '+48602602602',
-        floor: null,
-        paymentMethod: PaymentMethod.CASH,
-        orderDate: new Date(),
-        deliveryDate: null,
-        price: 42.50,
-        isPaid: false,
-        restaurantInfo: {
-          restaurantId: 1,
-          city: 'Kielce',
-          street: 'Warszawska',
-        },
-        address: {
-          city: 'Kielce',
-          street: 'Warszawska',
-          postcode: '25-734',
-          houseNr: '100',
-          flatNr: '20',
-        },
-        orders: [
-          {
-            dishId: 1,
-            name: 'Pomidorowa',
-            amount: 2,
-            price: 42.50,
-          },
-        ],
-      } as OnlineOrderInfo;
-      this.onlineOrderForm.patchValue({
-        firstName: this._orderInfo.name,
-        surname: this._orderInfo.surname,
-        email: this._orderInfo.email,
-        phoneNumber: this._orderInfo.phoneNr,
-        city: this._orderInfo.address.city,
-        street: this._orderInfo.address.street,
-        houseNr: this._orderInfo.address.houseNr,
-        flatNr: this._orderInfo.address.flatNr,
-        postcode: this._orderInfo.address.postcode,
-        floor: this._orderInfo.address.floor,
-        paymentMethod: this._orderInfo.paymentMethod,
-        orders: this._orderInfo.orders,
+      this.orderService.getOrderInfo(value.id, value.type).subscribe(data => {
+        this._orderInfo = data.onlineOrder;
+        this._orderInfo.orderDate = new Date(this._orderInfo.orderDate);
+        if (this._orderInfo.deliveryDate)
+          this._orderInfo.deliveryDate = new Date(this._orderInfo.deliveryDate);
+
+        this.onlineOrderForm.patchValue({
+          firstName: this._orderInfo.name,
+          surname: this._orderInfo.surname,
+          email: this._orderInfo.email,
+          phoneNumber: this._orderInfo.phoneNr,
+          city: this._orderInfo.address.city,
+          street: this._orderInfo.address.street,
+          houseNr: this._orderInfo.address.houseNr,
+          flatNr: this._orderInfo.address.flatNr,
+          postcode: this._orderInfo.address.postcode,
+          floor: this._orderInfo.address.floor,
+          paymentMethod: this._orderInfo.paymentMethod,
+          orders: this._orderInfo.orders,
+        });
+      }, error => {
+        console.error(error);
       });
     } else {
-      this._orderInfo = {
-        id: 1,
-        orderDate: new Date(),
-        deliveryDate: null,
-        tableId: 1,
-        restaurantInfo: {
-          restaurantId: 1,
-          city: 'Kielce',
-          street: 'Warszawska',
-        },
-        orders: [
-          {
-            dishId: 1,
-            name: 'Pomidorowa',
-            amount: 2,
-            price: 42.50,
-          },
-        ],
-        price: 42.50,
-      } as RestaurantOrderInfo;
-      this.restaurantOrderForm.patchValue({
-        orders: this._orderInfo.orders,
-        tableId: this._orderInfo.tableId,
+      this.orderService.getOrderInfo(value.id, value.type).subscribe(data => {
+        this._orderInfo = data.restaurantOrder;
+        this._orderInfo.orderDate = new Date(this._orderInfo.orderDate);
+        if (this._orderInfo.deliveryDate)
+          this._orderInfo.deliveryDate = new Date(this._orderInfo.deliveryDate);
+
+        this.restaurantOrderForm.patchValue({
+          orders: this._orderInfo.orders,
+          tableId: this._orderInfo.tableId,
+        });
+      }, error => {
+        console.error(error);
       });
     }
   }
@@ -239,24 +216,44 @@ export class OrderInfoComponent implements OnInit {
   }
 
   addDish(controls: any) {
+    this.errors.clear();
     let number = Number.parseInt(this.selectedDishId);
     let dish =  this.dishes.find(el => el.id === number);
     if (dish) {
-      controls['orders'].value.push({
-        dishId: dish.id,
-        name: dish.name,
-        amount: this.selectedDishAmount,
-        price: dish.price * this.selectedDishAmount,
-        isNew: true
-      } as OrderInfo);
-      controls['orders'].setValue(controls['orders'].value);
+      let restaurantId = localStorage.getItem('restaurantId');
+      this.loading = true;
+      let order = this.mapDishToOrder(dish);
+      this.mealService.validateOrder(restaurantId, order).subscribe(data => {
+        this.loading = false;
+        controls['orders'].value.push({
+          dishId: order.dishId,
+          name: order.name,
+          amount: order.amount,
+          price: order.price,
+          isNew: true
+        } as OrderInfo);
+        controls['orders'].setValue(controls['orders'].value);
+
+        this.selectedDishId = '';
+        this.selectedDishAmount = null;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.loading = false;
+        console.error(error);
+      });
     }
-    this.selectedDishId = '';
-    this.selectedDishAmount = null;
+  }
+
+  mapDishToOrder(dish: DishListView): Order {
+    return {
+      dishId: dish.id,
+      amount: this.selectedDishAmount,
+      name: dish.name,
+      price: dish.price * this.selectedDishAmount,
+    } as Order;
   }
 
   onRestaurantOrderFormSubmit() {
-    //todo
     let price: number = 0;
     let orderArr: Order[] = [];
     this.restaurantOrderForm.get('orders')?.value.forEach((el: OrderInfo) => {
@@ -270,11 +267,28 @@ export class OrderInfoComponent implements OnInit {
      orders: orderArr,
      price: price,
     }
-    console.log(order);
     if (this.newOrder) {
-
+      this.orderService.addRestaurantOrder(order).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.restaurantOrderForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
     } else {
-
+      this.orderService.updateRestaurantOrder(this._orderInfo.id, order).subscribe(data => {
+        this.loading = false;
+        this.isSuccessful = true;
+      }, error => {
+        this.errors = new Map(Object.entries(error.error));
+        this.restaurantOrderForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+      });
     }
   }
 }

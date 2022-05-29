@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Chart } from '../model/chart/chart';
+import { GenerateChartOptions } from '../model/chart/generate-chart-options';
 import { GeneralService } from './general.service';
 
 @Injectable({
@@ -17,8 +19,38 @@ export class StatisticService {
 
   constructor(private http: HttpClient) { }
 
-  getOrderInfo(restaurantId: number): Observable<number> {
+  getTodayIncome(restaurantId: any): Observable<number> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.get<number>(this.GET_TODAY_INCOME + '?rId' + restaurantId, {headers});
+    let path = restaurantId ? this.GET_TODAY_INCOME + '?rId' + restaurantId : this.GET_TODAY_INCOME;
+    return this.http.get<number>(path, {headers});
+  }
+
+  getTodayDeliveredOrdersAmount(restaurantId: any): Observable<number> {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
+    let path = restaurantId ? this.GET_TODAY_DELIVERED_ORDERS_AMOUNT + '?rId' + restaurantId : this.GET_TODAY_DELIVERED_ORDERS_AMOUNT;
+    return this.http.get<number>(path, {headers});
+  }
+
+  getTodayDeliveredMealsAmount(restaurantId: any): Observable<number> {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
+    let path = restaurantId ? this.GET_TODAY_DELIVERED_MEALS_AMOUNT + '?rId' + restaurantId : this.GET_TODAY_DELIVERED_MEALS_AMOUNT;
+    return this.http.get<number>(path, {headers});
+  }
+
+  getActiveOrdersAmount(restaurantId: any): Observable<number> {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
+    let path = restaurantId ? this.GET_ACTIVE_ORDERS_AMOUNT + '?rId' + restaurantId : this.GET_ACTIVE_ORDERS_AMOUNT;
+    return this.http.get<number>(path, {headers});
+  }
+
+  getOrderAmountFromHours(restaurantId: any): Observable<Chart> {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
+    let path = restaurantId ? this.GET_ORDER_AMOUNT_FROM_HOURS + '?rId' + restaurantId : this.GET_ORDER_AMOUNT_FROM_HOURS;
+    return this.http.get<Chart>(path, {headers});
+  }
+
+  getStatistics(options: GenerateChartOptions): Observable<Chart> {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
+    return this.http.post<Chart>(this.GET_STATISTICS, options, {headers});
   }
 }

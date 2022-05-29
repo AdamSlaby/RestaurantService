@@ -8,6 +8,9 @@ import {PaymentMethod} from "../../../model/payment-method";
 import {OnlineOrder} from "../../../model/order/online-order";
 import {BasketService} from "../../../service/basket.service";
 import {Order} from "../../../model/order/order";
+import { OrderService } from 'src/app/service/order.service';
+import { RestaurantService } from 'src/app/service/restaurant.service';
+import { PaymentService } from 'src/app/service/payment.service';
 
 @Component({
   selector: 'app-order-form',
@@ -21,7 +24,8 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
   faCreditCard = faCreditCard;
   faPaypal = faPaypal;
   loading = false;
-  availableCities: string[] = ['Kielce', 'Zagnańsk', 'Masłów', 'Bilcza', 'Morawica'];
+  isSuccessful: boolean = true;
+  availableCities: string[] = [];
   orderForm = this.fb.group({
     firstName: ['', [Validators.required, Validators.pattern(RegexPattern.NAME)]],
     surname: ['', [Validators.required, Validators.pattern(RegexPattern.SURNAME)]],
@@ -37,9 +41,17 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
   });
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute,
-              private basketService: BasketService) { }
+              private basketService: BasketService, private orderService: OrderService, 
+              private restaurantService: RestaurantService, private paymentService: PaymentService) { }
 
   ngOnInit(): void {
+    let restaurantId = sessionStorage.getItem('restaurantId');
+    this.restaurantService.getRestaurantShortInfo(restaurantId).subscribe(data => {
+      this.availableCities = [];
+      this.availableCities.push(data.city);
+    }, error => {
+      console.error(error);
+    });
   }
 
   ngAfterViewInit() {
@@ -61,7 +73,7 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
     this.loading=true;
     let orders:Order[] = []
     this.basketService.basket.forEach(el => orders.push(el));
-    let orderInfo: OnlineOrder = {
+    let onlineOrder: OnlineOrder = {
       name: this.orderForm.get('firstName')?.value,
       surname: this.orderForm.get('surname')?.value,
       email: this.orderForm.get('email')?.value,
@@ -78,6 +90,29 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
       },
       orders: orders,
     }
-    console.log(orderInfo);
+    this.loading = true;
+    this.orderService.reserveOrder(onlineOrder).subscribe(data => {
+      this.loading = false;
+      this.isSuccessful = true;
+      if (onlineOrder.paymentMethod === PaymentMethod.PAYPAL) {
+        this.paymentService.payPayPal(data).subscribe(link => {
+          window.location.href = link;
+        }, error => {
+          console.error(error);
+        })
+      } else if (onlineOrder.paymentMethod === PaymentMethod.PAYU) {
+        this.paymentService.payPayU(data).subscribe(link => {
+          window.location.href = link;
+        }, error => {
+          console.error(error);
+        })
+      }
+    }, error => {
+      this.errors = new Map(Object.entries(error.error));
+        this.orderForm.markAsPristine();
+        this.loading = false;
+        this.isSuccessful = false;
+        console.error(error);
+    });
   }
 }

@@ -317,6 +317,7 @@
               <div class="input-group">
                 <input type="text" placeholder="Wpisz nazwę posiłku" [(ngModel)]="selectedDishId"
                        [ngModelOptions]="{standalone: true}"
+                       [ngClass]="{ 'is-invalid': errors.has('order')}"
                        class="form-control" list="dishes"/>
                 <datalist id="dishes">
                   <option [value]="dish.id" *ngFor="let dish of dishes">
@@ -325,7 +326,11 @@
                 </datalist>
                 <input type="number" placeholder="Wpisz ilość" [(ngModel)]="selectedDishAmount"
                        [ngModelOptions]="{standalone: true}"
+                       [ngClass]="{ 'is-invalid': errors.has('order')}"
                        class="form-control"/>
+                <div *ngIf="errors.has('order')" class="invalid-feedback d-block">
+                    {{errors.get('order')}}
+                </div>
                 <button (click)="addDish(fo)" class="btn btn-outline-grey" type="button">Dodaj</button>
               </div>
             </div>
@@ -336,6 +341,12 @@
               <button *ngIf="!disabled" class="btn btn-outline-grey">
                 Zapisz
               </button>
+            </div>
+          </div>
+
+          <div *ngIf="isSuccessful" class="d-block alert-success mt-2">
+            <div class="d-grid text-center" style="font-size: 1.5rem;">
+              Zamówienie zostało zapisane
             </div>
           </div>
 
@@ -451,6 +462,7 @@
               <div class="input-group">
                 <input type="text" placeholder="Wpisz nazwę posiłku" [(ngModel)]="selectedDishId"
                        [ngModelOptions]="{standalone: true}"
+                       [ngClass]="{ 'is-invalid': errors.has('order')}"
                        class="form-control" list="_dishes"/>
                 <datalist id="_dishes">
                   <option [value]="dish.id" *ngFor="let dish of dishes">
@@ -459,7 +471,11 @@
                 </datalist>
                 <input type="number" placeholder="Wpisz ilość" [(ngModel)]="selectedDishAmount"
                        [ngModelOptions]="{standalone: true}"
+                       [ngClass]="{ 'is-invalid': errors.has('order')}"
                        class="form-control"/>
+                <div *ngIf="errors.has('order')" class="invalid-feedback d-block">
+                    {{errors.get('order')}}
+                </div>
                 <button (click)="addDish(fr)" class="btn btn-outline-grey" type="button">Dodaj</button>
               </div>
             </div>
@@ -470,6 +486,12 @@
               <button *ngIf="!disabled" class="btn btn-outline-grey">
                 Zapisz
               </button>
+            </div>
+          </div>
+
+          <div *ngIf="isSuccessful" class="d-block alert-success mt-2">
+            <div class="d-grid text-center" style="font-size: 1.5rem;">
+              Zamówienie zostało zapisane
             </div>
           </div>
 

@@ -11,6 +11,7 @@ import {NgbDateToStringAdapter} from "../../adapter/datepicker-string-adapter";
 import {ChartName} from "../../model/chart/chart-name";
 import {RestaurantService} from "../../service/restaurant.service";
 import { GenerateChartOptions } from 'src/app/model/chart/generate-chart-options';
+import { StatisticService } from 'src/app/service/statistic.service';
 
 @Component({
   selector: 'app-statistic',
@@ -20,8 +21,8 @@ import { GenerateChartOptions } from 'src/app/model/chart/generate-chart-options
 })
 export class StatisticComponent implements OnInit, AfterViewInit {
   @Input() set chartName(value: string) {
-    let chartName = value as unknown as ChartName;
-    this.getChartData(chartName);
+    this._chartName = value as unknown as ChartName;
+    this.generateChart(this._chartName);
   }
 
   @Input() periodOption!: boolean;
@@ -48,6 +49,7 @@ export class StatisticComponent implements OnInit, AfterViewInit {
   yearArr = Array.from({length: 10}, (_, i) => new Date().getFullYear() - i);
   periodType = PeriodType;
   chartType = ChartType;
+  _chartName!: ChartName;
   position = LegendPosition;
   observer!: any;
   selectedChartType!: ChartType;
@@ -57,7 +59,8 @@ export class StatisticComponent implements OnInit, AfterViewInit {
   restaurants!: RestaurantShortInfo[]
 
   constructor(private zone: NgZone, private cd: ChangeDetectorRef,
-              private restaurantService: RestaurantService) {
+              private restaurantService: RestaurantService, 
+              private statisticService: StatisticService) {
   }
 
   ngOnInit(): void {
@@ -92,28 +95,11 @@ export class StatisticComponent implements OnInit, AfterViewInit {
       return 0;
   }
 
-  getChartData(chartName: ChartName) {
-    this.generateChart(chartName);
-  }
-
-  getSoldDishIncomeData(): void {
-
-  }
-
-  getCompletionTimeData(): void {
-
-  }
-
-  getOrdersAmountData(): void {
-
-  }
-
   periodChanged() {
     this.chartOptionsValues.period = null;
   }
 
   generateChart(chartName: ChartName) {
-    //todo
     this.selectedChartType = this.chartOptionsValues.chartType;
     let options: GenerateChartOptions = {
       periodType: this.chartOptionsValues.periodType,
@@ -122,6 +108,11 @@ export class StatisticComponent implements OnInit, AfterViewInit {
       chartName: chartName,
       orderType: this.chartOptionsValues.orderType
     };
+    this.statisticService.getStatistics(options).subscribe(data => {
+      this.chartData = data;
+    }, error => {
+      console.error(error);
+    })
   }
 
   mapDataToBarOrPieChartData(data: Chart) {

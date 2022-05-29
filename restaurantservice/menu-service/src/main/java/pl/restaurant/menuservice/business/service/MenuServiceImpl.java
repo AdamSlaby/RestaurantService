@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.restaurant.menuservice.api.mapper.MealMapper;
 import pl.restaurant.menuservice.api.mapper.MenuMapper;
 import pl.restaurant.menuservice.api.request.MealMenu;
-import pl.restaurant.menuservice.api.response.Dish;
-import pl.restaurant.menuservice.api.response.DishOrderView;
-import pl.restaurant.menuservice.api.response.MealShortView;
-import pl.restaurant.menuservice.api.response.MenuView;
+import pl.restaurant.menuservice.api.response.*;
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyAddedToMenuException;
 import pl.restaurant.menuservice.business.exception.menu.MenuNotFoundException;
 import pl.restaurant.menuservice.data.entity.MealEntity;
@@ -37,6 +34,16 @@ public class MenuServiceImpl implements MenuService {
                 .orElseThrow(MenuNotFoundException::new);
         return menu.getMeals().stream()
                 .map(MealMapper::mapDataToDish)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DishListView> getAllDishesFromMenu() {
+        String season = SEASONS[LocalDate.now().getMonth().getValue() - 1];
+        MenuEntity menu = menuRepo.getBySeason(season)
+                .orElseThrow(MenuNotFoundException::new);
+        return menu.getMeals().stream()
+                .map(MealMapper::mapDataToListView)
                 .collect(Collectors.toList());
     }
 

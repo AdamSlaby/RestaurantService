@@ -13,6 +13,7 @@ import {RestaurantShortInfo} from "../model/restaurant/restaurant-short-info";
 export class RestaurantService {
   private COMMON_URL = `${GeneralService.BASE_URL}/restaurant`;
   private GET_RESTAURANT_INFO = `${this.COMMON_URL}/info/`;
+  private GET_RESTAURANT_SHORT_INFO = `${this.COMMON_URL}/short/`;
   private GET_TABLE = `${this.COMMON_URL}/table`;
   private GET_RESTAURANT = `${this.COMMON_URL}/details/`;
   private GET_ALL_RESTAURANTS = `${this.COMMON_URL}/`;
@@ -24,6 +25,10 @@ export class RestaurantService {
 
   getRestaurantInfo(restaurantId: any): Observable<RestaurantInfo> {
     return this.http.get<RestaurantInfo>(this.GET_RESTAURANT_INFO + restaurantId);
+  }
+
+  getRestaurantShortInfo(restaurantId: any): Observable<RestaurantShortInfo> {
+    return this.http.get<RestaurantShortInfo>(this.GET_RESTAURANT_SHORT_INFO + restaurantId);
   }
 
   getTable(seatsNr: number, restaurantId: any): Observable<Table> {

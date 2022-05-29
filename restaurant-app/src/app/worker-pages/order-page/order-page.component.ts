@@ -6,6 +6,8 @@ import {OrderListView} from "../../model/order/order-list-view";
 import {OrderShortInfo} from "../../model/order/order-short-info";
 import {HtmlUtility} from "../../utility/html-utility";
 import { NgbDateToDateAdapter } from 'src/app/adapter/datepicker-date-adapter';
+import { OrderFilters } from 'src/app/model/order/order-filters';
+import { OrderService } from 'src/app/service/order.service';
 
 @Component({
   selector: 'app-order-page',
@@ -21,45 +23,39 @@ export class OrderPageComponent implements OnInit {
   previousPage!: number;
   now!: Date;
   chosenType: string = 'Online';
-  chosenOrder!: number;
-  chosenDate!: Date;
+  chosenOrder!: any;
+  chosenDate!: any;
   isCompleted: any = null;
   selectedOrder!: OrderShortInfo | any;
   showOrderDetails: boolean = false;
-  orderList: OrderListView = {
-    totalElements: 110,
-    orders: [
-      {
-        id: 1,
-        type: 'Online',
-        price: 50.00,
-        orderDate: new Date(),
-        isCompleted: false,
-      }
-    ]
-  }
+  orderList!: OrderListView;
 
-  constructor() {
+  constructor(private orderService: OrderService) {
   }
 
   ngOnInit(): void {
     this.now = new Date();
-    let orderShortInfo = this.orderList.orders[0];
-    for (let i = 1; i <= 9; i++) {
-      this.orderList.orders.push(JSON.parse(JSON.stringify(orderShortInfo)));
-      this.orderList.orders[i].isCompleted = true;
-      this.orderList.orders[i].type = 'Restaurant';
-    }
+    this.getOrderList(this.filters);
     this.pageNr = 1;
     this.previousPage = 1;
   }
 
+  getOrderList(filters: OrderFilters) {
+    this.orderService.getOrderList(filters).subscribe(data => {
+      this.orderList = data;
+      this.orderList.orders.forEach(el => el.orderDate = new Date(el.orderDate));
+    }, error => {
+      console.error(error);
+    })
+  }
+
   filterOrders() {
-    //todo
+    let filters = this.filters;
+    filters.pageNr = 0;
+    this.getOrderList(filters);
   }
 
   addOnlineOrder() {
-    //todo
     this.showOrderDetails = true;
     this.selectedOrder = 'Online';
     setTimeout(() => {
@@ -76,12 +72,17 @@ export class OrderPageComponent implements OnInit {
   }
 
   resetFilters() {
-    //todo
+    this.chosenOrder = null;
     this.isCompleted = null;
+    this.chosenDate = null;
+    this.chosenDate = null;
+    this.getOrderList(this.filters);
   }
 
   onSort($event: SortEvent) {
-    //todo
+    let filters = this.filters
+    filters.sortEvent = $event;
+    this.getOrderList(filters);
   }
 
   editOrder(order: OrderShortInfo) {
@@ -92,13 +93,34 @@ export class OrderPageComponent implements OnInit {
     }, 1);
   }
 
-  loadPage($event: number) {
+  loadPage(page: number) {
+    let filters = this.filters;
+    filters.pageNr = page - 1;
     if (this.previousPage !== this.pageNr) {
-      this.previousPage = this.pageNr;
+      this.orderService.getOrderList(filters).subscribe(data => {
+        this.previousPage = this.pageNr;
+        this.pageNr = page;
+        this.orderList = data;
+        this.orderList.orders.forEach(el => el.orderDate = new Date(el.orderDate));
+      }, error => {
+        console.error(error);
+      })
     }
   }
 
   closeOrderDetails() {
     this.showOrderDetails = false;
+  }
+
+  get filters() {
+    return {
+      restaurantId: localStorage.getItem('restaurantId'),
+      orderId: this.chosenOrder,
+      isCompleted: this.isCompleted,
+      orderDate: this.chosenDate,
+      type: this.chosenType,
+      sortEvent: null,
+      pageNr: this.pageNr - 1
+    } as OrderFilters;
   }
 }

@@ -3,6 +3,9 @@ import {DishOrderView} from "../../../model/dish/dish-order-view";
 import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {BasketService} from "../../../service/basket.service";
+import { OrderService } from 'src/app/service/order.service';
+import { MealService } from 'src/app/service/meal.service';
+import { Order } from 'src/app/model/order/order';
 
 @Component({
   selector: 'app-order-food',

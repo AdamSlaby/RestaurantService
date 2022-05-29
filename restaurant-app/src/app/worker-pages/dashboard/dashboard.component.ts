@@ -10,9 +10,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {ActiveOrder} from "../../model/order/active-order";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {OrderType} from "../../model/order-type";
 import {Chart} from "../../model/chart/chart";
-import {ChartData} from "../../model/chart/chart-data";
+import { OrderService } from 'src/app/service/order.service';
+import { StatisticService } from 'src/app/service/statistic.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,114 +28,39 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   faHourglassStart = faHourglassStart;
   faCheck = faCheck;
   observer!:any;
+  income!: number;
+  ordersAmount!: number;
+  mealsAmount!: number;
+  activeOrdersAmount!: number;
   lastUpdateTime!: Date;
   chosenDish!: ActiveOrder;
   view!: [number, number];
-  ordersAmount: ChartData[] = [
-    {
-      name: "10:00",
-      value: 5,
-    },
-    {
-      name: "11:00",
-      value: 2,
-    },
-    {
-      name: "12:00",
-      value: 3,
-    },
-    {
-      name: "13:00",
-      value: 10,
-    },
-    {
-      name: "14:00",
-      value: 11,
-    },
-    {
-      name: "15:00",
-      value: 7,
-    },
-    {
-      name: "16:00",
-      value: 8,
-    },
-    {
-      name: "17:00",
-      value: 9,
-    },
-    {
-      name: "18:00",
-      value: 10,
-    },
-    {
-      name: "19:00",
-      value: 20,
-    },
-    {
-      name: "20:00",
-      value: 22,
-    },
-  ]
-  chartData: Chart[] = [
-    {
-      Xlabel: 'Godziny',
-      Ylabel: 'Liczba zamówień',
-      name: "Liczba zamówień w ciągu dnia",
-      series: []
-    }
-  ];
-  dishes: ActiveOrder[] = [
-    {
-      id: 1,
-      dishesInfo: [
-        {
-          name: 'Śledź po węgiersku',
-          amount: 1,
-        },
-        {
-          name: 'Śledź po węgiersku',
-          amount: 1,
-        },
-      ],
-      orderType: OrderType.ONLINE,
-      orderDate: new Date(),
-    },
-    {
-      id: 2,
-      dishesInfo: [
-        {
-          name: 'Śledź po węgiersku',
-          amount: 1,
-        },
-        {
-          name: 'Śledź po węgiersku',
-          amount: 1,
-        },
-      ],
-      orderType: OrderType.RESTAURANT,
-      orderDate: new Date(),
-    },
-    {
-      id: 3,
-      dishesInfo: [
-        {
-          name: 'Śledź po węgiersku',
-          amount: 1,
-        }
-      ],
-      orderType: OrderType.RESTAURANT,
-      orderDate: new Date(),
-    },
-  ]
+  chartData: Chart[] = [];
+  dishes!: ActiveOrder[];
 
-  constructor(private modalService: NgbModal,
-              private zone: NgZone, private cd: ChangeDetectorRef) {
+  constructor(private modalService: NgbModal, private orderService: OrderService,
+              private zone: NgZone, private cd: ChangeDetectorRef, 
+              private statisticService: StatisticService) {
   }
 
   ngOnInit(): void {
     this.lastUpdateTime = new Date();
-    this.chartData[0].series = this.ordersAmount;
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.statisticService.getOrderAmountFromHours(restaurantId).subscribe(data => {
+      this.chartData = [];
+      this.chartData.push(data);
+    }, error => {
+      console.error(error);
+    });
+    this.orderService.getActiveOrders(restaurantId).subscribe(data => {
+      this.dishes = data;
+    }, error => {
+      console.error(error);
+    });
+    this.getDailyIncome();
+    this.getDailyOrdersAmount();
+    this.getDailyMealsAmount();
+    this.getDailyActiveOrdersAmount();
   }
 
   ngAfterViewInit() {
@@ -165,13 +90,57 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  refreshDailyIncome() {
-    //todo
+  getDailyIncome() {
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.statisticService.getTodayIncome(restaurantId).subscribe(data => {
+      this.income = data;
+      this.lastUpdateTime = new Date();
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  getDailyOrdersAmount() {
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.statisticService.getTodayDeliveredOrdersAmount(restaurantId).subscribe(data => {
+      this.ordersAmount = data;
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  getDailyMealsAmount() {
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.statisticService.getTodayDeliveredMealsAmount(restaurantId).subscribe(data => {
+      this.mealsAmount = data;
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  getDailyActiveOrdersAmount() {
+    let restaurantId = localStorage.getItem('restaurantId');
+    this.statisticService.getActiveOrdersAmount(restaurantId).subscribe(data => {
+      this.activeOrdersAmount = data;
+    }, error => {
+      console.error(error);
+    })
   }
 
   completeOrder(modal: any) {
-    //todo
-    modal.close();
+    if (this.chosenDish.orderType === 'Online') {
+      this.orderService.completeOnlineOrder(this.chosenDish.id).subscribe(data => {
+        modal.close();
+      }, error => {
+        console.error(error);
+      });
+    } else {
+      this.orderService.completeRestaurantOrder(this.chosenDish.id).subscribe(data => {
+        modal.close();
+      }, error => {
+        console.error(error);
+      });
+    }
   }
 
   ngOnDestroy() {

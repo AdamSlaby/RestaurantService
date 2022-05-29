@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ActiveOrder } from '../model/order/active-order';
 import { OnlineOrder } from '../model/order/online-order';
 import { OrderFilters } from '../model/order/order-filters';
 import { OrderListView } from '../model/order/order-list-view';
@@ -34,10 +35,10 @@ export class OrderService {
     return this.http.get<OrdersInfo>(this.GET_ORDER_INFO + orderId + '?type=' + type, {headers});
   }
 
-  getActiveOrders(restaurantId: any): Observable<OrdersInfo> {
+  getActiveOrders(restaurantId: any): Observable<ActiveOrder[]> {
     let path = restaurantId ? this.GET_ACTIVE_ORDERS + '?rId=' + restaurantId : this.GET_ACTIVE_ORDERS;
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.get<OrdersInfo>(path, {headers});
+    return this.http.get<ActiveOrder[]>(path, {headers});
   }
 
   addRestaurantOrder(order: RestaurantOrder): Observable<any> {

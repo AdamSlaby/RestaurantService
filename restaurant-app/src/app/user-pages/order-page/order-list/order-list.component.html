@@ -20,9 +20,12 @@
       </button>
     </div>
     <div class="d-flex justify-content-center align-items-center">
-      <button (click)="addToBasket(dish)" class="btn btn-outline-grey">
+      <button (click)="addToBasket(dish, i)" class="btn btn-outline-grey">
         Zamów
       </button>
+    </div>
+    <div *ngIf="errors.has('order' + i)" class="invalid-feedback d-block">
+      {{errors.get('order' + i)}}
     </div>
   </div>
 </div>

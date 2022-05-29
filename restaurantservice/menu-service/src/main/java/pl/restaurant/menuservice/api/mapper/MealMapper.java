@@ -71,4 +71,12 @@ public class MealMapper {
         }
         return builder.toString();
     }
+
+    public static DishListView mapDataToListView(MealEntity meal) {
+        return new DishListView().builder()
+                .id(meal.getMealId())
+                .name(meal.getName())
+                .price(meal.getPrice())
+                .build();
+    }
 }
