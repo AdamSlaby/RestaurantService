@@ -76,7 +76,8 @@ export class SupplyPageComponent implements OnInit {
   saveSupplyState(index: number) {
     this.correctSupply = -1;
     this.errors.clear();
-    this.supplyService.updateSupply(this.supplies[index]).subscribe(data => {
+    console.log(this.suppliesCopy[index]);
+    this.supplyService.updateSupply(this.suppliesCopy[index]).subscribe(data => {
       this.correctSupply = index;
     }, error => {
       console.error(error);

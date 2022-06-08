@@ -60,7 +60,6 @@ export class MealService {
   }
 
   validateOrder(restaurantId: any, order: Order): Observable<any> {
-    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.post<any>(this.VALIDATE_ORDER + restaurantId, order, {headers});
+    return this.http.post<any>(this.VALIDATE_ORDER + restaurantId, order);
   }
 }

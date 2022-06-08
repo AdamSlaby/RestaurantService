@@ -26,10 +26,10 @@
 </div>
 <div>
   <div class="mt-4" *ngIf="basket.size > 0">
-    <div *ngIf="fullPrice - deliveryFee <= minimalPrice" class="bg-info text-center py-2 mb-2" style="border-radius: 10px">
+    <div *ngIf="fullPrice < minimalPrice" class="bg-info text-center py-2 mb-2" style="border-radius: 10px">
       Minimalna wartość zamówienia z dostawą wynosi
       {{minimalPrice}} zł (brakuje
-      {{deliveryFee + minimalPrice - fullPrice | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}).
+      {{minimalPrice - fullPrice | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}).
       Dodaj dania do koszyka.
     </div>
     <span class="float-start fw-bolder">Dostawa</span>
@@ -44,7 +44,7 @@
     <div style="clear: both" class="mb-4"></div>
   </div>
   <div *ngIf="basket.size > 0 && showFormBtn" class="d-grid gap-2">
-    <button [disabled]="fullPrice - deliveryFee <= minimalPrice"
+    <button [disabled]="fullPrice < minimalPrice"
             [routerLink]="['/order/customer']" fragment="orderForm"
             class="btn btn-outline-grey">
       Przejdź do kasy

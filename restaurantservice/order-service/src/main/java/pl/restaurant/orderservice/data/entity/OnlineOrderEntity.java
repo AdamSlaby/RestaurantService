@@ -1,6 +1,7 @@
 package pl.restaurant.orderservice.data.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.io.Serializable;

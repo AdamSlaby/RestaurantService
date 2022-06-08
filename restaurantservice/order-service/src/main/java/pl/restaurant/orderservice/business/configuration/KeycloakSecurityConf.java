@@ -48,11 +48,12 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 //order
                 .antMatchers("/list").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
-                .antMatchers("/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/info/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/active").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/restaurant").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/reserve").permitAll()
                 .antMatchers("/restaurant/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
+                .antMatchers("/restaurant/update/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/online/{id}").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 //payment
                 .antMatchers("/pay/paypal/{id}").permitAll()

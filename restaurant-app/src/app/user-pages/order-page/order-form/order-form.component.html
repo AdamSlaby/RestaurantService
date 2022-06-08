@@ -210,6 +210,10 @@
       </button>
     </div>
   </div>
+  <div *ngIf="errors.has('order')" class="invalid-feedback d-block">
+    {{errors.get('order')}}
+  </div>
+
   <div *ngIf="(form.submitted && form.invalid) || errors.size > 0" class="invalid-feedback d-block">
     Formularz zawiera błędy
   </div>

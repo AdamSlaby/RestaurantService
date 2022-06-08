@@ -15,11 +15,11 @@ import { GeneralService } from './general.service';
 export class OrderService {
   private COMMON_URL = `${GeneralService.BASE_URL}/order`;
   private GET_ORDER_LIST = `${this.COMMON_URL}/list`;
-  private GET_ORDER_INFO = `${this.COMMON_URL}/`;
+  private GET_ORDER_INFO = `${this.COMMON_URL}/info/`;
   private GET_ACTIVE_ORDERS = `${this.COMMON_URL}/active`;
   private ADD_RESTAURANT_ORDER = `${this.COMMON_URL}/restaurant`;
   private RESERVE_ORDER = `${this.COMMON_URL}/reserve`;
-  private UPDATE_RESTAURANT_ORDER = `${this.COMMON_URL}/`;
+  private UPDATE_RESTAURANT_ORDER = `${this.COMMON_URL}/restaurant/update/`;
   private COMPLETE_RESTAURANT_ORDER = `${this.COMMON_URL}/restaurant/`;
   private COMPLETE_ONLINE_ORDER = `${this.COMMON_URL}/online/`;
 

@@ -21,31 +21,31 @@ export class StatisticService {
 
   getTodayIncome(restaurantId: any): Observable<number> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    let path = restaurantId ? this.GET_TODAY_INCOME + '?rId' + restaurantId : this.GET_TODAY_INCOME;
+    let path = restaurantId ? this.GET_TODAY_INCOME + '?rId=' + restaurantId : this.GET_TODAY_INCOME;
     return this.http.get<number>(path, {headers});
   }
 
   getTodayDeliveredOrdersAmount(restaurantId: any): Observable<number> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    let path = restaurantId ? this.GET_TODAY_DELIVERED_ORDERS_AMOUNT + '?rId' + restaurantId : this.GET_TODAY_DELIVERED_ORDERS_AMOUNT;
+    let path = restaurantId ? this.GET_TODAY_DELIVERED_ORDERS_AMOUNT + '?rId=' + restaurantId : this.GET_TODAY_DELIVERED_ORDERS_AMOUNT;
     return this.http.get<number>(path, {headers});
   }
 
   getTodayDeliveredMealsAmount(restaurantId: any): Observable<number> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    let path = restaurantId ? this.GET_TODAY_DELIVERED_MEALS_AMOUNT + '?rId' + restaurantId : this.GET_TODAY_DELIVERED_MEALS_AMOUNT;
+    let path = restaurantId ? this.GET_TODAY_DELIVERED_MEALS_AMOUNT + '?rId=' + restaurantId : this.GET_TODAY_DELIVERED_MEALS_AMOUNT;
     return this.http.get<number>(path, {headers});
   }
 
   getActiveOrdersAmount(restaurantId: any): Observable<number> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    let path = restaurantId ? this.GET_ACTIVE_ORDERS_AMOUNT + '?rId' + restaurantId : this.GET_ACTIVE_ORDERS_AMOUNT;
+    let path = restaurantId ? this.GET_ACTIVE_ORDERS_AMOUNT + '?rId=' + restaurantId : this.GET_ACTIVE_ORDERS_AMOUNT;
     return this.http.get<number>(path, {headers});
   }
 
   getOrderAmountFromHours(restaurantId: any): Observable<Chart> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    let path = restaurantId ? this.GET_ORDER_AMOUNT_FROM_HOURS + '?rId' + restaurantId : this.GET_ORDER_AMOUNT_FROM_HOURS;
+    let path = restaurantId ? this.GET_ORDER_AMOUNT_FROM_HOURS + '?rId=' + restaurantId : this.GET_ORDER_AMOUNT_FROM_HOURS;
     return this.http.get<Chart>(path, {headers});
   }
 

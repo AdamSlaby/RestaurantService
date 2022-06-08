@@ -20,8 +20,13 @@ public class ChartData {
         this.value = value.longValue();
     }
 
+    public ChartData(Integer name, Double value) {
+        this.name = String.valueOf(name);
+        this.value = value.longValue() / 60;
+    }
+
     public ChartData(String name, Double value) {
-        this.name = name;
-        this.value = value.longValue();
+        this.name = String.valueOf(name);
+        this.value = value.longValue() / 60;
     }
 }

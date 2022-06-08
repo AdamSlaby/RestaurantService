@@ -32,8 +32,10 @@ public class IncorrectDataAdvice {
     @ResponseBody
     @ExceptionHandler(SupplyErrorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String mealAlreadyAddedToMenuHandler(SupplyErrorException ex) {
-        return ex.getMessage();
+    public Map<String, String> supplyErrorHandler(SupplyErrorException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+        return errors;
     }
     @ResponseBody
     @ExceptionHandler(MealAlreadyAddedToMenuException.class)

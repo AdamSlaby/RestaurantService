@@ -11,12 +11,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 @FeignClient(name = "MENU-SERVICE")
-@RequestMapping("/meal")
 public interface MenuServiceClient {
-    @PostMapping("/meals/{id}")
+    @PostMapping("/meal/meals/{id}")
     String validateOrders(@PathVariable("id") Long restaurantId, @RequestBody @Valid List<Order> orders);
 
-    @PostMapping("/rollback/{id}")
+    @PostMapping("/meal/rollback/{id}")
     void rollbackOrderSupplies(@PathVariable("id") Long restaurantId,
                                       @RequestBody @Valid List<Order> orders);
 }

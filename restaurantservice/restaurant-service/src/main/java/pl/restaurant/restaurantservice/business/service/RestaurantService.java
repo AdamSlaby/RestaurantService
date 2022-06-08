@@ -5,6 +5,7 @@ import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
 import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
 import pl.restaurant.restaurantservice.api.response.Table;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface RestaurantService {
@@ -27,4 +28,6 @@ public interface RestaurantService {
     void removeTableFromRestaurant(long tableId, long restaurantId);
 
     boolean isRestaurantTableExist(Long restaurantId, Long tableId);
+
+    BigDecimal getRestaurantDeliveryFee(Long id);
 }

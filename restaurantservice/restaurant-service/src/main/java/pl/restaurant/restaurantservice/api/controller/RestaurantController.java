@@ -12,6 +12,7 @@ import pl.restaurant.restaurantservice.api.response.Table;
 import pl.restaurant.restaurantservice.business.service.RestaurantService;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,12 @@ public class RestaurantController {
     public RestaurantInfo getRestaurantInfo(@PathVariable Long id) {
         log.log(Level.INFO, "Getting restaurant of id = " + id);
         return restaurantService.getRestaurantInfo(id);
+    }
+
+    @GetMapping("/fee/{id}")
+    public BigDecimal getRestaurantDeliveryFee(@PathVariable Long id) {
+        log.log(Level.INFO, "Getting restaurant delivery fee of id = " + id);
+        return restaurantService.getRestaurantDeliveryFee(id);
     }
 
     @GetMapping("/exist/{id}")

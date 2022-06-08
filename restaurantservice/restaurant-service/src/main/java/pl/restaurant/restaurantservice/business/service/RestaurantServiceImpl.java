@@ -16,6 +16,7 @@ import pl.restaurant.restaurantservice.data.entity.*;
 import pl.restaurant.restaurantservice.data.repository.*;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,5 +146,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public boolean isRestaurantTableExist(Long restaurantId, Long tableId) {
         return restaurantTableRepo.existsById(new RestaurantTableId(restaurantId, tableId));
+    }
+
+    @Override
+    public BigDecimal getRestaurantDeliveryFee(Long id) {
+        return restaurantRepo.getRestaurantDeliveryFee(id)
+                .orElseThrow(RestaurantNotFoundException::new);
     }
 }

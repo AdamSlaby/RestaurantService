@@ -28,7 +28,7 @@ public class OrderController {
         return orderService.getOrderList(filters);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/info/{id}")
     public OrdersInfo getOrderInfo(@PathVariable("id") Long orderId, @RequestParam("type") String type) {
         return orderService.getOrderInfo(orderId, type);
     }
@@ -48,7 +48,7 @@ public class OrderController {
         return onlineOrderService.reserveOrder(onlineOrder);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/restaurant/update/{id}")
     public void updateRestaurantOrder(@PathVariable("id") Long orderId, @RequestBody @Valid RestaurantOrder order) {
         restaurantOrderService.updateOrder(orderId, order);
     }

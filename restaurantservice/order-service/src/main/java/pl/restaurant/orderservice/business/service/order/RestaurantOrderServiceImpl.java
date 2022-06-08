@@ -49,8 +49,12 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
             from = orderDate.withHour(0).withMinute(0).withSecond(0);
             to = orderDate.withHour(23).withMinute(59).withSecond(59);
         }
-        return orderRepo.getOrders(filters.getRestaurantId(), filters.getOrderId(), from, to,
-                filters.getIsCompleted(), pageable);
+        if (filters.getIsCompleted() != null && filters.getIsCompleted()) {
+            return orderRepo.getDeliveredOrders(filters.getRestaurantId(), filters.getOrderId(), from, to,
+                    filters.getIsCompleted(), pageable);
+        } else
+            return orderRepo.getNotDeliveredOrders(filters.getRestaurantId(), filters.getOrderId(), from, to,
+                    filters.getIsCompleted(), pageable);
     }
 
     @Override
@@ -108,22 +112,26 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
 
     @Override
     public BigDecimal getTodayIncome(Long restaurantId, LocalDateTime from, LocalDateTime to) {
-        return orderRepo.getTodayIncome(restaurantId, from, to);
+        BigDecimal income = orderRepo.getTodayIncome(restaurantId, from, to);
+        return income == null ? BigDecimal.ZERO : income;
     }
 
     @Override
     public Integer getTodayDeliveredOrders(Long restaurantId, LocalDateTime from, LocalDateTime to) {
-        return orderRepo.getTodayDeliveredOrders(restaurantId, from, to);
+        Integer amount = orderRepo.getTodayDeliveredOrders(restaurantId, from, to);
+        return amount == null ? 0 : amount;
     }
 
     @Override
     public Integer getTodayDeliveredMealsAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
-        return orderRepo.getTodayDeliveredMealsAmount(restaurantId, from, to);
+        Integer amount = orderRepo.getTodayDeliveredMealsAmount(restaurantId, from, to);
+        return amount == null ? 0 : amount;
     }
 
     @Override
     public Integer getActiveOrdersAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
-        return orderRepo.getActiveOrdersAmount(restaurantId, from, to);
+        Integer amount = orderRepo.getActiveOrdersAmount(restaurantId, from, to);
+        return amount == null ? 0 : amount;
     }
 
     @Override

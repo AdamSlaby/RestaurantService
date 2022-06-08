@@ -8,9 +8,11 @@ import pl.restaurant.menuservice.api.mapper.MenuMapper;
 import pl.restaurant.menuservice.api.request.MealMenu;
 import pl.restaurant.menuservice.api.response.*;
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyAddedToMenuException;
+import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
 import pl.restaurant.menuservice.business.exception.menu.MenuNotFoundException;
 import pl.restaurant.menuservice.data.entity.MealEntity;
 import pl.restaurant.menuservice.data.entity.MenuEntity;
+import pl.restaurant.menuservice.data.repository.MealRepo;
 import pl.restaurant.menuservice.data.repository.MenuRepo;
 
 import java.time.LocalDate;
@@ -25,7 +27,7 @@ public class MenuServiceImpl implements MenuService {
             "Lato", "Lato", "Jesień", "Jesień", "Jesień", "Zima"
     };
     private MenuRepo menuRepo;
-    private MealService mealService;
+    private MealRepo mealRepo;
 
     @Override
     public List<Dish> getDishesFromMenu() {
@@ -71,9 +73,11 @@ public class MenuServiceImpl implements MenuService {
         MealEntity meal;
         if (NumberUtils.isParsable(menuMeal.getMeal())) {
             int mealId = Integer.parseInt(menuMeal.getMeal());
-            meal = mealService.getMeal(mealId);
+            meal = mealRepo.findById(mealId)
+                    .orElseThrow(MealNotFoundException::new);
         } else
-            meal = mealService.getMeal(menuMeal.getMeal());
+            meal = mealRepo.findByName(menuMeal.getMeal())
+                    .orElseThrow(MealNotFoundException::new);
         if (menu.getMeals().contains(meal))
             throw new MealAlreadyAddedToMenuException();
         menu.getMeals().add(meal);
@@ -85,7 +89,8 @@ public class MenuServiceImpl implements MenuService {
     public void removeMealFromMenu(Integer menuId, Integer mealId) {
         MenuEntity menu = menuRepo.getByMenuId(menuId)
                 .orElseThrow(MenuNotFoundException::new);
-        MealEntity meal = mealService.getMeal(mealId);
+        MealEntity meal = mealRepo.findById(mealId)
+                .orElseThrow(MealNotFoundException::new);
         menu.getMeals().remove(meal);
         menuRepo.save(menu);
     }

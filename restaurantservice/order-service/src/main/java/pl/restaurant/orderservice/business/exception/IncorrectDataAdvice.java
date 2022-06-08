@@ -18,6 +18,15 @@ import java.util.Map;
 public class IncorrectDataAdvice {
 
     @ResponseBody
+    @ExceptionHandler(InvalidOrderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invalidOrderHandler(InvalidOrderException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("order", ex.getMessage());
+        return errors;
+    }
+
+    @ResponseBody
     @ExceptionHandler(NumberFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> numberFormatHandler(NumberFormatException ex) {

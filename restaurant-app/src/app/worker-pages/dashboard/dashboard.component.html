@@ -165,7 +165,7 @@
     </div>
   </div>
 
-  <div class="col-xl-6 pb-3">
+  <div *ngIf="chartData.length > 0" class="col-xl-6 pb-3">
     <div id="orderChart" class="bg-white p-2" style="border-radius: 10px;height: 400px">
       <ngx-charts-line-chart
         [scheme]="'forest'"

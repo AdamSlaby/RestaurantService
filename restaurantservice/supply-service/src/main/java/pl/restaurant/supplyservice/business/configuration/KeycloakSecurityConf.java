@@ -53,6 +53,8 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 //supply
                 .antMatchers("/list").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
                 .antMatchers("/").hasAnyRole(Role.ADMIN.toString(), Role.MANAGER.toString())
+                .antMatchers("/{id}").permitAll()
+                .antMatchers("/rollback/{id}").permitAll()
                 .anyRequest().permitAll();
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);

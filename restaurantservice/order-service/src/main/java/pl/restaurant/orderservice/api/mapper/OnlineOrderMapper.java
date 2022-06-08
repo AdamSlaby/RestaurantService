@@ -49,8 +49,8 @@ public class OnlineOrderMapper {
     }
 
     public static OnlineOrderEntity mapObjectToData(OnlineOrder order, BigDecimal price, AddressEntity address) {
-        LocalDateTime timeToPaid = order.getPaymentMethod() == PaymentMethod.CASH ||
-                order.getPaymentMethod() == PaymentMethod.CARD ? LocalDateTime.now().plusMinutes(TIME_TO_PAID) : null;
+        LocalDateTime timeToPaid = order.getPaymentMethod() == PaymentMethod.PAYPAL ||
+                order.getPaymentMethod() == PaymentMethod.PAYU ? LocalDateTime.now().plusMinutes(TIME_TO_PAID) : null;
         return new OnlineOrderEntity().builder()
                 .restaurantId(order.getRestaurantId())
                 .name(order.getName())

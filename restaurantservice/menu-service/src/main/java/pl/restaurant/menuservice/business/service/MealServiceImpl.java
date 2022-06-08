@@ -56,13 +56,15 @@ public class MealServiceImpl implements MealService {
     private MenuService menuService;
 
     public MealServiceImpl(MealRepo mealRepo, MealIngredientRepo mealIngredientRepo,
-                           IngredientService ingredientService, TypeRepo typeRepo,
-                           ApplicationContext applicationContext) {
+                           IngredientService ingredientService, SupplyServiceClient supplyClient,
+                           TypeRepo typeRepo, ApplicationContext applicationContext, MenuService menuService) {
         this.mealRepo = mealRepo;
         this.mealIngredientRepo = mealIngredientRepo;
         this.ingredientService = ingredientService;
+        this.supplyClient = supplyClient;
         this.typeRepo = typeRepo;
         this.applicationContext = applicationContext;
+        this.menuService = menuService;
     }
 
     @Override
@@ -174,7 +176,7 @@ public class MealServiceImpl implements MealService {
         for (int i = 0; i < orders.size(); i++) {
             Order order = orders.get(i);
             MealEntity mealEntity = meals.get(i);
-            if (!mealEntity.getPrice().multiply(BigDecimal.valueOf(order.getAmount())).equals(order.getPrice()))
+            if (mealEntity.getPrice().multiply(BigDecimal.valueOf(order.getAmount())).compareTo(order.getPrice()) != 0)
                 return "Nieprawidłowa cena posiłku";
             orderList.add(new OrderValidation().builder()
                     .dishId(order.getDishId())

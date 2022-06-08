@@ -88,7 +88,7 @@ export class OrderFormComponent implements OnInit, AfterViewInit {
         flatNr: this.orderForm.get('flatNr')?.value,
         postcode: this.orderForm.get('postcode')?.value,
       },
-      orders: orders,
+      orders: orders
     }
     this.loading = true;
     this.orderService.reserveOrder(onlineOrder).subscribe(data => {

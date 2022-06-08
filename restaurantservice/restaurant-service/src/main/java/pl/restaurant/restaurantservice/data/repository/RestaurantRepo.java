@@ -7,6 +7,7 @@ import pl.restaurant.restaurantservice.api.response.RestaurantInfo;
 import pl.restaurant.restaurantservice.api.response.RestaurantShortInfo;
 import pl.restaurant.restaurantservice.data.entity.RestaurantEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,4 +26,7 @@ public interface RestaurantRepo extends JpaRepository<RestaurantEntity, Long> {
     Optional<RestaurantInfo> findByRestaurantId(Long restaurantId);
 
     boolean existsByRestaurantId(Long restaurantId);
+
+    @Query("select r.deliveryFee from RestaurantEntity r where r.restaurantId = :id")
+    Optional<BigDecimal> getRestaurantDeliveryFee(@Param("id") Long id);
 }

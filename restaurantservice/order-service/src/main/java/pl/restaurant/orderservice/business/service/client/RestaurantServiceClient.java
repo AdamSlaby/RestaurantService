@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.restaurant.orderservice.api.response.RestaurantShortInfo;
 
+import java.math.BigDecimal;
+
 @FeignClient(url = "http://localhost:9998", name = "RESTAURANT-SERVICE")
 public interface RestaurantServiceClient {
     @GetMapping("/exist/{id}")
@@ -17,4 +19,7 @@ public interface RestaurantServiceClient {
     @GetMapping("/exist/table/{id}")
     boolean isRestaurantTableExists(@PathVariable("id") Long restaurantId,
                                            @RequestParam("tableId") Long tableId);
+
+    @GetMapping("/fee/{id}")
+    BigDecimal getRestaurantDeliveryFee(@PathVariable Long id);
 }
