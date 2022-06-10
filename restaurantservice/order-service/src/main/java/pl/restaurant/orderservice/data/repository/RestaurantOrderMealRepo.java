@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RestaurantOrderMealRepo extends JpaRepository<RestaurantOrderMealEntity, OrderMealId> {
-    @Query("select new pl.restaurant.orderservice.api.response.chart.ChartData(o.mealName , count(o)) " +
+    @Query("select new pl.restaurant.orderservice.api.response.chart.ChartData(o.mealName , sum(o.quantity)) " +
             "from RestaurantOrderMealEntity o where o.order.orderDate > :from and " +
             "o.order.orderDate <= :to and o.order.deliveryDate is not null and " +
             "(:rId is null or o.order.restaurantId = :rId) " +

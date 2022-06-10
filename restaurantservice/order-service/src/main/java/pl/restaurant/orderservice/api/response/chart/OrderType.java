@@ -35,6 +35,6 @@ public enum OrderType {
 
     public static Map<String, OrderType> getMap(Class<? extends Enum<?>> e) {
         return Arrays.stream(e.getEnumConstants())
-                .collect(Collectors.toMap(Enum::toString, v -> OrderType.valueOf(v.toString())));
+                .collect(Collectors.toMap(Enum::toString, v -> OrderType.valueOf(v.name())));
     }
 }

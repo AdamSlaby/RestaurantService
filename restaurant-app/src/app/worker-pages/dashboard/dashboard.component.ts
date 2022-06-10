@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   activeOrdersAmount!: number;
   lastUpdateTime!: Date;
   chosenDish!: ActiveOrder;
+  chosenDishIndex!: number;
   view!: [number, number];
   chartData: Chart[] = [];
   dishes!: ActiveOrder[];
@@ -84,8 +85,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       return 0;
   }
 
-  open(content: any, dish: ActiveOrder) {
+  open(content: any, dish: ActiveOrder, index: number) {
     this.chosenDish = dish;
+    this.chosenDishIndex = index;
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
     });
   }
@@ -130,12 +132,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   completeOrder(modal: any) {
     if (this.chosenDish.orderType === 'Online') {
       this.orderService.completeOnlineOrder(this.chosenDish.id).subscribe(data => {
+        this.dishes.splice(this.chosenDishIndex, 1);
         modal.close();
       }, error => {
         console.error(error);
       });
     } else {
       this.orderService.completeRestaurantOrder(this.chosenDish.id).subscribe(data => {
+        this.dishes.splice(this.chosenDishIndex, 1);
         modal.close();
       }, error => {
         console.error(error);

@@ -29,4 +29,9 @@ public class ChartData {
         this.name = String.valueOf(name);
         this.value = value.longValue() / 60;
     }
+
+    public ChartData(Integer amount, Long value) {
+        this.name = String.valueOf(amount);
+        this.value = value;
+    }
 }

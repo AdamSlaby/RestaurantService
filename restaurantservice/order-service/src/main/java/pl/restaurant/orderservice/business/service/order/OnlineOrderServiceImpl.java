@@ -2,10 +2,12 @@ package pl.restaurant.orderservice.business.service.order;
 
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.orderservice.api.mapper.AddressMapper;
 import pl.restaurant.orderservice.api.mapper.OnlineOrderMapper;
@@ -48,6 +50,7 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
     private MenuServiceClient menuClient;
     private RestaurantServiceClient restaurantClient;
     private RabbitTemplate rabbitTemplate;
+    private ApplicationContext applicationContext;
 
     @Override
     public OnlineOrderEntity getOrder(Long orderId) {
@@ -122,12 +125,13 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         return onlineOrderEntity.getOrderId();
     }
 
-    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void rollbackOrder(Long orderId) {
         OnlineOrderEntity order = orderRepo.getByOrderId(orderId).orElseThrow(OrderNotFoundException::new);
         rollbackOrder(order);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void rollbackOrder(OnlineOrderEntity order) {
         List<Order> orders = order.getMeals().stream()
                 .map(OnlineOrderMapper::mapDataToOrder)
@@ -136,7 +140,7 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         deleteOrder(order);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteOrder(OnlineOrderEntity order) {
         mealRepo.deleteMealsByOrderId(order.getOrderId());
         orderRepo.deleteById(order.getOrderId());
@@ -199,7 +203,8 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
 
     @Override
     public BigDecimal getCompareOrderIncomeChart(Time time, GenerateChartOptions data) {
-        return orderRepo.getCompareOrderIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+        BigDecimal income = orderRepo.getCompareOrderIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+        return income == null ? BigDecimal.ZERO : income;
     }
 
     @Override
@@ -235,10 +240,13 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         List<OnlineOrderEntity> orders = orderRepo.getOrdersByDate(from, to);
         for (OnlineOrderEntity order : orders) {
             if (isOrderUnpaid(order))
-                rollbackOrder(order);
+                getOnlineOrderServiceProxy().rollbackOrder(order);
         }
     }
 
+    private OnlineOrderServiceImpl getOnlineOrderServiceProxy() {
+        return applicationContext.getBean(this.getClass());
+    }
 
     private boolean isOrderUnpaid(OnlineOrderEntity order) {
         LocalDateTime now = LocalDateTime.now();

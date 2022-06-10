@@ -16,7 +16,7 @@ public interface OnlineOrderMealRepo extends JpaRepository<OnlineOrderMealEntity
     @Query("delete from OnlineOrderMealEntity o where o.id.orderId = :id")
     void deleteMealsByOrderId(@Param("id") Long orderId);
 
-    @Query("select new pl.restaurant.orderservice.api.response.chart.ChartData(o.mealName , count(o)) " +
+    @Query("select new pl.restaurant.orderservice.api.response.chart.ChartData(o.mealName , sum(o.quantity)) " +
             "from OnlineOrderMealEntity o where o.order.orderDate > :from and " +
             "o.order.orderDate <= :to and o.order.isPaid = true and o.order.deliveryDate is not null and " +
             "(:rId is null or o.order.restaurantId = :rId) " +

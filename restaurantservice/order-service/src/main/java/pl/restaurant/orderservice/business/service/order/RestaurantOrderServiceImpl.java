@@ -146,7 +146,8 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
 
     @Override
     public BigDecimal getCompareOrderIncomeChart(Time time, GenerateChartOptions data) {
-        return orderRepo.getCompareOrderIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+        BigDecimal income = orderRepo.getCompareOrderIncomeChart(data.getPlaceId(), time.getFrom(), time.getTo());
+        return income == null ? BigDecimal.ZERO : income;
     }
 
     @Override

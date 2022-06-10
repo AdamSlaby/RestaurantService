@@ -57,11 +57,11 @@ export class OrderService {
 
   completeRestaurantOrder(orderId: number): Observable<any> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.patch<any>(this.COMPLETE_RESTAURANT_ORDER + orderId, {headers});
+    return this.http.patch<any>(this.COMPLETE_RESTAURANT_ORDER + orderId, orderId, {headers});
   }
 
   completeOnlineOrder(orderId: number): Observable<any> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
-    return this.http.patch<any>(this.COMPLETE_ONLINE_ORDER + orderId, {headers});
+    return this.http.patch<any>(this.COMPLETE_ONLINE_ORDER + orderId, orderId, {headers});
   }
 }

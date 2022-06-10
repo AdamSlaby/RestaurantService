@@ -92,7 +92,7 @@ public class MailSenderImpl implements MailSender {
     public static String getContentForOrderConfirmation(OrderEmailInfo info) {
         return "<div style=\"width: 100%; height: 100%; background-color: #333333; min-height:900px\"> \n" +
                 "         <div style=\"font-size: 25px; text-align: center;padding: 1.5rem 2rem;\">\n" +
-                "           <img src=\"restaurantIcon.jpg\" alt=\"restaurant-icon\"/>\n" +
+                "           <img src=\"cid:restaurantIcon\" alt=\"restaurant-icon\"/>\n" +
                 "        </div>\n" +
                 "         <div style=\"text-align: center; background-color: white; color: #333333; padding: 5rem 1rem;width: 30%;margin: auto;min-width: 400px\">\n" +
                 "             <h2>Hej " + info.getName() + " " + info.getSurname() + "</h2>\n" +

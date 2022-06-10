@@ -1,10 +1,11 @@
 package pl.restaurant.orderservice.business.service.payment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import pl.restaurant.orderservice.OrderServiceApplication;
+import org.springframework.web.client.RestTemplate;
 import pl.restaurant.orderservice.api.mapper.PayuMapper;
 import pl.restaurant.orderservice.api.request.payu.PayuAuthResponse;
 import pl.restaurant.orderservice.api.request.payu.PayuResponse;
@@ -12,15 +13,9 @@ import pl.restaurant.orderservice.api.response.payu.Payload;
 import pl.restaurant.orderservice.business.service.order.OnlineOrderService;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 @Service
 public class PayuServiceImpl implements PayuService {
-    private static final String NOTIFY_URL = OrderServiceApplication.MAIN_SITE + "/pay/payu/notify?id=";
+    private static final String NOTIFY_URL = "https://48bf-31-178-44-241.eu.ngrok.io/pay/payu/notify?id=";
 
     @Value("${app.payu.posId}")
     private String posId;
@@ -44,35 +39,25 @@ public class PayuServiceImpl implements PayuService {
     public String createPayment(Long orderId) {
         OnlineOrderEntity order = orderService.getOrder(orderId);
         PayuAuthResponse payuResponse = getAccessToken();
-        Client client = ClientBuilder.newClient();
         Payload data = PayuMapper.mapOrderToPayload(order, posId, NOTIFY_URL + orderId,
                 orderService.getOrderDescription(order));
-        Entity payload = Entity.json(mapPayloadToString(data));
-        Response response = client.target("https://secure.snd.payu.com/api/v2_1/orders/")
-                        .request(MediaType.APPLICATION_JSON_TYPE)
-                        .header("Authorization", "Bearer: " + payuResponse.getAccess_token())
-                        .post(payload);
-        PayuResponse payuDetails = response.readEntity(PayuResponse.class);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(payuResponse.getAccess_token());
+        HttpEntity<Payload> request = new HttpEntity<>(data, headers);
+        PayuResponse payuDetails = restTemplate.postForObject("https://secure.snd.payu.com/api/v2_1/orders",
+                request, PayuResponse.class);
+        assert payuDetails != null;
         return payuDetails.getRedirectUri();
     }
 
     private PayuAuthResponse getAccessToken() {
-        Client client = ClientBuilder.newClient();
-        Entity<String> payload = Entity.text("grant_type=client_credentials&#38;" +
-                "client_id=" + clientId + ";" +
-                "client_secret=" + secret);
-        Response response = client.target("https://secure.snd.payu.com/pl/standard/user/oauth/authorize")
-                        .request(MediaType.TEXT_PLAIN_TYPE)
-                        .post(payload);
-        return response.readEntity(PayuAuthResponse.class);
-    }
-
-    private String mapPayloadToString(Payload data) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(data);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<String> request = new HttpEntity<>("grant_type=client_credentials&client_id=" + clientId + "&client_secret=" + secret, headers);
+        return restTemplate.postForObject("https://secure.snd.payu.com/pl/standard/user/oauth/authorize",
+                request, PayuAuthResponse.class);
     }
 }

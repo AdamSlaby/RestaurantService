@@ -24,8 +24,9 @@
         Zamów
       </button>
     </div>
-    <div *ngIf="errors.has('order' + i)" class="invalid-feedback d-block">
+    <div *ngIf="errors.has('order' + i) || errors.has('message' + i)" class="invalid-feedback d-block">
       {{errors.get('order' + i)}}
+      {{errors.get('message' + i)}}
     </div>
   </div>
 </div>

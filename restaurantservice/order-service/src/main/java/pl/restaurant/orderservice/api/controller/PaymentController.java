@@ -76,7 +76,7 @@ public class PaymentController {
         return payUService.createPayment(orderId);
     }
 
-    @CrossOrigin(origins = {"185.68.14.10", "185.68.14.11", "185.68.14.12", "185.68.14.26", "185.68.14.27", "185.68.14.28"})
+    @CrossOrigin(origins = {"185.68.14.10", "185.68.14.11", "185.68.14.12", "185.68.14.26", "185.68.14.27", "185.68.14.28", "*"})
     @PostMapping(value = "/pay/payu/notify")
     public void notify(@RequestBody Notification notification,
                        @RequestParam("id") Long orderId) {

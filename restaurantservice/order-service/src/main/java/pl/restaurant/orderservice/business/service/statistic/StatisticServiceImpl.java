@@ -11,6 +11,7 @@ import pl.restaurant.orderservice.business.service.order.OrderService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class StatisticServiceImpl implements StatisticService {
         for (int i = 8; i <= 20; i++)
             map.put(i, 0);
         for (LocalDateTime time : orders)
-            map.put(time.getHour(), map.get(time.getHour()) + 1);
+            map.put(time.getHour(), (map.get(time.getHour()) == null ? 0 : map.get(time.getHour())) + 1);
         return new Chart().builder()
                 .Xlabel("Godzina")
                 .Ylabel("Liczba zamówień")
@@ -166,7 +167,7 @@ public class StatisticServiceImpl implements StatisticService {
     private Time setTime(GenerateChartOptions data) {
         Time time = new Time();
         if (data.getPeriodType() == PeriodType.DAY) {
-            LocalDateTime dateTime = LocalDateTime.parse(data.getPeriod());
+            LocalDateTime dateTime = LocalDateTime.parse(data.getPeriod(), DateTimeFormatter.RFC_1123_DATE_TIME);
             time.setFrom(dateTime.withHour(0).withMinute(0).withSecond(0));
             time.setTo(dateTime.withHour(23).withMinute(59).withSecond(59));
             return time;

@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import pl.restaurant.orderservice.business.exception.CustomKeycloakAuthenticationHandler;
@@ -30,12 +32,16 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v3/api-docs",
+        web.ignoring().antMatchers( "/v3/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**");
+        web.ignoring()
+                .antMatchers(HttpMethod.GET, "/pay/payu/{id}");
+        web.ignoring()
+                .antMatchers(HttpMethod.POST, "/pay/payu/notify" );
     }
 
     @Override
@@ -59,8 +65,6 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/pay/paypal/{id}").permitAll()
                 .antMatchers("/pay/cancel").permitAll()
                 .antMatchers("/pay/success").permitAll()
-                .antMatchers("/pay/payu/{id}").permitAll()
-                .antMatchers("/pay/payu/notify").permitAll()
                 //statistics
                 .antMatchers("/statistic/income").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
                 .antMatchers("/statistic/orders").hasAnyRole(Role.MANAGER.toString(), Role.ADMIN.toString())
@@ -72,6 +76,8 @@ public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
 
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler);
     }
+
+
 
     @Autowired
     public void configureGlobal( AuthenticationManagerBuilder auth) {

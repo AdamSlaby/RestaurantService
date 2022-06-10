@@ -116,17 +116,15 @@ public interface OnlineOrderRepo extends JpaRepository<OnlineOrderEntity, Long> 
                                                 @Param("from") LocalDateTime from,
                                                 @Param("to") LocalDateTime to);
 
-    @Query("select new pl.restaurant.orderservice.api.response.chart.ChartData(concat(o.meals.size, '') , count(o)) " +
+    @Query("select new pl.restaurant.orderservice.api.response.chart.ChartData(size(o.meals) , count(o.orderId)) " +
             "from OnlineOrderEntity o where o.orderDate > :from and " +
             "o.orderDate <= :to and o.isPaid = true and o.deliveryDate is not null and " +
             "(:rId is null or o.restaurantId = :rId) " +
-            "group by o.meals.size")
+            "group by size(o.meals)")
     List<ChartData> getOrdersAmountWithDishesAmountChart(@Param("rId") Long placeId,
                                                          @Param("from") LocalDateTime from,
                                                          @Param("to") LocalDateTime to);
 
-    //TIME_TO_SEC(TIMEDIFF(r.startTime, r.endTime)) instead of function('TIMESTAMPDIFF')
-    //avg(function('TIMESTAMPDIFF', 'MINUTE', o.deliveryDate, o.orderDate)
     @Query("select new pl.restaurant.orderservice.api.response.chart" +
             ".ChartData(size(o.meals), avg(function('TIME_TO_SEC', function('TIMEDIFF', o.deliveryDate, o.orderDate)))) " +
             "from OnlineOrderEntity o where o.orderDate > :from and " +
