@@ -13,7 +13,7 @@ export interface OnlineOrderInfo {
   address: Address;
   floor: number | any;
   orderDate: Date;
-  isPaid: boolean;
+  paid: boolean;
   deliveryDate: Date | any;
   paymentMethod: PaymentMethod;
   orders: OrderInfo[];

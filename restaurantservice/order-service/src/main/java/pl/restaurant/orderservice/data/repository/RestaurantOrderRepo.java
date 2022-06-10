@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public interface RestaurantOrderRepo extends JpaRepository<RestaurantOrderEntity, Long> {
     @Query("select new pl.restaurant.orderservice.api.response." +
-            "OrderShortInfo(o.orderId, 'Restaurant', o.price, o.orderDate, (o.deliveryDate is not null)) " +
+            "OrderShortInfo(o.orderId, 'Restaurant', o.price, o.orderDate, o.deliveryDate) " +
             "from RestaurantOrderEntity o " +
             "where (:rId is null or o.restaurantId = :rId) and " +
             "(:oId is null or o.orderId = :oId) and " +
@@ -31,7 +31,7 @@ public interface RestaurantOrderRepo extends JpaRepository<RestaurantOrderEntity
                                             Pageable pageable);
 
     @Query("select new pl.restaurant.orderservice.api.response." +
-            "OrderShortInfo(o.orderId, 'Restaurant', o.price, o.orderDate, (o.deliveryDate is not null)) " +
+            "OrderShortInfo(o.orderId, 'Restaurant', o.price, o.orderDate, o.deliveryDate) " +
             "from RestaurantOrderEntity o " +
             "where (:rId is null or o.restaurantId = :rId) and " +
             "(:oId is null or o.orderId = :oId) and " +

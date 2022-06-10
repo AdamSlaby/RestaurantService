@@ -3,5 +3,5 @@ export interface OrderShortInfo {
   type: string;
   price: number;
   orderDate: Date;
-  isCompleted: boolean;
+  completed: boolean;
 }

@@ -228,9 +228,9 @@
               <span style="font-size: 1rem">{{fo['paymentMethod'].value}}</span>
             </div>
 
-            <div *ngIf="!newOrder" class="mb-2 mb-md-4 col-md-6">
+            <div *ngIf="!newOrder && _orderInfo" class="mb-2 mb-md-4 col-md-6">
               <label class="d-block" for="orderDate">Stan realizacji płatnośći:</label>
-              <span style="font-size: 1rem">{{_orderInfo.isPaid ? 'Zapłacone' : 'Niezapłacone'}}</span>
+              <span style="font-size: 1rem">{{_orderInfo.paid ? 'Zapłacone' : 'Niezapłacone'}}</span>
             </div>
           </div>
 
@@ -239,18 +239,18 @@
             <h5>Detale zamówienia</h5>
 
             <div class="row m-0">
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="orderDate">Data zamówienia:</label>
                 <span id="orderDate">
-                {{_orderInfo.orderDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+                {{_orderInfo.orderDate | date:'MMM d, y, HH:mm':'+0200':'pl-PL'}}
               </span>
               </div>
 
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="deliveryDate">Data realizacji zamówienia:</label>
                 <span id="deliveryDate">
                 <ng-container *ngIf="_orderInfo.deliveryDate !== null">
-                  {{_orderInfo.deliveryDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+                  {{_orderInfo.deliveryDate | date:'MMM d, y, HH:mm':'+0200':'pl-PL'}}
                 </ng-container>
                 <ng-container *ngIf="_orderInfo.deliveryDate === null">
                   Brak
@@ -258,14 +258,14 @@
               </span>
               </div>
 
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="price">Całkowity koszt zamówienia:</label>
                 <span id="price">
                   {{_orderInfo.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
                 </span>
               </div>
 
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="restaurant">Lokal zamówienia:</label>
                 <span id="restaurant">
                   {{_orderInfo.restaurantInfo.city}}, ul. {{_orderInfo.restaurantInfo.street}}

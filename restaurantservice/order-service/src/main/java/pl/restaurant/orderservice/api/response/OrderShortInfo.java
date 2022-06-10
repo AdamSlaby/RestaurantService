@@ -18,4 +18,12 @@ public class OrderShortInfo {
     private BigDecimal price;
     private LocalDateTime orderDate;
     private boolean isCompleted;
+
+    public OrderShortInfo(Long id, String type, BigDecimal price, LocalDateTime orderDate, LocalDateTime dateTime) {
+        this.id = id;
+        this.type = type;
+        this.price = price;
+        this.orderDate = orderDate;
+        this.isCompleted = dateTime != null;
+    }
 }

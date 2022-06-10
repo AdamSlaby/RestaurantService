@@ -68,16 +68,16 @@
             <td>{{order.type}}</td>
             <td>{{order.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}</td>
             <td>
-              {{order.orderDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
+              {{order.orderDate | date:'MMM d, y, HH:mm':'+0200':'pl-PL'}}
             </td>
-            <td [ngClass]="order.isCompleted ? 'text-success' : 'text-danger'">
-              {{order.isCompleted ? 'TAK' : 'NIE'}}
+            <td [ngClass]="order.completed ? 'text-success' : 'text-danger'">
+              {{order.completed ? 'TAK' : 'NIE'}}
             </td>
             <td>
               <fa-icon style="cursor: pointer" class="me-2 text-info" placement="top"
                        ngbTooltip="Zobacz detale"
                        (click)="editOrder(order)" [icon]="faEye"></fa-icon>
-              <fa-icon *ngIf="!order.isCompleted" style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
+              <fa-icon *ngIf="!order.completed" style="cursor: pointer" class="me-2 text-warning" placement="top" ngbTooltip="Edytuj"
                        (click)="editOrder(order)" [icon]="faPenToSquare"></fa-icon>
             </td>
           </tr>

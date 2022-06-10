@@ -44,6 +44,7 @@ export class OrderPageComponent implements OnInit {
     this.orderService.getOrderList(filters).subscribe(data => {
       this.orderList = data;
       this.orderList.orders.forEach(el => el.orderDate = new Date(el.orderDate));
+      console.log(this.orderList.orders[0]);
     }, error => {
       console.error(error);
     })

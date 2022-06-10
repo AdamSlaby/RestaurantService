@@ -20,7 +20,7 @@ public interface OnlineOrderRepo extends JpaRepository<OnlineOrderEntity, Long> 
     Optional<OnlineOrderEntity> getByOrderId(Long orderId);
 
     @Query("select new pl.restaurant.orderservice.api.response." +
-            "OrderShortInfo(o.orderId, 'Online', o.price, o.orderDate, (o.deliveryDate is not null)) " +
+            "OrderShortInfo(o.orderId, 'Online', o.price, o.orderDate, o.deliveryDate) " +
             "from OnlineOrderEntity o " +
             "where (:rId is null or o.restaurantId = :rId) and " +
             "(:oId is null or o.orderId = :oId) and " +
@@ -34,7 +34,7 @@ public interface OnlineOrderRepo extends JpaRepository<OnlineOrderEntity, Long> 
                                             Pageable pageable);
 
     @Query("select new pl.restaurant.orderservice.api.response." +
-            "OrderShortInfo(o.orderId, 'Online', o.price, o.orderDate, (o.deliveryDate is not null)) " +
+            "OrderShortInfo(o.orderId, 'Online', o.price, o.orderDate, o.deliveryDate) " +
             "from OnlineOrderEntity o " +
             "where (:rId is null or o.restaurantId = :rId) and " +
             "(:oId is null or o.orderId = :oId) and " +
