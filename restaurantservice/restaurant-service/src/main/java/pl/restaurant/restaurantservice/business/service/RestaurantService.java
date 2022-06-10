@@ -21,6 +21,8 @@ public interface RestaurantService {
 
     List<RestaurantShortInfo> getAllRestaurants();
 
+    List<Long> getAllTables(Long restaurantId);
+
     void addRestaurant(Restaurant restaurant);
 
     void updateRestaurant(Long id, Restaurant restaurant);

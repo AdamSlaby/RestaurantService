@@ -47,12 +47,12 @@ public interface OnlineOrderRepo extends JpaRepository<OnlineOrderEntity, Long> 
                                             @Param("done") Boolean isCompleted,
                                             Pageable pageable);
 
-    @Query("select o " +
-            "from OnlineOrderEntity o join fetch o.meals " +
+    @Query("select distinct o " +
+            "from OnlineOrderEntity o left join fetch o.meals " +
             "where o.deliveryDate is null and o.restaurantId = :rId and o.isPaid = true")
     List<OnlineOrderEntity> getActiveOrders(@Param("rId") Long restaurantId);
 
-    @Query("select o from OnlineOrderEntity o join fetch o.meals " +
+    @Query("select distinct o from OnlineOrderEntity o join fetch o.meals " +
             "where o.orderDate > :from and o.orderDate < :to")
     List<OnlineOrderEntity> getOrdersByDate(@Param("from") LocalDateTime from,
                                             @Param("to") LocalDateTime to);

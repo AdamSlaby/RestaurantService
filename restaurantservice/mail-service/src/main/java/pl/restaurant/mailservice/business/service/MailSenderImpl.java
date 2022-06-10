@@ -146,6 +146,8 @@ public class MailSenderImpl implements MailSender {
             builder.append(" <div style=\"margin: 1em 0\">\n" + "<div style=\"float: left;\">")
                     .append(i + 1).append(". ")
                     .append(info.getName())
+                    .append(" Ilość: ")
+                    .append(info.getAmount())
                     .append("</div>  ")
                     .append("<div style=\"float: right;\">")
                     .append(info.getPrice().toString())

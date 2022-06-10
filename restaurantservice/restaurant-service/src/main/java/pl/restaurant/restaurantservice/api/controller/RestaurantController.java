@@ -65,6 +65,12 @@ public class RestaurantController {
         return restaurantService.getRestaurantShortInfo(id);
     }
 
+    @GetMapping("/tables/{id}")
+    public List<Long> getAllTables(@PathVariable("id") Long restaurantId) {
+        log.log(Level.INFO, "Getting all tables from restaurant of id = " + restaurantId);
+        return restaurantService.getAllTables(restaurantId);
+    }
+
     @GetMapping()
     public List<RestaurantShortInfo> getAllRestaurants() {
         log.log(Level.INFO, "Getting all restaurants");

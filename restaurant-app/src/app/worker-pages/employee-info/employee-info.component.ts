@@ -35,6 +35,9 @@ export class EmployeeInfoComponent implements OnInit {
         this.employeeInfo = data;
         this.mapDatesToJsDate()
         this.updateEmployeeForm()
+        this.isSuccessful = false;
+        this.calendarOptions.events = [];
+        console.log(this.employeeInfo.schedulesInfo);
         for (let schedule of this.employeeInfo.schedulesInfo) {
           this.addScheduleTocalendar(schedule, schedule.id);
         }

@@ -14,8 +14,9 @@ public interface ScheduleRepo extends JpaRepository<ScheduleEntity, Long> {
     @Query("select new pl.restaurant.employeeservice.api.response" +
             ".ScheduleInfo(s.scheduleId, s.startShift, s.endShift) " +
             "from ScheduleEntity s " +
-            "where s.startShift > :date")
-    List<ScheduleInfo> getSchedulesFromDate(@Param("date") LocalDateTime date);
+            "where s.startShift > :date and s.employee.employeeId = :eId")
+    List<ScheduleInfo> getSchedulesFromDate(@Param("date") LocalDateTime date,
+                                            @Param("eId") Long employeeId);
 
     @Query("select s " +
             "from ScheduleEntity s " +

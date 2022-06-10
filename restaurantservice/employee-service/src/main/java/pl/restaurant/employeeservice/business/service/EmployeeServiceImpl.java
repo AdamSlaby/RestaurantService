@@ -69,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeEntity employee = employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException());
         LocalDateTime dateTime = LocalDateTime.now().withHour(1);
-        List<ScheduleInfo> schedules = scheduleRepo.getSchedulesFromDate(dateTime);
+        List<ScheduleInfo> schedules = scheduleRepo.getSchedulesFromDate(dateTime, employee.getEmployeeId());
         RestaurantShortInfo restaurantInfo = restaurantServiceClient
                 .getRestaurantShortInfo(employee.getRestaurantId());
 
@@ -225,6 +225,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             try {
                 String column = filter.getSortEvent().getColumn();
                 EmployeeEntity.class.getDeclaredField(column);
+                if (column.equals("workstation"))
+                    column = "workstation.name";
                 if (filter.getSortEvent().getDirection().equals(SortDirection.ASC))
                     return PageRequest.of(filter.getPageNr(), AMOUNT, Sort.by(Sort.Direction.ASC, column));
                 else if (filter.getSortEvent().getDirection().equals(SortDirection.DESC)) {

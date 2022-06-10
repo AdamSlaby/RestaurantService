@@ -313,7 +313,7 @@
               {{errors.get('orders')}}
             </div>
 
-            <div *ngIf="_orderInfo === null || !_orderInfo?.isPaid" class="form-group mb-2 mb-md-4">
+            <div *ngIf="_orderInfo === null || !_orderInfo.paid" class="form-group mb-2 mb-md-4">
               <div class="input-group">
                 <input type="text" placeholder="Wpisz nazwę posiłku" [(ngModel)]="selectedDishId"
                        [ngModelOptions]="{standalone: true}"
@@ -366,7 +366,7 @@
 
           <div class="row m-0">
             <ng-container *ngIf="!newOrder">
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="restaurantOrderDate">Data zamówienia:</label>
                 <span id="restaurantOrderDate">
                   {{_orderInfo.orderDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
@@ -376,23 +376,23 @@
               <div class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="restaurantDeliveryDate">Data realizacji zamówienia:</label>
                 <span id="restaurantDeliveryDate">
-                <ng-container *ngIf="_orderInfo.deliveryDate !== null">
+                <ng-container *ngIf="_orderInfo && _orderInfo.deliveryDate !== null">
                   {{_orderInfo.deliveryDate | date:'MMM d, y, HH:mm':'+0000':'pl-PL'}}
                 </ng-container>
-                <ng-container *ngIf="_orderInfo.deliveryDate === null">
+                <ng-container *ngIf="_orderInfo && _orderInfo.deliveryDate === null">
                   Brak
                 </ng-container>
               </span>
               </div>
 
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="restaurantPrice">Całkowity koszt zamówienia:</label>
                 <span id="restaurantPrice">
                   {{_orderInfo.price | currency:'PLN':'symbol-narrow':'1.2-2':'pl-PL'}}
                 </span>
               </div>
 
-              <div class="mb-2 mb-md-4 col-md-6">
+              <div *ngIf="_orderInfo" class="mb-2 mb-md-4 col-md-6">
                 <label class="d-block" for="_restaurant">Lokal zamówienia:</label>
                 <span id="_restaurant">
                   {{_orderInfo.restaurantInfo.city}}, ul. {{_orderInfo.restaurantInfo.street}}

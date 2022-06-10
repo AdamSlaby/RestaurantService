@@ -373,7 +373,7 @@
               <div class="d-grid text-center" style="font-size: 1.5rem;">
                 Dane zostały zaktualizowane
               </div>
-              <div *ngIf="credentials.username" class="d-grid text-center" style="font-size: 1.5rem;">
+              <div *ngIf="credentials && credentials.username" class="d-grid text-center" style="font-size: 1.5rem;">
                 Username: {{credentials.username}} <br>
                 Password: {{credentials.password}} 
               </div>

@@ -51,6 +51,7 @@ export class StatisticComponent implements OnInit, AfterViewInit {
   chartType = ChartType;
   _chartName!: ChartName;
   position = LegendPosition;
+  errors: Map<string, string> = new Map<string, string>();
   observer!: any;
   selectedChartType!: ChartType;
   chartTypes!: ChartType[];
@@ -100,6 +101,7 @@ export class StatisticComponent implements OnInit, AfterViewInit {
   }
 
   generateChart(chartName: ChartName) {
+    this.errors.clear();
     this.selectedChartType = this.chartOptionsValues.chartType;
     let options: GenerateChartOptions = {
       periodType: this.chartOptionsValues.periodType,
@@ -111,6 +113,7 @@ export class StatisticComponent implements OnInit, AfterViewInit {
     this.statisticService.getStatistics(options).subscribe(data => {
       this.chartData = data;
     }, error => {
+      this.errors = new Map(Object.entries(error.error));
       console.error(error);
     })
   }

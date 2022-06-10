@@ -140,11 +140,7 @@ public class OrderServiceImpl implements OrderService {
             Map<String, Long> map = onlineService.getDishAmountChart(time, data).stream()
                     .collect(Collectors.toMap(ChartData::getName, ChartData::getValue));
             List<ChartData> list = restaurantService.getDishAmountChart(time, data);
-            for (ChartData chartData : list)
-                map.put(chartData.getName(), map.get(chartData.getName()) + chartData.getValue());
-            return map.entrySet().stream()
-                    .map(e -> new ChartData(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList());
+            return getCombinedResult(map, list);
         }
     }
 
@@ -158,11 +154,7 @@ public class OrderServiceImpl implements OrderService {
             Map<String, Long> map = onlineService.getDishIncomeChart(time, data).stream()
                     .collect(Collectors.toMap(ChartData::getName, ChartData::getValue));
             List<ChartData> list = restaurantService.getDishIncomeChart(time, data);
-            for (ChartData chartData : list)
-                map.put(chartData.getName(), map.get(chartData.getName()) + chartData.getValue());
-            return map.entrySet().stream()
-                    .map(e -> new ChartData(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList());
+            return getCombinedResult(map, list);
         }
     }
 
@@ -176,11 +168,7 @@ public class OrderServiceImpl implements OrderService {
             Map<String, Long> map = onlineService.getOrdersAmountWithDishesAmountChart(time, data).stream()
                     .collect(Collectors.toMap(ChartData::getName, ChartData::getValue));
             List<ChartData> list = restaurantService.getOrdersAmountWithDishesAmountChart(time, data);
-            for (ChartData chartData : list)
-                map.put(chartData.getName(), map.get(chartData.getName()) + chartData.getValue());
-            return map.entrySet().stream()
-                    .map(e -> new ChartData(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList());
+            return getCombinedResult(map, list);
         }
     }
 
@@ -194,12 +182,17 @@ public class OrderServiceImpl implements OrderService {
             Map<String, Long> map = onlineService.getAvgCompletionTimeWithDishesAmountChart(time, data).stream()
                     .collect(Collectors.toMap(ChartData::getName, ChartData::getValue));
             List<ChartData> list = restaurantService.getAvgCompletionTimeWithDishesAmountChart(time, data);
-            for (ChartData chartData : list)
-                map.put(chartData.getName(), map.get(chartData.getName()) + chartData.getValue());
-            return map.entrySet().stream()
-                    .map(e -> new ChartData(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList());
+            return getCombinedResult(map, list);
         }
+    }
+
+    private List<ChartData> getCombinedResult(Map<String, Long> map, List<ChartData> list) {
+        for (ChartData chartData : list)
+            map.put(chartData.getName(),
+                    (map.get(chartData.getName()) == null ? 0L : map.get(chartData.getName())) + chartData.getValue());
+        return map.entrySet().stream()
+                .map(e -> new ChartData(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
     }
 
     private Pageable mapSortEventToPageable(OrderFilters filters) {

@@ -1,8 +1,8 @@
 <ul class="dots mx-auto" [class.padding]="showBest">
-  <li *ngFor="let dish of dishes" class="position-relative" [class.best-dish]="dish.isBest && showBest">
+  <li *ngFor="let dish of dishes" class="position-relative" [class.best-dish]="dish.best && showBest">
     <span class="text-uppercase mb-2" style="font-family: 'Lato', sans-serif">{{dish.name}}</span>
     <span>{{dish.price | currency :'PLN': 'symbol-narrow':'1.2-2':'pl-PL'}}</span>
     <p style="font-size: 12px">{{dish.ingredients}}</p>
-    <div *ngIf="dish.isBest && showBest" class="text-uppercase text-white p-1 recommend-text">polecane</div>
+    <div *ngIf="dish.best && showBest" class="text-uppercase text-white p-1 recommend-text">polecane</div>
   </li>
 </ul>

@@ -1,6 +1,7 @@
 package pl.restaurant.orderservice.business.service.order;
 
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     private RestaurantOrderMealRepo mealRepo;
     private MenuServiceClient menuClient;
     private RestaurantServiceClient restaurantClient;
+    private ApplicationContext applicationContext;
 
     @Override
     public Page<OrderShortInfo> getOrderList(OrderFilters filters, Pageable pageable) {
@@ -79,7 +81,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         String error = menuClient.validateOrders(restaurantOrder.getRestaurantId(), restaurantOrder.getOrders());
         if (error != null)
             throw new InvalidOrderException(error);
-        saveOrder(restaurantOrder);
+        getRestaurantOrderServiceProxy().saveOrder(restaurantOrder);
     }
 
     @Transactional
@@ -91,6 +93,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     }
 
     @Override
+    @Transactional
     public void updateOrder(Long orderId, RestaurantOrder order) {
         RestaurantOrderEntity restaurantOrderEntity = orderRepo.getByOrderId(orderId)
                 .orElseThrow(OrderNotFoundException::new);
@@ -99,7 +102,7 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         String error = menuClient.validateOrders(order.getRestaurantId(), order.getOrders());
         if (error != null)
             throw new InvalidOrderException(error);
-        updateOrder(restaurantOrderEntity, order);
+        getRestaurantOrderServiceProxy().updateOrder(restaurantOrderEntity, order);
     }
 
     @Override
@@ -170,9 +173,13 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         return orderRepo.getAvgCompletionTimeWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
     }
 
+    private RestaurantOrderServiceImpl getRestaurantOrderServiceProxy() {
+        return applicationContext.getBean(this.getClass());
+    }
+
     @Transactional
     public void updateOrder(RestaurantOrderEntity restaurantOrderEntity, RestaurantOrder restaurantOrder) {
-        restaurantOrderEntity.setPrice(restaurantOrder.getPrice());
+        restaurantOrderEntity.setPrice(restaurantOrderEntity.getPrice().add(restaurantOrder.getPrice()));
         orderRepo.save(restaurantOrderEntity);
         for (Order order : restaurantOrder.getOrders())
             mealRepo.save(RestaurantOrderMapper.mapOrderToData(order, restaurantOrderEntity));

@@ -36,6 +36,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -169,13 +170,14 @@ public class MealServiceImpl implements MealService {
     @Override
     public String validateOrders(Long restaurantId, List<Order> orders) {
         List<Integer> ids = orders.stream().map(Order::getDishId).collect(Collectors.toList());
-        List<MealEntity> meals = mealRepo.getAllByMealIdIn(ids);
+        Map<Integer, MealEntity> meals = mealRepo.getAllByMealIdIn(ids).stream()
+                .collect(Collectors.toMap(MealEntity::getMealId, v -> v));
         List<OrderValidation> orderList = new ArrayList<>();
         if (meals.size() != orders.size())
             return "Posiłek o podanym identyfikatorze nie istnieje";
         for (int i = 0; i < orders.size(); i++) {
             Order order = orders.get(i);
-            MealEntity mealEntity = meals.get(i);
+            MealEntity mealEntity = meals.get(order.getDishId());
             if (mealEntity.getPrice().multiply(BigDecimal.valueOf(order.getAmount())).compareTo(order.getPrice()) != 0)
                 return "Nieprawidłowa cena posiłku";
             orderList.add(new OrderValidation().builder()

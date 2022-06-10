@@ -15,4 +15,7 @@ public interface RestaurantTableEntityRepo extends JpaRepository<RestaurantTable
             "from RestaurantTableEntity r where r.restaurant.restaurantId = :id " +
             "order by r.table.seatsNr asc")
     List<FoodTableEntity> getAllByRestaurantId(@Param("id") Long restaurantId);
+
+    @Query("select r.table.tableId from RestaurantTableEntity r where r.restaurantTableId.restaurantId = :id")
+    List<Long> getAllTables(@Param("id") Long restaurantId);
 }

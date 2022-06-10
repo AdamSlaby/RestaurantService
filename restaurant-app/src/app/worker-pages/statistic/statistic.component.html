@@ -10,6 +10,9 @@
           <option [ngValue]="periodType.YEAR">{{periodType.YEAR.toString()}}</option>
         </select>
       </div>
+      <div *ngIf="errors.has('periodType')" class="invalid-feedback d-block">
+          {{errors.get('periodType')}}
+      </div>
     </div>
 
     <div *ngIf="chartOptionsValues.periodType === periodType.DAY"
@@ -22,6 +25,9 @@
           <button class="btn btn-outline-grey calendar" type="button" (click)="d.toggle()"></button>
         </div>
       </div>
+      <div *ngIf="errors.has('period')" class="invalid-feedback d-block">
+        {{errors.get('period')}}
+      </div>
     </div>
 
     <div *ngIf="chartOptionsValues.periodType === periodType.MONTH"
@@ -32,6 +38,9 @@
           <option *ngFor="let monthNr of monthArr" [ngValue]="monthNr">{{monthNr | month}}</option>
         </select>
       </div>
+      <div *ngIf="errors.has('period')" class="invalid-feedback d-block">
+        {{errors.get('period')}}
+      </div>
     </div>
 
     <div *ngIf="chartOptionsValues.periodType === periodType.YEAR"
@@ -41,6 +50,9 @@
           <option hidden disabled [ngValue]="null">Wybierz rok</option>
           <option *ngFor="let year of yearArr" [ngValue]="year">{{year}}</option>
         </select>
+      </div>
+      <div *ngIf="errors.has('period')" class="invalid-feedback d-block">
+        {{errors.get('period')}}
       </div>
     </div>
 
@@ -54,6 +66,9 @@
           </option>
         </datalist>
       </div>
+      <div *ngIf="errors.has('placeId')" class="invalid-feedback d-block">
+        {{errors.get('placeId')}}
+      </div>
     </div>
 
     <div *ngIf="chartTypeOption && chartOptionsValues.periodType" class="d-grid mb-3">
@@ -63,6 +78,9 @@
           <option *ngFor="let type of chartTypes" [ngValue]="type">{{type.toString()}}</option>
         </select>
       </div>
+      <div *ngIf="errors.has('chartType')" class="invalid-feedback d-block">
+        {{errors.get('chartType')}}
+      </div>
     </div>
 
     <div *ngIf="orderTypeOption" class="d-grid mb-3">
@@ -71,6 +89,9 @@
         <select id="orderType" class="form-select" [(ngModel)]="chartOptionsValues.orderType">
           <option *ngFor="let type of orderTypes" [ngValue]="type">{{type.toString()}}</option>
         </select>
+      </div>
+      <div *ngIf="errors.has('orderType')" class="invalid-feedback d-block">
+        {{errors.get('orderType')}}
       </div>
     </div>
 

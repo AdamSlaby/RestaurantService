@@ -95,6 +95,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public List<Long> getAllTables(Long restaurantId) {
+        return restaurantTableRepo.getAllTables(restaurantId);
+    }
+
+    @Override
     @Transactional
     public void addRestaurant(Restaurant restaurant) {
         AddressEntity addressEntity = addressRepo.save(AddressMapper.mapObjectToData(restaurant.getAddress()));

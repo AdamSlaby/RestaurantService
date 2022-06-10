@@ -15,6 +15,7 @@ export class RestaurantService {
   private GET_RESTAURANT_INFO = `${this.COMMON_URL}/info/`;
   private GET_RESTAURANT_SHORT_INFO = `${this.COMMON_URL}/short/`;
   private GET_TABLE = `${this.COMMON_URL}/table`;
+  private GET_ALL_TABLES = `${this.COMMON_URL}/tables/`;
   private GET_RESTAURANT = `${this.COMMON_URL}/details/`;
   private GET_ALL_RESTAURANTS = `${this.COMMON_URL}/`;
   private ADD_RESTAURANT = `${this.COMMON_URL}/new`;
@@ -34,6 +35,11 @@ export class RestaurantService {
   getTable(seatsNr: number, restaurantId: any): Observable<Table> {
     const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
     return this.http.get<Table>(this.GET_TABLE + '?seats=' + seatsNr + '&restaurantId=' + restaurantId, {headers});
+  }
+
+  getAllTables(restaurantId: any): Observable<number[]> {
+    const headers = new HttpHeaders({Authorization: 'Bearer ' + localStorage.getItem('accessToken')});
+    return this.http.get<number[]>(this.GET_ALL_TABLES + restaurantId, {headers});
   }
 
   getRestaurant(restaurantId: any): Observable<Restaurant> {

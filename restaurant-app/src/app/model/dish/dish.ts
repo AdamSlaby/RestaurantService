@@ -4,5 +4,5 @@ export interface Dish {
   type: string;
   ingredients: string;
   price: number;
-  isBest: boolean;
+  best: boolean;
 }

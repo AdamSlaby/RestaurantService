@@ -56,6 +56,7 @@ public class RestaurantOrderMapper {
     public static RestaurantOrderMealEntity mapOrderToData(Order order, RestaurantOrderEntity restaurantOrder) {
         return new RestaurantOrderMealEntity().builder()
                 .id(new OrderMealId(restaurantOrder.getOrderId(), order.getDishId()))
+                .order(restaurantOrder)
                 .mealName(order.getName())
                 .price(order.getPrice())
                 .quantity(order.getAmount())

@@ -49,7 +49,7 @@ export class OrderInfoComponent implements OnInit {
       this.showOnlineForm = value.type === 'Online';
       if (value.type === 'Online')
         this.disabled = true;
-      if (value.isCompleted) {
+      if (value.completed) {
         this.disabled = true;
         if (value.type === 'Online')
           this.onlineOrderForm.disable();
@@ -64,14 +64,14 @@ export class OrderInfoComponent implements OnInit {
   showOnlineForm: boolean = false;
   newOrder: boolean = false;
   loading: boolean = false;
-  isSuccessful: boolean = true;
+  isSuccessful: boolean = false;
   faXmark = faXmark;
   faCartShopping = faCartShopping;
   selectedDishId!: string;
   selectedDishAmount!: any;
   availableCities: string[] = [];
   errors: Map<string, string> = new Map<string, string>();
-  tables: number[] = [1, 2, 3, 4];
+  tables!: number[];
   dishes!: DishListView[];
   onlineOrderForm = this.fb.group({
     firstName: ['', [Validators.required, Validators.pattern(RegexPattern.NAME)]],
@@ -109,6 +109,11 @@ export class OrderInfoComponent implements OnInit {
     }, error => {
       console.error(error);
     });
+    this.restaurantService.getAllTables(restaurantId).subscribe(data => {
+      this.tables = data;
+    }, error => {
+      console.error(error);
+    })
   }
 
   get fo() {
@@ -254,6 +259,7 @@ export class OrderInfoComponent implements OnInit {
   }
 
   onRestaurantOrderFormSubmit() {
+    this.errors.clear();
     let price: number = 0;
     let orderArr: Order[] = [];
     this.restaurantOrderForm.get('orders')?.value.forEach((el: OrderInfo) => {

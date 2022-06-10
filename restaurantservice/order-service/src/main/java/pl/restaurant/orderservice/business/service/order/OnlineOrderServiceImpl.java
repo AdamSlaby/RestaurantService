@@ -29,6 +29,7 @@ import pl.restaurant.orderservice.business.service.client.RestaurantServiceClien
 import pl.restaurant.orderservice.business.service.statistic.Time;
 import pl.restaurant.orderservice.data.entity.AddressEntity;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
+import pl.restaurant.orderservice.data.entity.OnlineOrderMealEntity;
 import pl.restaurant.orderservice.data.entity.PaymentMethod;
 import pl.restaurant.orderservice.data.repository.AddressRepo;
 import pl.restaurant.orderservice.data.repository.OnlineOrderMealRepo;
@@ -36,7 +37,9 @@ import pl.restaurant.orderservice.data.repository.OnlineOrderRepo;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,10 +110,10 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         String error = menuClient.validateOrders(onlineOrder.getRestaurantId(), onlineOrder.getOrders());
         if (error != null)
             throw new InvalidOrderException(error);
-        return saveOrder(onlineOrder);
+        return getOnlineOrderServiceProxy().saveOrder(onlineOrder);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public Long saveOrder(OnlineOrder onlineOrder) {
         BigDecimal fee = restaurantClient.getRestaurantDeliveryFee(onlineOrder.getRestaurantId());
         BigDecimal price = BigDecimal.ZERO;
@@ -120,8 +123,15 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         AddressEntity address = addressRepo.save(AddressMapper.mapObjectToData(onlineOrder.getAddress()));
         OnlineOrderEntity onlineOrderEntity = orderRepo
                 .save(OnlineOrderMapper.mapObjectToData(onlineOrder, price, address));
+        Set<OnlineOrderMealEntity> meals = new HashSet<>();
         for (Order order : onlineOrder.getOrders())
-            mealRepo.save(OnlineOrderMapper.mapOrderToData(order, onlineOrderEntity));
+            meals.add(mealRepo.save(OnlineOrderMapper.mapOrderToData(order, onlineOrderEntity)));
+        if (onlineOrder.getPaymentMethod() != PaymentMethod.PAYPAL &&
+                onlineOrder.getPaymentMethod() != PaymentMethod.PAYU) {
+            RestaurantShortInfo restaurant = restaurantClient.getRestaurantShortInfo(onlineOrder.getRestaurantId());
+            rabbitTemplate.convertAndSend("order",
+                    OnlineOrderMapper.mapDataToEmailInfo(onlineOrderEntity, meals, restaurant));
+        }
         return onlineOrderEntity.getOrderId();
     }
 
