@@ -8,11 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.restaurant.orderservice.api.response.OrderShortInfo;
 import pl.restaurant.orderservice.api.response.chart.ChartData;
+import pl.restaurant.orderservice.business.model.MealAmount;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface OnlineOrderRepo extends JpaRepository<OnlineOrderEntity, Long> {

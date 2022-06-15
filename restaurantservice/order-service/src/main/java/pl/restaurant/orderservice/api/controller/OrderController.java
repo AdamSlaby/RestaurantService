@@ -38,6 +38,11 @@ public class OrderController {
         return orderService.getActiveOrders(restaurantId);
     }
 
+    @GetMapping("/best")
+    public List<Integer> getMostPopularMeals() {
+        return orderService.getMostPopularMeals();
+    }
+
     @PostMapping("/restaurant")
     public void addRestaurantOrder(@RequestBody @Valid RestaurantOrder order) {
         restaurantOrderService.addRestaurantOrder(order);

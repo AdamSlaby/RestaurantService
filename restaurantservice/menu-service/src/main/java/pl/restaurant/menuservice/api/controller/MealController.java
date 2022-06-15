@@ -11,6 +11,7 @@ import pl.restaurant.menuservice.api.response.MealInfo;
 import pl.restaurant.menuservice.api.response.MealListView;
 import pl.restaurant.menuservice.business.service.MealService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -43,8 +44,9 @@ public class MealController {
 
     @PostMapping("/rollback/{id}")
     public void rollbackOrderSupplies(@PathVariable("id") Long restaurantId,
-                                      @RequestBody @Valid List<Order> orders) {
-        mealService.rollbackOrderSupplies(restaurantId, orders);
+                                      @RequestBody @Valid List<Order> orders,
+                                      HttpServletRequest request) {
+        mealService.rollbackOrderSupplies(restaurantId, orders, request.getHeader("Authorization"));
     }
 
     @PostMapping("/valid/{id}")
@@ -53,8 +55,9 @@ public class MealController {
     }
 
     @PostMapping("/meals/{id}")
-    public String validateOrders(@PathVariable("id") Long restaurantId, @RequestBody @Valid List<Order> orders) {
-        return mealService.validateOrders(restaurantId, orders);
+    public String validateOrders(@PathVariable("id") Long restaurantId, @RequestBody @Valid List<Order> orders,
+                                 HttpServletRequest request) {
+        return mealService.validateOrders(restaurantId, orders, request.getHeader("Authorization"));
     }
 
     @PostMapping("/")

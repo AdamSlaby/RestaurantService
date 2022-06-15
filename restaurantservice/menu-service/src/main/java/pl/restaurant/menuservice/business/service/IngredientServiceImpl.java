@@ -38,14 +38,6 @@ public class IngredientServiceImpl implements IngredientService {
     public List<IngredientInfo> getAllIngredients() {
         return ingredientRepo.getAllIngredients();
     }
-
-    @Override
-    public IngredientEntity addIngredient(Ingredient ingredient, int index) {
-        if (ingredientRepo.existsByName(ingredient.getName()))
-            throw new IngredientAlreadyExistsException(index);
-        return ingredientRepo.save(new IngredientEntity(ingredient.getName()));
-    }
-
     @Override
     public Integer getIngredient(String ingredient) {
         Optional<Integer> ingredientId = ingredientRepo.getIngredientByName(ingredient);
@@ -54,14 +46,14 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Validated
     @Override
-    public void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int i) {
+    public void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int index) {
         IngredientEntity ingredientEntity;
-        Ingredient ingredient = ingredients.get(i);
+        Ingredient ingredient = ingredients.get(index);
         if (ingredient.getId() == -1)
-            ingredientEntity = addIngredient(ingredient, i);
+            throw new IngredientNotFoundException(index);
         else
-            ingredientEntity = getIngredient(ingredient.getId(), i);
-        UnitEntity unit = unitService.getUnit(ingredient.getUnitId(), i);
+            ingredientEntity = getIngredient(ingredient.getId(), index);
+        UnitEntity unit = unitService.getUnit(ingredient.getUnitId(), index);
         mealIngredientRepo.save(MealIngredientMapper.mapToData(mealEntity, ingredientEntity, unit,
                 ingredient.getAmount()));
     }

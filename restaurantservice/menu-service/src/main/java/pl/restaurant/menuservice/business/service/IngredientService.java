@@ -13,8 +13,6 @@ public interface IngredientService {
     IngredientEntity getIngredient(Integer ingredientId, int index);
     List<IngredientInfo> getAllIngredients();
 
-    IngredientEntity addIngredient(Ingredient ingredient, int index);
-
     Integer getIngredient(String ingredient);
 
     void addIngredientsForMeal(@Valid List<Ingredient> ingredients, MealEntity mealEntity, int i);

@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.orderservice.api.mapper.AddressMapper;
 import pl.restaurant.orderservice.api.mapper.OnlineOrderMapper;
-import pl.restaurant.orderservice.api.request.GenerateChartOptions;
-import pl.restaurant.orderservice.api.request.OnlineOrder;
-import pl.restaurant.orderservice.api.request.Order;
-import pl.restaurant.orderservice.api.request.OrderFilters;
+import pl.restaurant.orderservice.api.request.*;
 import pl.restaurant.orderservice.api.response.ActiveOrder;
 import pl.restaurant.orderservice.api.response.OnlineOrderInfo;
 import pl.restaurant.orderservice.api.response.OrderShortInfo;
@@ -24,6 +21,8 @@ import pl.restaurant.orderservice.business.exception.CannotCompleteOrderExceptio
 import pl.restaurant.orderservice.business.exception.InvalidOrderException;
 import pl.restaurant.orderservice.business.exception.OrderNotFoundException;
 import pl.restaurant.orderservice.business.exception.RestaurantNotFoundException;
+import pl.restaurant.orderservice.business.model.MealAmount;
+import pl.restaurant.orderservice.business.service.authentication.LoginService;
 import pl.restaurant.orderservice.business.service.client.MenuServiceClient;
 import pl.restaurant.orderservice.business.service.client.RestaurantServiceClient;
 import pl.restaurant.orderservice.business.service.statistic.Time;
@@ -39,6 +38,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OnlineOrderServiceImpl implements OnlineOrderService {
     public static final String ONLINE_TYPE = "Online";
+    private static final String BEARER_TOKEN = "Bearer ";
     public static final int TIME_TO_PAID = 30;
     private OnlineOrderRepo orderRepo;
     private AddressRepo addressRepo;
@@ -54,6 +55,7 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
     private RestaurantServiceClient restaurantClient;
     private RabbitTemplate rabbitTemplate;
     private ApplicationContext applicationContext;
+    private LoginService loginService;
 
     @Override
     public OnlineOrderEntity getOrder(Long orderId) {
@@ -107,7 +109,10 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
     public Long reserveOrder(OnlineOrder onlineOrder) {
         if (!restaurantClient.isRestaurantExist(onlineOrder.getRestaurantId()))
             throw new RestaurantNotFoundException();
-        String error = menuClient.validateOrders(onlineOrder.getRestaurantId(), onlineOrder.getOrders());
+        KeycloakResponse response = loginService.login();
+        String error = menuClient.validateOrders(onlineOrder.getRestaurantId(), onlineOrder.getOrders(),
+                BEARER_TOKEN + response.getAccess_token());
+        loginService.logout(response.getRefresh_token());
         if (error != null)
             throw new InvalidOrderException(error);
         return getOnlineOrderServiceProxy().saveOrder(onlineOrder);
@@ -146,7 +151,10 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         List<Order> orders = order.getMeals().stream()
                 .map(OnlineOrderMapper::mapDataToOrder)
                 .collect(Collectors.toList());
-        menuClient.rollbackOrderSupplies(order.getRestaurantId(), orders);
+        KeycloakResponse response = loginService.login();
+        menuClient.rollbackOrderSupplies(order.getRestaurantId(), orders,
+                BEARER_TOKEN + response.getAccess_token());
+        loginService.logout(response.getRefresh_token());
         deleteOrder(order);
     }
 
@@ -240,6 +248,12 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
     @Override
     public List<ChartData> getAvgCompletionTimeWithDishesAmountChart(Time time, GenerateChartOptions data) {
         return orderRepo.getAvgCompletionTimeWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public Map<Integer, MealAmount> getMostPopularMeals(Time time) {
+        return mealRepo.getMealsAmount(time.getFrom(), time.getTo()).stream()
+                .collect(Collectors.toMap(MealAmount::getMealId, v -> v));
     }
 
     //method will be invoked every 30 minutes (1000 milis * 60 sec * 30 min = 1800000 milis)

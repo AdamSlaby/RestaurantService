@@ -13,8 +13,6 @@ import pl.restaurant.menuservice.data.entity.MealEntity;
 import java.util.List;
 
 public interface MealService {
-    MealEntity getMeal(String name);
-    MealEntity getMeal(Integer mealId);
     List<DishListView> getAllMealsFromMenu();
     MealListView getMeals(MealFilters filters);
 
@@ -28,9 +26,9 @@ public interface MealService {
 
     void deleteMeal(Integer mealId);
 
-    String validateOrders(Long restaurantId, List<Order> orders);
+    String validateOrders(Long restaurantId, List<Order> orders, String authHeader);
 
     void validateOrder(Long restaurantId, Order order);
 
-    void rollbackOrderSupplies(Long restaurantId, List<Order> orders);
+    void rollbackOrderSupplies(Long restaurantId, List<Order> orders, String authHeader);
 }

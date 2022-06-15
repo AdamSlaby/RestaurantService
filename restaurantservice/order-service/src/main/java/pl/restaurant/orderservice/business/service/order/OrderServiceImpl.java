@@ -16,11 +16,13 @@ import pl.restaurant.orderservice.api.response.OrdersInfo;
 import pl.restaurant.orderservice.api.response.chart.ChartData;
 import pl.restaurant.orderservice.api.response.chart.OrderType;
 import pl.restaurant.orderservice.business.exception.ColumnNotFoundException;
+import pl.restaurant.orderservice.business.model.MealAmount;
 import pl.restaurant.orderservice.business.service.statistic.Time;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,29 @@ public class OrderServiceImpl implements OrderService {
         List<ActiveOrder> orders = onlineService.getActiveOrders(restaurantId);
         orders.addAll(restaurantService.getActiveOrders(restaurantId));
         return orders;
+    }
+
+    @Override
+    public List<Integer> getMostPopularMeals() {
+        LocalDateTime from = LocalDateTime.now().minusDays(31);
+        LocalDateTime to = LocalDateTime.now();
+        //map<mealId, mealAmount>
+        Time time = new Time(from, to);
+        Map<Integer, MealAmount> resultSoldMealsAmount = onlineService
+                .getMostPopularMeals(time);
+        Map<Integer, MealAmount> restaurantSoldMealsAmount = restaurantService
+                .getMostPopularMeals(time);
+        restaurantSoldMealsAmount.forEach((k, v) -> {
+            if (resultSoldMealsAmount.containsKey(k))
+                resultSoldMealsAmount.put(k, v.setAmount(restaurantSoldMealsAmount.get(k).getAmount() + v.getAmount()));
+            else
+                resultSoldMealsAmount.put(k, v);
+        });
+        return new ArrayList<>(resultSoldMealsAmount.values()).stream()
+                .sorted()
+                .map(MealAmount::getMealId)
+                .limit(7)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -16,7 +16,7 @@ import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 @Service
 public class PayuServiceImpl implements PayuService {
     //change it every time when start ngrok
-    private static final String NOTIFY_URL = "https://bf43-31-178-44-241.eu.ngrok.io/pay/payu/notify?id=";
+    private static final String NOTIFY_URL = "https://6762-31-178-44-241.eu.ngrok.io/pay/payu/notify?id=";
 
     @Value("${app.payu.posId}")
     private String posId;

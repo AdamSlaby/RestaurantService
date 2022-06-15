@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.orderservice.api.mapper.RestaurantOrderMapper;
-import pl.restaurant.orderservice.api.request.GenerateChartOptions;
-import pl.restaurant.orderservice.api.request.Order;
-import pl.restaurant.orderservice.api.request.OrderFilters;
-import pl.restaurant.orderservice.api.request.RestaurantOrder;
+import pl.restaurant.orderservice.api.request.*;
 import pl.restaurant.orderservice.api.response.ActiveOrder;
 import pl.restaurant.orderservice.api.response.OrderShortInfo;
 import pl.restaurant.orderservice.api.response.RestaurantOrderInfo;
@@ -20,6 +17,8 @@ import pl.restaurant.orderservice.business.exception.CannotUpdateOrderException;
 import pl.restaurant.orderservice.business.exception.InvalidOrderException;
 import pl.restaurant.orderservice.business.exception.OrderNotFoundException;
 import pl.restaurant.orderservice.business.exception.TableNotFoundException;
+import pl.restaurant.orderservice.business.model.MealAmount;
+import pl.restaurant.orderservice.business.service.authentication.LoginService;
 import pl.restaurant.orderservice.business.service.client.MenuServiceClient;
 import pl.restaurant.orderservice.business.service.client.RestaurantServiceClient;
 import pl.restaurant.orderservice.business.service.statistic.Time;
@@ -30,17 +29,20 @@ import pl.restaurant.orderservice.data.repository.RestaurantOrderRepo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     public static final String RESTAURANT_TYPE = "Restaurant";
+    private static final String BEARER_TOKEN = "Bearer ";
     private RestaurantOrderRepo orderRepo;
     private RestaurantOrderMealRepo mealRepo;
     private MenuServiceClient menuClient;
     private RestaurantServiceClient restaurantClient;
     private ApplicationContext applicationContext;
+    private LoginService loginService;
 
     @Override
     public Page<OrderShortInfo> getOrderList(OrderFilters filters, Pageable pageable) {
@@ -78,7 +80,10 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     public void addRestaurantOrder(RestaurantOrder restaurantOrder) {
         if (!restaurantClient.isRestaurantTableExists(restaurantOrder.getRestaurantId(), restaurantOrder.getTableId()))
             throw new TableNotFoundException();
-        String error = menuClient.validateOrders(restaurantOrder.getRestaurantId(), restaurantOrder.getOrders());
+        KeycloakResponse response = loginService.login();
+        String error = menuClient.validateOrders(restaurantOrder.getRestaurantId(), restaurantOrder.getOrders(),
+                BEARER_TOKEN + response.getAccess_token());
+        loginService.logout(response.getRefresh_token());
         if (error != null)
             throw new InvalidOrderException(error);
         getRestaurantOrderServiceProxy().saveOrder(restaurantOrder);
@@ -99,7 +104,10 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
                 .orElseThrow(OrderNotFoundException::new);
         if (restaurantOrderEntity.getDeliveryDate() != null)
             throw new CannotUpdateOrderException();
-        String error = menuClient.validateOrders(order.getRestaurantId(), order.getOrders());
+        KeycloakResponse response = loginService.login();
+        String error = menuClient.validateOrders(order.getRestaurantId(), order.getOrders(),
+                BEARER_TOKEN + response.getAccess_token());
+        loginService.logout(response.getRefresh_token());
         if (error != null)
             throw new InvalidOrderException(error);
         getRestaurantOrderServiceProxy().updateOrder(restaurantOrderEntity, order);
@@ -171,6 +179,12 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
     @Override
     public List<ChartData> getAvgCompletionTimeWithDishesAmountChart(Time time, GenerateChartOptions data) {
         return orderRepo.getAvgCompletionTimeWithDishesAmountChart(data.getPlaceId(), time.getFrom(), time.getTo());
+    }
+
+    @Override
+    public Map<Integer, MealAmount> getMostPopularMeals(Time time) {
+        return mealRepo.getMealsAmount(time.getFrom(), time.getTo()).stream()
+                .collect(Collectors.toMap(MealAmount::getMealId, v -> v));
     }
 
     private RestaurantOrderServiceImpl getRestaurantOrderServiceProxy() {

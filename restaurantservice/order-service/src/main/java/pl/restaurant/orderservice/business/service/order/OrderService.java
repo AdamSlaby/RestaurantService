@@ -21,6 +21,8 @@ public interface OrderService {
 
     List<ActiveOrder> getActiveOrders(Long restaurantId);
 
+    List<Integer> getMostPopularMeals();
+
     BigDecimal getTodayIncome(Long restaurantId);
 
     Integer getTodayDeliveredOrders(Long restaurantId);

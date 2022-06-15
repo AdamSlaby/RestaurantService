@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.restaurant.menuservice.api.response.DishListView;
@@ -35,4 +36,13 @@ public interface MealRepo extends JpaRepository<MealEntity, Integer> {
 
     @EntityGraph(attributePaths = {"ingredients", "ingredients.ingredient", "ingredients.unit"})
     Optional<MealEntity> getByMealId(Integer id);
+
+    @Modifying
+    @Query("update MealEntity m set m.isBest = :status")
+    void updateAllMealBestStatus(@Param("status") boolean status);
+
+    @Modifying
+    @Query("update MealEntity m set m.isBest = :status where m.mealId in :meals")
+    void updateMealBestStatusIn(@Param("meals") List<Integer> mostPopularMeals,
+                                @Param("status") boolean status);
 }

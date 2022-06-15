@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,8 @@ import pl.restaurant.menuservice.business.exception.meal.CannotDeserializeIngred
 import pl.restaurant.menuservice.business.exception.meal.MealAlreadyExistsException;
 import pl.restaurant.menuservice.business.exception.meal.MealNotFoundException;
 import pl.restaurant.menuservice.business.exception.type.TypeNotFoundException;
+import pl.restaurant.menuservice.business.service.client.OrderServiceClient;
+import pl.restaurant.menuservice.business.service.client.SupplyServiceClient;
 import pl.restaurant.menuservice.business.utility.FileUtility;
 import pl.restaurant.menuservice.business.utility.ImageValidator;
 import pl.restaurant.menuservice.data.entity.MealEntity;
@@ -33,6 +36,7 @@ import pl.restaurant.menuservice.data.repository.TypeRepo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,10 +59,12 @@ public class MealServiceImpl implements MealService {
     private TypeRepo typeRepo;
     private ApplicationContext applicationContext;
     private MenuService menuService;
+    private OrderServiceClient orderClient;
 
     public MealServiceImpl(MealRepo mealRepo, MealIngredientRepo mealIngredientRepo,
                            IngredientService ingredientService, SupplyServiceClient supplyClient,
-                           TypeRepo typeRepo, ApplicationContext applicationContext, MenuService menuService) {
+                           TypeRepo typeRepo, ApplicationContext applicationContext,
+                           MenuService menuService, OrderServiceClient orderClient) {
         this.mealRepo = mealRepo;
         this.mealIngredientRepo = mealIngredientRepo;
         this.ingredientService = ingredientService;
@@ -66,6 +72,7 @@ public class MealServiceImpl implements MealService {
         this.typeRepo = typeRepo;
         this.applicationContext = applicationContext;
         this.menuService = menuService;
+        this.orderClient = orderClient;
     }
 
     @Override
@@ -74,18 +81,6 @@ public class MealServiceImpl implements MealService {
                 .orElseThrow(MealNotFoundException::new);
         List<MealIngredientEntity> ingredients = mealIngredientRepo.findByMeal(mealEntity);
         return MealMapper.mapDataToInfo(mealEntity, ingredients);
-    }
-
-    @Override
-    public MealEntity getMeal(String name) {
-        return mealRepo.findByName(name)
-                .orElseThrow(MealNotFoundException::new);
-    }
-
-    @Override
-    public MealEntity getMeal(Integer mealId) {
-        return mealRepo.findById(mealId)
-                .orElseThrow(MealNotFoundException::new);
     }
 
     @Override
@@ -168,7 +163,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public String validateOrders(Long restaurantId, List<Order> orders) {
+    public String validateOrders(Long restaurantId, List<Order> orders, String authHeader) {
         List<Integer> ids = orders.stream().map(Order::getDishId).collect(Collectors.toList());
         Map<Integer, MealEntity> meals = mealRepo.getAllByMealIdIn(ids).stream()
                 .collect(Collectors.toMap(MealEntity::getMealId, v -> v));
@@ -189,7 +184,7 @@ public class MealServiceImpl implements MealService {
                             .collect(Collectors.toList()))
                     .build());
         }
-        supplyClient.updateSupplies(restaurantId, orderList);
+        supplyClient.updateSupplies(restaurantId, orderList, authHeader);
         return null;
     }
 
@@ -209,7 +204,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public void rollbackOrderSupplies(Long restaurantId, List<Order> orders) {
+    public void rollbackOrderSupplies(Long restaurantId, List<Order> orders, String authHeader) {
         List<Integer> ids = orders.stream().map(Order::getDishId).collect(Collectors.toList());
         List<MealEntity> meals = mealRepo.getAllByMealIdIn(ids);
         List<OrderValidation> orderList = new ArrayList<>();
@@ -225,9 +220,17 @@ public class MealServiceImpl implements MealService {
                             .collect(Collectors.toList()))
                     .build());
         }
-        supplyClient.rollbackOrderSupplies(restaurantId, orderList);
+        supplyClient.rollbackOrderSupplies(restaurantId, orderList, authHeader);
     }
 
+    //change it to crone to run for first day of every month
+    @Scheduled(fixedRate = 1800000)
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateMostPopularMeals() {
+        List<Integer> mostPopularMeals = orderClient.getMostPopularMeals();
+        mealRepo.updateAllMealBestStatus(false);
+        mealRepo.updateMealBestStatusIn(mostPopularMeals, true);
+    }
 
     private Pageable mapSortEventToPageable(MealFilters filters) {
         if (filters.getSortEvent() == null) {

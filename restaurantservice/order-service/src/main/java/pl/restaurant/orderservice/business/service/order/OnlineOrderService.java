@@ -9,12 +9,14 @@ import pl.restaurant.orderservice.api.response.ActiveOrder;
 import pl.restaurant.orderservice.api.response.OnlineOrderInfo;
 import pl.restaurant.orderservice.api.response.OrderShortInfo;
 import pl.restaurant.orderservice.api.response.chart.ChartData;
+import pl.restaurant.orderservice.business.model.MealAmount;
 import pl.restaurant.orderservice.business.service.statistic.Time;
 import pl.restaurant.orderservice.data.entity.OnlineOrderEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface OnlineOrderService {
     OnlineOrderEntity getOrder(Long orderId);
@@ -55,4 +57,6 @@ public interface OnlineOrderService {
     List<ChartData> getOrdersAmountWithDishesAmountChart(Time time, GenerateChartOptions data);
 
     List<ChartData> getAvgCompletionTimeWithDishesAmountChart(Time time, GenerateChartOptions data);
+
+    Map<Integer, MealAmount> getMostPopularMeals(Time time);
 }

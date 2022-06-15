@@ -34,7 +34,7 @@ public class SupplyController {
         supplyService.checkSupplies(restaurantId, order);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public void updateSupplies(@PathVariable("id") Long restaurantId,
                                  @RequestBody @Valid List<OrderValidation> orders) {
         supplyService.updateSupplies(restaurantId, orders);
