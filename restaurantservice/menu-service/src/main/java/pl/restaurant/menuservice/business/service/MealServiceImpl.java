@@ -223,8 +223,8 @@ public class MealServiceImpl implements MealService {
         supplyClient.rollbackOrderSupplies(restaurantId, orderList, authHeader);
     }
 
-    //change it to crone to run for first day of every month
-    @Scheduled(fixedRate = 1800000)
+    //cron for every first day of every month at 6 am
+    @Scheduled(cron = "0 0 6 1 * ? *")
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateMostPopularMeals() {
         List<Integer> mostPopularMeals = orderClient.getMostPopularMeals();

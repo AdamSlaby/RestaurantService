@@ -140,10 +140,9 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
         return onlineOrderEntity.getOrderId();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     public void rollbackOrder(Long orderId) {
         OnlineOrderEntity order = orderRepo.getByOrderId(orderId).orElseThrow(OrderNotFoundException::new);
-        rollbackOrder(order);
+        getOnlineOrderServiceProxy().rollbackOrder(order);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -160,8 +159,8 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteOrder(OnlineOrderEntity order) {
-        mealRepo.deleteMealsByOrderId(order.getOrderId());
         orderRepo.deleteById(order.getOrderId());
+        mealRepo.deleteMealsByOrderId(order.getOrderId());
     }
 
     @Override
