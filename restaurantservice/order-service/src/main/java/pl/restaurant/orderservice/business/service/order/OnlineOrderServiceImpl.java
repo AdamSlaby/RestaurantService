@@ -120,24 +120,32 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public Long saveOrder(OnlineOrder onlineOrder) {
-        BigDecimal fee = restaurantClient.getRestaurantDeliveryFee(onlineOrder.getRestaurantId());
-        BigDecimal price = BigDecimal.ZERO;
-        for (Order order : onlineOrder.getOrders())
-            price = price.add(order.getPrice());
-        price = price.add(fee == null ? BigDecimal.ZERO : fee);
-        AddressEntity address = addressRepo.save(AddressMapper.mapObjectToData(onlineOrder.getAddress()));
-        OnlineOrderEntity onlineOrderEntity = orderRepo
-                .save(OnlineOrderMapper.mapObjectToData(onlineOrder, price, address));
-        Set<OnlineOrderMealEntity> meals = new HashSet<>();
-        for (Order order : onlineOrder.getOrders())
-            meals.add(mealRepo.save(OnlineOrderMapper.mapOrderToData(order, onlineOrderEntity)));
-        if (onlineOrder.getPaymentMethod() != PaymentMethod.PAYPAL &&
-                onlineOrder.getPaymentMethod() != PaymentMethod.PAYU) {
-            RestaurantShortInfo restaurant = restaurantClient.getRestaurantShortInfo(onlineOrder.getRestaurantId());
-            rabbitTemplate.convertAndSend("order",
-                    OnlineOrderMapper.mapDataToEmailInfo(onlineOrderEntity, meals, restaurant));
+        try {
+            BigDecimal fee = restaurantClient.getRestaurantDeliveryFee(onlineOrder.getRestaurantId());
+            BigDecimal price = BigDecimal.ZERO;
+            for (Order order : onlineOrder.getOrders())
+                price = price.add(order.getPrice());
+            price = price.add(fee == null ? BigDecimal.ZERO : fee);
+            AddressEntity address = addressRepo.save(AddressMapper.mapObjectToData(onlineOrder.getAddress()));
+            OnlineOrderEntity onlineOrderEntity = orderRepo
+                    .save(OnlineOrderMapper.mapObjectToData(onlineOrder, price, address));
+            Set<OnlineOrderMealEntity> meals = new HashSet<>();
+            for (Order order : onlineOrder.getOrders())
+                meals.add(mealRepo.save(OnlineOrderMapper.mapOrderToData(order, onlineOrderEntity)));
+            if (onlineOrder.getPaymentMethod() != PaymentMethod.PAYPAL &&
+                    onlineOrder.getPaymentMethod() != PaymentMethod.PAYU) {
+                RestaurantShortInfo restaurant = restaurantClient.getRestaurantShortInfo(onlineOrder.getRestaurantId());
+                rabbitTemplate.convertAndSend("order",
+                        OnlineOrderMapper.mapDataToEmailInfo(onlineOrderEntity, meals, restaurant));
+            }
+            return onlineOrderEntity.getOrderId();
+        } catch (Exception ex) {
+            KeycloakResponse response = loginService.login();
+            menuClient.rollbackOrderSupplies(onlineOrder.getRestaurantId(), onlineOrder.getOrders(),
+                    BEARER_TOKEN + response.getAccess_token());
+            loginService.logout(response.getRefresh_token());
+            throw ex;
         }
-        return onlineOrderEntity.getOrderId();
     }
 
     public void rollbackOrder(Long orderId) {

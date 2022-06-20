@@ -8,6 +8,6 @@ import pl.restaurant.restaurantservice.data.entity.OpeningHourEntity;
 import java.util.List;
 
 public interface OpeningHourRepo extends JpaRepository<OpeningHourEntity, Long> {
-    @Query("select h from OpeningHourEntity h where h.restaurant.restaurantId = :id order by h.hourId ASC ")
+    @Query("select h from OpeningHourEntity h where h.restaurant.restaurantId = :id order by h.weekDayNr ASC ")
     List<OpeningHourEntity> getHoursByRestaurant(@Param("id") Long restaurantId);
 }

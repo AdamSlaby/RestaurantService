@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class TableMapper {
     public List<Table> mapDataToObject(Set<RestaurantTableEntity> tables) {
         return tables.stream()
-                .map(el -> new Table(el.getTable().getTableId(), el.getTable().getSeatsNr()))
+                .map(el -> TableMapper.mapDataToObject(el.getTable()))
                 .collect(Collectors.toList());
     }
 
