@@ -47,6 +47,5 @@ public class Restaurant {
     private List<OpeningHour> openingHours;
 
     @Valid
-    @NotEmpty(message = "Lista stolików w restauracji nie może być pusta")
     private List<Table> tables;
 }

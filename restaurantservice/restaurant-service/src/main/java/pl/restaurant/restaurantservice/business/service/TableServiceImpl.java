@@ -14,6 +14,8 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public FoodTableEntity createTable(int seatsNr) {
+        if (seatsNr <= 1)
+            throw new IllegalArgumentException("Seats number cannot be zero or negative number");
         return tableRepo.save(new FoodTableEntity().builder()
                 .seatsNr(seatsNr)
                 .build());

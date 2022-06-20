@@ -7,6 +7,8 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.passay.PolishCharacterData;
 
+import javax.validation.constraints.NotNull;
+
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 @UtilityClass

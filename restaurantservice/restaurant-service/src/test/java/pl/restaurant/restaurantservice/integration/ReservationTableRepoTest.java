@@ -2,6 +2,7 @@ package pl.restaurant.restaurantservice.integration;
 
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +55,6 @@ public class ReservationTableRepoTest {
         ReservationEntity reservation2 = saveReservation(generator, 18, 20);
         saveReservationTable(generator, restaurantTableEntity, reservation2);
     }
-
 
     @Test
     public void deleteAllReservationsById() {

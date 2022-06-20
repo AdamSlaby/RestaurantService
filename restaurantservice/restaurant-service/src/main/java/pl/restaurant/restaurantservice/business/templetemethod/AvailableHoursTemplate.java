@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 public abstract class AvailableHoursTemplate {
     public List<AvailableHour> getAvailableHours(Set<FoodTableEntity> tables, LocalDateTime dateTime,
                                                  List<ReservationEntity> reservations, int peopleNr) {
+        if (peopleNr <= 0)
+            throw new IllegalArgumentException("People number cannot be 0 or negative number");
         List<AvailableHour> hours = new ArrayList<>();
         for (int i = 10; i <= 20; i += 2) {
             Set<FoodTableEntity> availableTables = new LinkedHashSet<>(tables);
