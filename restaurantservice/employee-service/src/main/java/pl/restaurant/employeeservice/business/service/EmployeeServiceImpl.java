@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.restaurant.employeeservice.api.mapper.AddressMapper;
 import pl.restaurant.employeeservice.api.mapper.EmployeeMapper;
 import pl.restaurant.employeeservice.api.mapper.ScheduleMapper;
@@ -31,7 +32,6 @@ import pl.restaurant.employeeservice.data.repository.EmployeeRepo;
 import pl.restaurant.employeeservice.data.repository.ScheduleRepo;
 import pl.restaurant.employeeservice.data.repository.WorkstationRepo;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -119,7 +119,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Transactional(rollbackOn = NoSuchMethodError.class)
+    @Transactional(rollbackFor = NoSuchMethodError.class)
     public Credentials addEmployee(Employee employee) {
         validateEmployee(employee);
         if (!restaurantServiceClient.isRestaurantExist(employee.getRestaurantId()))
@@ -263,8 +263,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         user.setUsername(username);
         user.setCredentials(Collections.singletonList(credential));
         user.setEnabled(true);
-        UsersResource instance = getInstance();
-        instance.create(user);
+        getInstance().create(user);
 
         addRoles(username, workstation);
         return new Credentials(username, password);

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 public class NewsServiceImpl implements NewsService {
     private static final int CLIENT_PAGE_AMOUNT = 5;
     private static final int USER_PAGE_AMOUNT = 10;
-    private static final String IMAGE_URL = "http://localhost:9000/news/image/";
+    public static final String IMAGE_URL = "http://localhost:9000/news/image/";
 
     @Value("${app.file.path}")
     private String path;
