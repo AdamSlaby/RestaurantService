@@ -63,7 +63,8 @@ public class NewsServiceImpl implements NewsService {
         List<NewsInfo> content = newsRepo.getNewsList(pageable).getContent();
         content.forEach(el -> {
                     int index = el.getContent().indexOf(".", 200);
-                    el.setContent(el.getContent().substring(0, index + 1));
+                    if (index >= 200)
+                        el.setContent(el.getContent().substring(0, index + 1));
                 });
         return content;
     }

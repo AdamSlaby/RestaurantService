@@ -3,6 +3,7 @@ package pl.restaurant.newsservice.api.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.newsservice.api.request.NewsFilters;
 import pl.restaurant.newsservice.api.request.NewsRequest;
@@ -13,10 +14,12 @@ import pl.restaurant.newsservice.business.service.NewsService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @CrossOrigin
+@Validated
 @Log4j2
 @AllArgsConstructor
 public class NewsController {
@@ -28,7 +31,8 @@ public class NewsController {
     }
 
     @GetMapping("/list/info")
-    public List<NewsInfo> getNews(@RequestParam("pageNr") Integer pageNr) {
+    public List<NewsInfo> getNews(@Valid @RequestParam("pageNr") @Min(value = 0, message = "Page number cannot be negative number")
+                                      Integer pageNr) {
         return newsService.getNews(pageNr);
     }
 

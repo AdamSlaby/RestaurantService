@@ -1,6 +1,5 @@
 package pl.restaurant.supplyservice.business.calculator;
 
-import pl.restaurant.supplyservice.business.exception.UnitMismatchException;
 import pl.restaurant.supplyservice.data.entity.UnitEntity;
 
 public class CalculateUnitCreator implements Creator<UnitCalculator, UnitEntity> {

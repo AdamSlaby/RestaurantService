@@ -18,6 +18,8 @@ public abstract class UnitCalculator {
             if (divide.compareTo(BigDecimal.ONE) >= 0)
                 return new Result(divide, entry.getKey());
         }
+        if (result.compareTo(BigDecimal.ZERO) == 0)
+            return new Result(result, "g");
         return new Result(result, null);
     }
 

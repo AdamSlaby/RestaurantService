@@ -22,10 +22,10 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import pl.restaurant.employeeservice.business.exception.CustomKeycloakAuthenticationHandler;
 import pl.restaurant.employeeservice.business.exception.RestAccessDeniedHandler;
 
+@Profile("dev")
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
-@Order(2)
 @AllArgsConstructor
 public class KeycloakSecurityConf extends KeycloakWebSecurityConfigurerAdapter {
     RestAccessDeniedHandler restAccessDeniedHandler;
