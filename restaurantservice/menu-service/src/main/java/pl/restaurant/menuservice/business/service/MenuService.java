@@ -12,4 +12,5 @@ public interface MenuService {
     List<MenuView> getAllMenus();
     MealShortView addMealToMenu(MealMenu mealMenu);
     void removeMealFromMenu(Integer menuId, Integer mealId);
+    String getCurrentSeason();
 }

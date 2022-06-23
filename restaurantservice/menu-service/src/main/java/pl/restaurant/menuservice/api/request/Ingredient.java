@@ -1,15 +1,15 @@
 package pl.restaurant.menuservice.api.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Ingredient {
     @NotNull(message = "Identyfikator składnika nie może być pusty")
     private Integer id;

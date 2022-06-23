@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Dish> getDishesFromMenu() {
-        String season = SEASONS[LocalDate.now().getMonth().getValue() - 1];
+        String season = getCurrentSeason();
         MenuEntity menu = menuRepo.getBySeason(season)
                 .orElseThrow(MenuNotFoundException::new);
         return menu.getMeals().stream()
@@ -41,7 +41,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<DishListView> getAllDishesFromMenu() {
-        String season = SEASONS[LocalDate.now().getMonth().getValue() - 1];
+        String season = getCurrentSeason();
         MenuEntity menu = menuRepo.getBySeason(season)
                 .orElseThrow(MenuNotFoundException::new);
         return menu.getMeals().stream()
@@ -51,7 +51,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<DishOrderView> getDishOrderViewsFromMenu() {
-        String season = SEASONS[LocalDate.now().getMonth().getValue() - 1];
+        String season = getCurrentSeason();
         MenuEntity menu = menuRepo.getBySeason(season)
                 .orElseThrow(MenuNotFoundException::new);
         return menu.getMeals().stream()
@@ -93,5 +93,9 @@ public class MenuServiceImpl implements MenuService {
                 .orElseThrow(MealNotFoundException::new);
         menu.getMeals().remove(meal);
         menuRepo.save(menu);
+    }
+
+    public String getCurrentSeason() {
+        return SEASONS[LocalDate.now().getMonth().getValue() - 1];
     }
 }

@@ -6,6 +6,7 @@ import pl.restaurant.menuservice.api.response.Type;
 import pl.restaurant.menuservice.data.entity.TypeEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TypeRepo extends JpaRepository<TypeEntity, Integer> {
     @Query("select new pl.restaurant.menuservice.api.response." +
@@ -14,4 +15,6 @@ public interface TypeRepo extends JpaRepository<TypeEntity, Integer> {
     List<Type> getAllTypes();
 
     boolean existsByName(String name);
+
+    Optional<TypeEntity> findByName(String name);
 }

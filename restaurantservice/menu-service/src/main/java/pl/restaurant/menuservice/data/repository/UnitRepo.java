@@ -6,10 +6,13 @@ import pl.restaurant.menuservice.api.response.Unit;
 import pl.restaurant.menuservice.data.entity.UnitEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UnitRepo extends JpaRepository<UnitEntity, Integer> {
     @Query("select new pl.restaurant.menuservice.api.response." +
             "Unit(u.unitId, u.name) " +
             "from UnitEntity u")
     List<Unit> getAllUnits();
+
+    Optional<UnitEntity> findByName(String name);
 }

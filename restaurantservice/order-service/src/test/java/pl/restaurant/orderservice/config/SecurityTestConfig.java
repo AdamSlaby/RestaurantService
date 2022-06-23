@@ -1,4 +1,4 @@
-package pl.restaurant.menuservice.config;
+package pl.restaurant.orderservice.config;
 
 import org.junit.jupiter.api.Order;
 import org.springframework.context.annotation.Configuration;

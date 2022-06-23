@@ -1,7 +1,6 @@
 package pl.restaurant.menuservice.api.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
@@ -9,6 +8,9 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Meal {
     @NotBlank(message = "Nazwa posiłku nie może być pusta")
     @Size(max = 30, message = "Nazwa posiłku jest za długa")

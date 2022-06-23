@@ -36,7 +36,6 @@ import pl.restaurant.menuservice.data.repository.TypeRepo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +47,7 @@ import java.util.stream.Collectors;
 public class MealServiceImpl implements MealService {
     private final static int AMOUNT = 10;
     private final static int BEST_MEALS_AMOUNT = 7;
-    private static final String IMAGE_URL = "http://localhost:9000/menu/image/";
+    public static final String IMAGE_URL = "http://localhost:9000/menu/image/";
 
     @Value("${app.file.path}")
     private String path;
@@ -129,7 +128,7 @@ public class MealServiceImpl implements MealService {
         if (mealRepo.existsByName(meal.getName()) && !mealEntity.getName().equals(meal.getName()))
             throw new MealAlreadyExistsException();
         getMealServiceProxy().removeIngredientsFromMeal(mealEntity);
-        updateMeal(mealEntity, meal, ingredients);
+        getMealServiceProxy().updateMeal(mealEntity, meal, ingredients);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -224,7 +223,7 @@ public class MealServiceImpl implements MealService {
     }
 
     //cron for every first day of every month at 6 am
-    @Scheduled(cron = "0 0 6 1 * ? *")
+    @Scheduled(cron = "0 0 6 1 * ?")
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateMostPopularMeals() {
         List<Integer> mostPopularMeals = orderClient.getMostPopularMeals();

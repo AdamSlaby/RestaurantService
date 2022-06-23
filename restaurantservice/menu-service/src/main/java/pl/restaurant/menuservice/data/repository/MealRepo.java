@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import pl.restaurant.menuservice.api.response.DishListView;
 import pl.restaurant.menuservice.api.response.MealShortInfo;
 import pl.restaurant.menuservice.data.entity.MealEntity;
 
