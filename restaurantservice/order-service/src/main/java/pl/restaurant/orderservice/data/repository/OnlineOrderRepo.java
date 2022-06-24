@@ -30,7 +30,7 @@ public interface OnlineOrderRepo extends JpaRepository<OnlineOrderEntity, Long> 
             "(:done is null or o.deliveryDate is not null)")
     Page<OrderShortInfo> getDeliveredOrders(@Param("rId") Long restaurantId,
                                             @Param("oId") Long orderId,
-                                            @Param("from")LocalDateTime from,
+                                            @Param("from") LocalDateTime from,
                                             @Param("to") LocalDateTime to,
                                             @Param("done") Boolean isCompleted,
                                             Pageable pageable);

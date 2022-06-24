@@ -113,6 +113,14 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
         getRestaurantOrderServiceProxy().updateOrder(restaurantOrderEntity, order);
     }
 
+    @Transactional
+    public void updateOrder(RestaurantOrderEntity restaurantOrderEntity, RestaurantOrder restaurantOrder) {
+        restaurantOrderEntity.setPrice(restaurantOrderEntity.getPrice().add(restaurantOrder.getPrice()));
+        orderRepo.save(restaurantOrderEntity);
+        for (Order order : restaurantOrder.getOrders())
+            mealRepo.save(RestaurantOrderMapper.mapOrderToData(order, restaurantOrderEntity));
+    }
+
     @Override
     public void completeOrder(Long orderId) {
         RestaurantOrderEntity order = orderRepo.findById(orderId)
@@ -189,13 +197,5 @@ public class RestaurantOrderServiceImpl implements RestaurantOrderService {
 
     private RestaurantOrderServiceImpl getRestaurantOrderServiceProxy() {
         return applicationContext.getBean(this.getClass());
-    }
-
-    @Transactional
-    public void updateOrder(RestaurantOrderEntity restaurantOrderEntity, RestaurantOrder restaurantOrder) {
-        restaurantOrderEntity.setPrice(restaurantOrderEntity.getPrice().add(restaurantOrder.getPrice()));
-        orderRepo.save(restaurantOrderEntity);
-        for (Order order : restaurantOrder.getOrders())
-            mealRepo.save(RestaurantOrderMapper.mapOrderToData(order, restaurantOrderEntity));
     }
 }
