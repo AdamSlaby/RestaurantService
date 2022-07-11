@@ -1,4 +1,4 @@
-package pl.restaurant.employeeservice.business.utility;
+package pl.restaurant.employeeservice.api.mapper;
 
 import lombok.experimental.UtilityClass;
 import org.keycloak.representations.idm.CredentialRepresentation;

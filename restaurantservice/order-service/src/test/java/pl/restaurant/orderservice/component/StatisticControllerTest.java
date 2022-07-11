@@ -249,7 +249,7 @@ public class StatisticControllerTest extends MysqlTest {
                 .collect(Collectors.toList()).get(0);
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getSeries()).hasSize(14);
+        assertThat(response.getBody().getSeries()).hasSize(13);
         assertThat(chartData.getValue()).isEqualTo(orders);
     }
 
@@ -266,7 +266,7 @@ public class StatisticControllerTest extends MysqlTest {
                 .collect(Collectors.toList()).get(0);
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getSeries()).hasSize(14);
+        assertThat(response.getBody().getSeries()).hasSize(13);
         assertThat(chartData.getValue()).isEqualTo(orders);
     }
 

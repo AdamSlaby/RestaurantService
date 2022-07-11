@@ -8,11 +8,13 @@ import pl.restaurant.orderservice.api.response.chart.ChartData;
 import pl.restaurant.orderservice.api.response.chart.OrderType;
 import pl.restaurant.orderservice.api.response.chart.PeriodType;
 import pl.restaurant.orderservice.business.service.order.OrderService;
+import pl.restaurant.orderservice.business.service.strategy.DayTimePeriodStrategy;
+import pl.restaurant.orderservice.business.service.strategy.MonthTimePeriodStrategy;
+import pl.restaurant.orderservice.business.service.strategy.TimePeriodStrategyContext;
+import pl.restaurant.orderservice.business.service.strategy.YearTimePeriodStrategy;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,29 +167,13 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     private Time setTime(GenerateChartOptions data) {
-        Time time = new Time();
-        if (data.getPeriodType() == PeriodType.DAY) {
-            LocalDateTime dateTime = LocalDateTime.parse(data.getPeriod(), DateTimeFormatter.RFC_1123_DATE_TIME);
-            time.setFrom(dateTime.withHour(0).withMinute(0).withSecond(0));
-            time.setTo(dateTime.withHour(23).withMinute(59).withSecond(59));
-            return time;
-        } if (data.getPeriodType() == PeriodType.MONTH) {
-            int month = Integer.parseInt(data.getPeriod());
-            LocalDateTime dateTime = LocalDateTime.now();
-            time.setFrom(dateTime.withMonth(month).withDayOfMonth(1)
-                    .withHour(0).withMinute(0).withSecond(0));
-            time.setTo(dateTime.withMonth(month).with(TemporalAdjusters.lastDayOfMonth())
-                    .withHour(23).withMinute(59).withSecond(59));
-            return time;
-        } if (data.getPeriodType() == PeriodType.YEAR) {
-            int year = Integer.parseInt(data.getPeriod());
-            LocalDateTime dateTime = LocalDateTime.now();
-            time.setFrom(dateTime.withYear(year).withMonth(1).withDayOfMonth(1)
-                    .withHour(0).withMinute(0).withSecond(0));
-            time.setTo(dateTime.withYear(year).withMonth(12).with(TemporalAdjusters.lastDayOfMonth())
-                    .withHour(23).withMinute(59).withSecond(59));
-            return time;
-        }
-        throw new RuntimeException("Period type not found");
+        TimePeriodStrategyContext context = new TimePeriodStrategyContext();
+        if (data.getPeriodType() == PeriodType.DAY)
+            context.setStrategy(new DayTimePeriodStrategy());
+        else if (data.getPeriodType() == PeriodType.MONTH)
+            context.setStrategy(new MonthTimePeriodStrategy());
+        else if (data.getPeriodType() == PeriodType.YEAR)
+            context.setStrategy(new YearTimePeriodStrategy());
+        return context.execute(data);
     }
 }

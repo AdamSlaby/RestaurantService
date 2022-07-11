@@ -21,7 +21,7 @@ import pl.restaurant.employeeservice.api.request.*;
 import pl.restaurant.employeeservice.api.response.*;
 import pl.restaurant.employeeservice.business.exception.*;
 import pl.restaurant.employeeservice.business.utility.CredentialsGenerator;
-import pl.restaurant.employeeservice.business.utility.PasswordMapper;
+import pl.restaurant.employeeservice.api.mapper.PasswordMapper;
 import pl.restaurant.employeeservice.business.utility.ValidationUtility;
 import pl.restaurant.employeeservice.data.entity.AddressEntity;
 import pl.restaurant.employeeservice.data.entity.EmployeeEntity;
