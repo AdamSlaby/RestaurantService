@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class NewsIncorrectDataAdvice {
+public class IncorrectNewsDataAdvice {
     @ResponseBody
     @ExceptionHandler(CannotSaveImageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

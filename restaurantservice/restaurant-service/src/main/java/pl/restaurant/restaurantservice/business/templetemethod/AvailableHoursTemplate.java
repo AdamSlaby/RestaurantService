@@ -20,9 +20,7 @@ public abstract class AvailableHoursTemplate {
         for (int i = 10; i <= 20; i += 2) {
             Set<FoodTableEntity> availableTables = new LinkedHashSet<>(tables);
             removeUnavailableTables(reservations, availableTables, i);
-            int availableSeats = 0;
-            for (FoodTableEntity table : availableTables)
-                availableSeats += table.getSeatsNr();
+            int availableSeats = getAvailableSeatsAmount(availableTables);
             if (availableSeats < peopleNr)
                 continue;
             addAvailableHours(availableTables, hours, i, dateTime, peopleNr);
@@ -30,7 +28,14 @@ public abstract class AvailableHoursTemplate {
         return hours;
     }
 
-    private void removeUnavailableTables(List<ReservationEntity> reservations,
+    protected int getAvailableSeatsAmount(Set<FoodTableEntity> availableTables) {
+        int availableSeats = 0;
+        for (FoodTableEntity table : availableTables)
+            availableSeats += table.getSeatsNr();
+        return availableSeats;
+    }
+
+    protected void removeUnavailableTables(List<ReservationEntity> reservations,
                                          Set<FoodTableEntity> availableTables,
                                          int hour) {
         reservations.stream()
