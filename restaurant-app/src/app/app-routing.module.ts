@@ -113,7 +113,7 @@ const routes: Routes = [
         canActivate: [AuthenticationGuard],
         data: {
           role: [
-            "admin", "manager"
+            "admin", "manager", "waiter"
           ]
         }
       },
@@ -123,7 +123,7 @@ const routes: Routes = [
         canActivate: [AuthenticationGuard],
         data: {
           role: [
-            "admin", "manager"
+            "admin", "manager", "waiter"
           ]
         }
       },
@@ -161,7 +161,7 @@ const routes: Routes = [
         component: OrderPageComponent,
         data: {
           role: [
-            "admin", "manager"
+            "admin", "manager", "waiter"
           ]
         }
       },

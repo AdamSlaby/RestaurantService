@@ -154,6 +154,10 @@ export class MainNavComponent implements OnInit, AfterViewInit {
     return localStorage.getItem('role') === 'admin';
   }
 
+  isNotWaiter() {
+    return localStorage.getItem('role') !== 'waiter';
+  }
+
   getFullName() {
     return localStorage.getItem('fullName');
   }

@@ -34,28 +34,28 @@
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Zamówienia</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isNotWaiter()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/reservations" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faCalendarDays"></fa-icon>
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Rezerwacje</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isNotWaiter()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/employees" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faPeopleGroup"></fa-icon>
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Pracownicy</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isNotWaiter()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/invoices" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faFileInvoice"></fa-icon>
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Faktury</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isNotWaiter()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/supply" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faBoxesStacked"></fa-icon>
@@ -76,7 +76,7 @@
               <span [style.width.px]="navItemWidth" class="text-uppercase" *ngIf="!isCollapsed">Menu</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isNotWaiter()" class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center"
                style="font-size: 18px" routerLink="/admin/statistics" routerLinkActive="active">
               <fa-icon class="me-1" [icon]="faChartLine"></fa-icon>

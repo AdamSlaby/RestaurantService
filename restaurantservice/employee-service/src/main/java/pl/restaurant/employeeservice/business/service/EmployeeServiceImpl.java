@@ -43,6 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final static int AMOUNT = 10;
     private final static String ADMIN = "Administrator";
     private final static String MANAGER = "Menedżer";
+    private final static String WAITER = "Kelner";
     private EmployeeRepo employeeRepo;
     private ScheduleRepo scheduleRepo;
     private RestaurantServiceClient restaurantServiceClient;
@@ -249,7 +250,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private boolean isKeycloakUser(WorkstationEntity workstation) {
-        return Objects.equals(workstation.getName(), ADMIN) || Objects.equals(workstation.getName(), MANAGER);
+        return Objects.equals(workstation.getName(), ADMIN) || Objects.equals(workstation.getName(), MANAGER) ||
+                Objects.equals(workstation.getName(), WAITER);
     }
 
     private Credentials createKeycloakUser(EmployeeEntity employee, WorkstationEntity workstation) {
@@ -276,8 +278,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             ClientRepresentation clientRepresentation = keycloakService.getClientRep(clientId);
             if (Objects.equals(workstation.getName(), ADMIN)) {
                 roles = keycloakService.getRoles(new String[]{"admin"}, clientRepresentation.getId());
-            } else {
+            } else if (Objects.equals(workstation.getName(), MANAGER)){
                 roles = keycloakService.getRoles(new String[]{"manager"}, clientRepresentation.getId());
+            } else {
+                roles = keycloakService.getRoles(new String[]{"waiter"}, clientRepresentation.getId());
             }
             userResource.roles().clientLevel(clientRepresentation.getId()).add(roles);
         }

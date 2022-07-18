@@ -1,7 +1,7 @@
 package pl.restaurant.employeeservice.business.configuration;
 
 public enum Role {
-    MANAGER("manager"), ADMIN("admin");
+    MANAGER("manager"), ADMIN("admin"), WAITER("waiter");
 
     private String name;
 
