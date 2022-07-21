@@ -66,12 +66,12 @@ public interface RestaurantOrderRepo extends JpaRepository<RestaurantOrderEntity
                                     @Param("from") LocalDateTime from,
                                     @Param("to") LocalDateTime to);
 
-    @Query("select count(o.meals.size) from RestaurantOrderEntity o where o.orderDate > :from and " +
-            "o.orderDate <= :to and o.deliveryDate is not null and " +
-            "(:rId is null or o.restaurantId = :rId)")
-    Integer getTodayDeliveredMealsAmount(@Param("rId") Long restaurantId,
-                                         @Param("from") LocalDateTime from,
-                                         @Param("to") LocalDateTime to);
+//    @Query("select count(o.meals.size) from RestaurantOrderEntity o where o.orderDate > :from and " +
+//            "o.orderDate <= :to and o.deliveryDate is not null and " +
+//            "(:rId is null or o.restaurantId = :rId)")
+//    Integer getTodayDeliveredMealsAmount(@Param("rId") Long restaurantId,
+//                                         @Param("from") LocalDateTime from,
+//                                         @Param("to") LocalDateTime to);
 
     @Query("select count(o) from RestaurantOrderEntity o where o.orderDate > :from and " +
             "o.orderDate <= :to and o.deliveryDate is null and " +
