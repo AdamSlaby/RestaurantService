@@ -13,6 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class OrderMealId implements Serializable {
+    private static final long serialVersionUID = -5226507871198692364L;
+
     @Column(name = "order_id")
     private Long orderId;
 

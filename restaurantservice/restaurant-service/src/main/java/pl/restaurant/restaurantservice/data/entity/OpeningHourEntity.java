@@ -14,6 +14,8 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Table(name = "Opening_hour")
 public class OpeningHourEntity implements Serializable {
+    private static final long serialVersionUID = 8687222115910023411L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hourId;

@@ -3,6 +3,7 @@ package pl.restaurant.orderservice.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
@@ -12,7 +13,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "RestaurantOrder_Meal")
-public class RestaurantOrderMealEntity {
+public class RestaurantOrderMealEntity implements Serializable {
+    private static final long serialVersionUID = 8546720274196153571L;
+
     @EmbeddedId
     private OrderMealId id;
 

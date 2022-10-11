@@ -17,6 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Employee")
 public class EmployeeEntity implements Serializable {
+    private static final long serialVersionUID = 2423727561641877294L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;

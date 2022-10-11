@@ -16,6 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Restaurant")
 public class RestaurantEntity implements Serializable {
+    private static final long serialVersionUID = -6636979256055520830L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long restaurantId;

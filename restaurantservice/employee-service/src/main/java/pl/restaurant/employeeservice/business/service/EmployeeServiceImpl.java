@@ -40,10 +40,10 @@ import java.util.*;
 @Log4j2
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    private final static int AMOUNT = 10;
-    private final static String ADMIN = "Administrator";
-    private final static String MANAGER = "Menedżer";
-    private final static String WAITER = "Kelner";
+    private static final int AMOUNT = 10;
+    private static final String ADMIN = "Administrator";
+    private static final String MANAGER = "Menedżer";
+    private static final String WAITER = "Kelner";
     private EmployeeRepo employeeRepo;
     private ScheduleRepo scheduleRepo;
     private RestaurantServiceClient restaurantServiceClient;
@@ -68,7 +68,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public EmployeeInfo getEmployeeInfo(Long employeeId) {
         EmployeeEntity employee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException());
+                .orElseThrow(EmployeeNotFoundException::new);
         LocalDateTime dateTime = LocalDateTime.now().withHour(1);
         List<ScheduleInfo> schedules = scheduleRepo.getSchedulesFromDate(dateTime, employee.getEmployeeId());
         RestaurantShortInfo restaurantInfo = restaurantServiceClient
@@ -131,8 +131,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeEntity savedEmployee = employeeRepo
                 .save(EmployeeMapper.mapObjectToData(employee, address, workstation));
         if (isKeycloakUser(workstation)) {
-            Credentials credentials = createKeycloakUser(savedEmployee, workstation);
-            return credentials;
+            return createKeycloakUser(savedEmployee, workstation);
         }
         return new Credentials();
     }

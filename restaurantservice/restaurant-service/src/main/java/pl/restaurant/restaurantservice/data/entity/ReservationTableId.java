@@ -12,6 +12,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationTableId implements Serializable {
-    Long reservationId;
-    RestaurantTableId tableId;
+    private static final long serialVersionUID = 4086854802682547113L;
+
+    private Long reservationId;
+    private RestaurantTableId tableId;
 }

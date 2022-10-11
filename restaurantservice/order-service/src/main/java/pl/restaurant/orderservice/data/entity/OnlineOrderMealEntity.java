@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "OnlineOrder_Meal")
 public class OnlineOrderMealEntity implements Serializable {
+    private static final long serialVersionUID = 9032971575683446006L;
+
     @EmbeddedId
     private OrderMealId id;
 

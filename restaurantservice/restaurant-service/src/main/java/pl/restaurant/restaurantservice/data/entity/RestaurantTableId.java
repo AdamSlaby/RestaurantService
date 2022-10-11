@@ -13,6 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class RestaurantTableId implements Serializable {
+    private static final long serialVersionUID = 6671518821589251147L;
     @Column(name = "restaurant_id")
     Long restaurantId;
 

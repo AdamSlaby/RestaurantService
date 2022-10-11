@@ -17,6 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Workstation")
 public class WorkstationEntity implements Serializable {
+    private static final long serialVersionUID = 3304231517994776393L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer workstationId;

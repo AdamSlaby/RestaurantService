@@ -2,7 +2,6 @@ package pl.restaurant.newsservice.api.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.restaurant.newsservice.api.request.NewsFilters;

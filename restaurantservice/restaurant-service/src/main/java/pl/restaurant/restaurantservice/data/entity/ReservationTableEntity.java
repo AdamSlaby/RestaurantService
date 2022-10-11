@@ -3,6 +3,7 @@ package pl.restaurant.restaurantservice.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Getter
@@ -11,7 +12,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Reservation_Tables")
-public class ReservationTableEntity {
+public class ReservationTableEntity implements Serializable {
+    private static final long serialVersionUID = -6915558578910647541L;
+
     @EmbeddedId
     ReservationTableId reservationTableId;
 

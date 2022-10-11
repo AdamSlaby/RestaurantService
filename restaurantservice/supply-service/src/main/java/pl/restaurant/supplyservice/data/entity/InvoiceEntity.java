@@ -17,6 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Invoice")
 public class InvoiceEntity implements Serializable {
+    private static final long serialVersionUID = 4710359136505953549L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long invoiceId;

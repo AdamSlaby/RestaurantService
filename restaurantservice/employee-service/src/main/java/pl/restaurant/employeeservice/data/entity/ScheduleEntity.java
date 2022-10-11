@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "Schedule")
 public class ScheduleEntity implements Serializable {
+    private static final long serialVersionUID = 1529704684600039877L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long scheduleId;

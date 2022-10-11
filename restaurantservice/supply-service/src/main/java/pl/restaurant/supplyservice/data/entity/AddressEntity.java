@@ -13,6 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Table(name = "Address")
 public class AddressEntity implements Serializable {
+    private static final long serialVersionUID = -413341433841359850L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;

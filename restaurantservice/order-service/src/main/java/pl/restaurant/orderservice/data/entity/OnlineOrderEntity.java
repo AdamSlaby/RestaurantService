@@ -17,6 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Online_Order")
 public class OnlineOrderEntity implements Serializable {
+    private static final long serialVersionUID = 4375707022599619239L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;

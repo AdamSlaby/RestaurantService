@@ -21,7 +21,7 @@ public interface NewsRepo extends JpaRepository<NewsEntity, Long> {
             "where n.newsId = :nId")
     Optional<NewsInfo> getNewsInfoById(@Param("nId") Long newsId);
 
-    @Query("select n.employeeId from NewsEntity n where n.newsId = :nId")
+    @Query("select n.employeeId from NewsEntity n where n.newsId =ó :nId")
     Optional<Long> getNewsEmployeeId(@Param("nId") Long newsId);
 
     @Query("select new pl.restaurant.newsservice.api.response." +

@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "Good")
 public class GoodEntity implements Serializable {
+    private static final long serialVersionUID = -2486890964036472326L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long goodId;

@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsEntity implements Serializable {
+    private static final long serialVersionUID = -5052918316498433676L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long newsId;

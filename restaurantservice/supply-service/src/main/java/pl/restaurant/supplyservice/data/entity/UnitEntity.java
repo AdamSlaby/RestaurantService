@@ -14,6 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Unit")
 public class UnitEntity implements Serializable {
+    private static final long serialVersionUID = -955517944981686921L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer unitId;

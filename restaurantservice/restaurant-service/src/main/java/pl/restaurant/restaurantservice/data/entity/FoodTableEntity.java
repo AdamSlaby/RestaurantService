@@ -3,6 +3,7 @@ package pl.restaurant.restaurantservice.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Food_Table")
-public class FoodTableEntity{
+public class FoodTableEntity implements Serializable {
+    private static final long serialVersionUID = -8765574881346400292L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tableId;

@@ -14,6 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Type")
 public class TypeEntity implements Serializable, Comparable<TypeEntity> {
+    private static final long serialVersionUID = 2105178182015726031L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer typeId;

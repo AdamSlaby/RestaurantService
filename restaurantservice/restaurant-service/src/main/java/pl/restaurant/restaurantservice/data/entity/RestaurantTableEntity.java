@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Restaurant_Tables")
 public class RestaurantTableEntity implements Serializable {
+    private static final long serialVersionUID = 5169200688520892728L;
     @EmbeddedId
     RestaurantTableId restaurantTableId;
 
