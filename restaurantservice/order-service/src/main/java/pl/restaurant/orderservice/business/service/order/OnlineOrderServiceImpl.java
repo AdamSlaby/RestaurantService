@@ -206,7 +206,7 @@ public class OnlineOrderServiceImpl implements OnlineOrderService {
 
     @Override
     public Integer getTodayDeliveredMealsAmount(Long restaurantId, LocalDateTime from, LocalDateTime to) {
-        Integer amount = orderRepo.getTodayDeliveredMealsAmount(restaurantId, from, to);
+        Integer amount = mealRepo.getTodayDeliveredMealsAmount(restaurantId, from, to);
         return amount == null ? 0 : amount;
     }
 
